@@ -1,4 +1,5 @@
-#include "basic_components.h"
+#include"basic_components.h"
+#include<cmath>
 
 Position::Position(float coord1, float coord2, CoordinateType type){
     if(type == CARTESIAN){
