@@ -79,6 +79,10 @@ inline float angle(const Vector2& v1, const Vector2& v2){
     return acos( (v1 * v2) / (length(v1)*length(v2)) );
 }
 
+inline Vector2 reflect_across_normal(const Vector2& v, const Vector2& unitNormal){
+    return v - 2 * (unitNormal * v) * unitNormal;
+}
+
 inline bool approx_equal(float x1, float x2){
     float margin = max(x1, x2) / 100000;
     return fabs(x1 - x2) < 0.;

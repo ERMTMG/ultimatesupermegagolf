@@ -44,6 +44,7 @@ void set_layers(CollisionComponent &collision, std::vector<LayerType> &&layers){
 
 CollisionInformation get_collision(const CollisionComponent& collision1, const CollisionComponent& collision2, const Position& pos1, const Position& pos2){
     CollisionInformation output {false, {0,0}};
+    if(!has_common_layers(collision1, collision2)) return output;
     int shapeCount = 0; // for cumulative calculation of average normal vector
     for(const auto& shapePtr1 : collision1.shapes){
         CollisionShape* currentShape = shapePtr1.get();

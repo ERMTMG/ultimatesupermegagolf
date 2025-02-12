@@ -63,6 +63,39 @@ CollisionComponent& LevelRegistry::create_static_body(const Position& pos, std::
     return collision;
 }
 
+void LevelRegistry::handle_collisions_general(){
+    auto collisionEntities = registry->view<CollisionComponent, const Position>();
+    for(auto[entity_i, collision_i, position_i] : collisionEntities.each()){
+        for(auto[entity_j, collision_j, position_j] : collisionEntities.each()){
+            if(entity_i < entity_j && (!collision_i.isStatic || !collision_j.isStatic)){
+
+                CollisionInformation info = get_collision(collision_i, collision_j, position_i, position_j);
+                if(info.collision){
+                    Velocity* velocity_i = registry->try_get<Velocity>(entity_i);
+                    Velocity* velocity_j = registry->try_get<Velocity>(entity_j);
+                    CollisionHandler* handler_i = registry->try_get<CollisionHandler>(entity_i);
+                    CollisionHandler* handler_j = registry->try_get<CollisionHandler>(entity_j);
+                    if(handler_i != nullptr){
+                        if(handler_i->type == COLLISION_HANDLER_DEFAULT){
+                            (handler_i->defaultHandler)(info, velocity_i, velocity_j, handler_j);
+                        } else {
+                            (handler_i->customHandler)(info, entity_i, entity_j, registry.get());
+                        }
+                    }
+                    if(handler_j != nullptr){
+                        if(handler_j->type == COLLISION_HANDLER_DEFAULT){
+                            (handler_j->defaultHandler)(info, velocity_j, velocity_i, handler_i);
+                        } else {
+                            (handler_i->customHandler)(info, entity_j, entity_i, registry.get());
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}
+
 void LevelRegistry::update(float delta){
     //move objects with velocity
     auto viewPositionAndVelocity = registry->view<Position, Velocity>();
@@ -75,9 +108,6 @@ void LevelRegistry::update(float delta){
         }
     }
 
-    handle_collisions_general();
+    handle_collisions_general(); // maybe dispatch this to another thread?
 
-    // TODO: implement collisions, handling animations, blahblahblah
-    // i'm tired boss
-    //does this work?s
 }
