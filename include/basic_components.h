@@ -36,12 +36,12 @@ struct SpriteSheet{
     HeapArray<unsigned short> numberFramesPerAnimation;
     unsigned short currentAnimation;
     unsigned short currentFrame;
+    Vector2 offset;
 
-    SpriteSheet(const char* filename, unsigned int frameWidth, unsigned int frameHeight);
+    SpriteSheet(const char* filename, unsigned int frameWidth, unsigned int frameHeight, const Vector2& offset = {0,0});
     ~SpriteSheet();
     void set_animation_length(unsigned int animationRow, unsigned int length);
 };
-
 
 void move_position(Position& pos, const Velocity& vel, float delta);
 void move_position(Position& pos, Velocity& vel, const Acceleration& acc, float delta);

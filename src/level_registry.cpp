@@ -96,6 +96,16 @@ void LevelRegistry::handle_collisions_general(){
     }
 }
 
+void LevelRegistry::handle_animations(float delta){
+    auto spriteEntities = registry->view<SpriteSheet>();
+    for(auto[entity, sprite] : spriteEntities.each()){
+        AnimationHandler* handler = registry->try_get<AnimationHandler>(entity);
+        if(handler != nullptr){
+            handler->handler(delta, handler->timer, sprite);
+        }
+    }
+}
+
 void LevelRegistry::update(float delta){
     //move objects with velocity
     auto viewPositionAndVelocity = registry->view<Position, Velocity>();
@@ -109,5 +119,21 @@ void LevelRegistry::update(float delta){
     }
 
     handle_collisions_general(); // maybe dispatch this to another thread?
+    handle_animations(delta);
+}
 
+void LevelRegistry::draw(bool debugMode) const{
+    BeginDrawing();
+        //TODO: add camera shenanigans?
+        auto spriteEntities = registry->view<const SpriteSheet, const Position>();
+        for(auto[entity, sprite, pos] : spriteEntities.each()){
+            draw_sprite(sprite, pos);
+        }
+        if(debugMode){
+            auto collisionEntites = registry->view<const CollisionComponent, const Position>();
+            for(auto[entity, collision, pos] : collisionEntites.each()){
+                draw_collision_debug(collision, pos);
+            }
+        }
+    EndDrawing();
 }

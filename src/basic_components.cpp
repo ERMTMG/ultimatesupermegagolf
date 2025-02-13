@@ -1,5 +1,6 @@
 #include"basic_components.h"
 #include<cmath>
+#include"vector2_utilities.h"
 
 Position::Position(float coord1, float coord2, CoordinateType type){
     if(type == CARTESIAN){
@@ -40,9 +41,9 @@ void move_position(Position& pos, Velocity& vel, const Acceleration& acc, float 
     pos.y += vel.v_y * delta;
 }
 
-SpriteSheet::SpriteSheet(const char *filename, unsigned int frameWidth, unsigned int frameHeight): 
+SpriteSheet::SpriteSheet(const char *filename, unsigned int frameWidth, unsigned int frameHeight, const Vector2& offset = {0,0}): 
 texture(LoadTexture(filename)), numberFramesPerRow(texture.width / frameWidth), numberRows(texture.height / frameHeight), 
-numberFramesPerAnimation(numberRows), currentAnimation(0), currentFrame(0) {}
+numberFramesPerAnimation(numberRows), currentAnimation(0), currentFrame(0), offset(offset) {}
 
 SpriteSheet::~SpriteSheet(){
     UnloadTexture(texture);
@@ -65,5 +66,5 @@ void draw_sprite(const SpriteSheet& sprite, const Position& pos){
     int frameWidth = sprite.texture.width / sprite.numberFramesPerRow;
     int frameHeight = sprite.texture.height / sprite.numberRows;
     Rectangle frame {frameWidth * sprite.currentFrame, frameHeight * sprite.currentAnimation, frameWidth, frameHeight};
-    DrawTextureRec(sprite.texture, frame, {pos.x, pos.y}, WHITE);
+    DrawTextureRec(sprite.texture, frame, sprite.offset + Vector2{pos.x, pos.y}, WHITE);
 }
