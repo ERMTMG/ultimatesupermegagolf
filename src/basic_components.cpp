@@ -3,27 +3,27 @@
 #include"vector2_utilities.h"
 
 Position::Position(float coord1, float coord2, CoordinateType type){
-    if(type == CARTESIAN){
+    if(type == COORDINATES_CARTESIAN){
         x = coord1; y = coord2;
-    } else if(type == POLAR){
+    } else if(type == COORDINATES_POLAR){
         x = coord1*cos(coord2);
         y = coord1*sin(coord2);
     }
 }
 
 Velocity::Velocity(float coord1, float coord2, CoordinateType type){
-    if(type == CARTESIAN){
+    if(type == COORDINATES_CARTESIAN){
         v_x = coord1; v_y = coord2;
-    } else if(type == POLAR){
+    } else if(type == COORDINATES_POLAR){
         v_x = coord1*cos(coord2);
         v_y = coord1*sin(coord2);
     }
 }
 
 Acceleration::Acceleration(float coord1, float coord2, CoordinateType type){
-    if(type == CARTESIAN){
+    if(type == COORDINATES_CARTESIAN){
         a_x = coord1; a_y = coord2;
-    } else if(type == POLAR){
+    } else if(type == COORDINATES_POLAR){
         a_x = coord1*cos(coord2);
         a_y = coord1*sin(coord2);
     }

@@ -4,7 +4,7 @@
 #include<vector>
 
 enum CoordinateType {
-    CARTESIAN, POLAR
+    COORDINATES_CARTESIAN, COORDINATES_POLAR
 };
 
 struct Position{
@@ -14,20 +14,37 @@ struct Position{
     // initializes based on a pair of coordinates. If type == CARTESIAN 
     // the coordinates are taken to be (x,y), and if TYPE == POLAR the
     // coordinates are taken to be (r, θ).
-    Position(float coord1, float coord2, CoordinateType type = CARTESIAN);
+    Position(float coord1, float coord2, CoordinateType type = COORDINATES_CARTESIAN);
+    Position(const Vector2& v) : Position(v.x, v.y) {};
 };
 
 struct Velocity{
     float v_x;
     float v_y;
-    Velocity(float coord1, float coord2, CoordinateType type = CARTESIAN);
+    Velocity(float coord1, float coord2, CoordinateType type = COORDINATES_CARTESIAN);
+    Velocity(const Vector2& v) : Velocity(v.x, v.y) {};
 };
 
 struct Acceleration{
     float a_x;
     float a_y;
-    Acceleration(float coord1, float coord2, CoordinateType type = CARTESIAN);
+    Acceleration(float coord1, float coord2, CoordinateType type = COORDINATES_CARTESIAN);
+    Acceleration(const Vector2& v) : Acceleration(v.x, v.y) {};
 };
+
+//TODO: replace all hacky Vector2 <-> Position conversions with these functions and/or Position(Vector2) constructor.
+
+inline Vector2 to_Vector2(const Position& pos){
+    return {pos.x, pos.y};
+}
+
+inline Vector2 to_Vector2(const Velocity& vel){
+    return {vel.v_x, vel.v_y};
+}
+
+inline Vector2 to_Vector2(const Acceleration& accel){
+    return {accel.a_x, accel.a_y};
+}
 
 struct SpriteSheet{
     Texture2D texture;
