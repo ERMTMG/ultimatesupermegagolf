@@ -1,6 +1,6 @@
 #include "bounding_box.h"
 
-bool overlapping_bb(const BoundingBox& bb1, const BoundingBox& bb2, const Position& pos1, const Position& pos2){
+bool overlapping_bb(const BoundingBoxComponent& bb1, const BoundingBoxComponent& bb2, const Position& pos1, const Position& pos2){
     Vector2 bb1TruePos = bb1.offset + to_Vector2(pos1);
     Vector2 bb2TruePos = bb2.offset + to_Vector2(pos2);
     return (

@@ -4,12 +4,12 @@
 #include"collision_shapes.h"
 #include<type_traits>
 #include"vector2_utilities.h"
+#include<cassert>
 
 template<class ShapeType> ShapeType operator+(const ShapeType& shape, const Position& pos){
     static_assert(std::is_base_of<CollisionShape, ShapeType>::value, "Left operand is not a subclass of CollisionShape");
     ShapeType output = shape;
-    CollisionShape& collision = static_cast<CollisionShape&>(output);
-    collision.offset += {pos.x, pos.y}; //output is also modified
+    output.offset += to_Vector2(pos);
     return output;
 }
 

@@ -16,8 +16,8 @@ void default_elastic_collision_handler_fn(CollisionInformation info, Velocity* t
         }
     } else if(thisVelocity != nullptr && info.collision){ // case 2: only calling object is not static, colliding with some other static object
         Velocity& vel = *thisVelocity;
-        Vector2 reflectedVelocity = ELASTICITY * reflect_across_normal({vel.v_x, vel.v_y}, info.unitNormal);
-        vel = {reflectedVelocity.x, reflectedVelocity.y};
+        Vector2 reflectedVelocity = ELASTICITY * reflect_across_normal(to_Vector2(vel), info.unitNormal);
+        vel = Velocity(reflectedVelocity);
     }
 }
 
