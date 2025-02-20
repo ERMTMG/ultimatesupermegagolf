@@ -46,6 +46,7 @@ entt::entity LevelRegistry::create_player(const Position& pos){
     add_to_layer(collision, PLAYER_COLLISION_LAYER);
     registry->emplace<NormalStoreComponent>(player);
     registry->emplace<PlayerComponent>(player, Vector2{0,0}, 0, true);
+    registry->emplace<BoundingBoxComponent>(player, Vector2{-5,-5}, 26, 26);
 
     return player;
 }

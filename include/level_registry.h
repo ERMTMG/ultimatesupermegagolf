@@ -4,6 +4,7 @@
 #include"basic_components.h"
 #include"collision_component.h"
 #include"player_component.h"
+#include"bounding_box.h"
 #include"collision_handler.h"
 #include"animation_handler.h"
 #include<memory>
