@@ -79,9 +79,11 @@ BoundingBoxComponent calculate_bb(const CollisionComponent& collision, float mar
 }
 
 BoundingBoxComponent calculate_bb(const SpriteSheet& sprite, float margin){
-    BoundingBoxComponent output {sprite.offset, 0, 0};
-    output.width = sprite.texture.width / sprite.numberFramesPerRow;
-    output.height = sprite.texture.height / sprite.numberRows;
+    int frameWidth = sprite.texture.width / sprite.numberFramesPerRow;
+    int frameHeight = sprite.texture.height / sprite.numberRows;
+    BoundingBoxComponent output {{-frameWidth/2, -frameHeight/2}, 0, 0};
+    output.width = frameWidth;
+    output.height = frameHeight;
     if(margin != 0){
         output.offset -= {margin, margin};
         output.width += margin; output.height += margin;

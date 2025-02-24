@@ -41,9 +41,9 @@ void move_position(Position& pos, Velocity& vel, const Acceleration& acc, float 
     pos.y += vel.v_y * delta;
 }
 
-SpriteSheet::SpriteSheet(const char *filename, unsigned int frameWidth, unsigned int frameHeight, const Vector2& offset = {0,0}): 
+SpriteSheet::SpriteSheet(const char *filename, unsigned int frameWidth, unsigned int frameHeight): 
 texture(LoadTexture(filename)), numberFramesPerRow(texture.width / frameWidth), numberRows(texture.height / frameHeight), 
-numberFramesPerAnimation(numberRows), currentAnimation(0), currentFrame(0), offset(offset) {}
+numberFramesPerAnimation(numberRows), currentAnimation(0), currentFrame(0) {}
 
 SpriteSheet::~SpriteSheet(){
     UnloadTexture(texture);
@@ -62,9 +62,21 @@ void prev_frame(SpriteSheet& sprite){
     if(sprite.currentFrame < 0) sprite.currentFrame = sprite.numberFramesPerAnimation[sprite.currentAnimation] - 1;
 }
 
-void draw_sprite(const SpriteSheet& sprite, const Position& pos){
+Rectangle transform_frame_rect(const Rectangle& source, const SpriteTransform& transform){
+    return Rectangle{
+        .x = source.x + transform.offset.x,
+        .y = source.y + transform.offset.y,
+        .width = source.width * transform.scale.x,
+        .height = source.height * transform.scale.y
+    };
+}
+
+void draw_sprite(const SpriteSheet& sprite, const SpriteTransform& transform, const Position& pos){
     int frameWidth = sprite.texture.width / sprite.numberFramesPerRow;
     int frameHeight = sprite.texture.height / sprite.numberRows;
     Rectangle frame {frameWidth * sprite.currentFrame, frameHeight * sprite.currentAnimation, frameWidth, frameHeight};
-    DrawTextureRec(sprite.texture, frame, sprite.offset + Vector2{pos.x, pos.y}, WHITE);
+    Rectangle destFrame = {pos.x - frameWidth/2.0f, pos.y - frameHeight/2.0f, frameWidth, frameHeight};
+    destFrame = transform_frame_rect(destFrame, transform);
+    DrawTexturePro(sprite.texture, frame, destFrame, to_Vector2(pos), transform.rotation, WHITE);
 }
+

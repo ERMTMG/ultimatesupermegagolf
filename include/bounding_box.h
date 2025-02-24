@@ -18,10 +18,10 @@ struct BoundingBoxComponent{
     float height;
 };
 
-inline static const BoundingBoxComponent BB_INVALID = {VECTOR2_NULL, NAN, NAN};
+inline static const BoundingBoxComponent BB_INVALID = {VEC2_NULL, NAN, NAN};
 
 inline bool is_bb_valid(const BoundingBoxComponent& bb){
-    return (bb.offset != VECTOR2_NULL && bb.width == bb.width && bb.height == bb.height);
+    return (bb.offset != VEC2_NULL && bb.width == bb.width && bb.height == bb.height);
 }
 
 bool overlapping_bb(const BoundingBoxComponent& bb1, const BoundingBoxComponent& bb2, const Position& pos1 = {0,0}, const Position& pos2 = {0,0});

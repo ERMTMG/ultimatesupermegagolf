@@ -6,7 +6,14 @@
 //#define sign(x) ((float)copysign(1, (x)))
 //#define clamp(x, min, max) ((x) < (min) ? (min) : ((x) > (max) ? (max) : (x)))
 
-static const Vector2 VECTOR2_NULL = {NAN, NAN};
+static const Vector2 VEC2_NULL = {NAN, NAN};
+static const Vector2 VEC2_ZERO = {0,0};
+static const Vector2 VEC2_ONE = {1,1};
+static const Vector2 VEC2_UP_UNIT = {0,-1};
+static const Vector2 VEC2_DOWN_UNIT = {0,1};
+static const Vector2 VEC2_LEFT_UNIT = {-1,0};
+static const Vector2 VEC2_RIGHT_UNIT = {1,0};
+
 inline Vector2 operator+(const Vector2& v1, const Vector2& v2){
     return {v1.x + v2.x, v1.y + v2.y};
 }

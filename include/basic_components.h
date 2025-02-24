@@ -53,15 +53,27 @@ struct SpriteSheet{
     HeapArray<unsigned short> numberFramesPerAnimation;
     unsigned short currentAnimation;
     unsigned short currentFrame;
-    Vector2 offset;
 
-    SpriteSheet(const char* filename, unsigned int frameWidth, unsigned int frameHeight, const Vector2& offset = {0,0});
+    SpriteSheet(const char* filename, unsigned int frameWidth, unsigned int frameHeight);
     ~SpriteSheet();
     void set_animation_length(unsigned int animationRow, unsigned int length);
+};
+
+struct SpriteTransform{
+    Vector2 offset;
+    Vector2 scale;
+    float rotation; // IN DEGREES!!!
+    SpriteTransform() : offset{0,0}, rotation{0}, scale{1,1} {};
+    SpriteTransform(const Vector2& offset, float scale, int rotation) : offset{offset}, rotation{rotation}, scale{scale, scale} {};
+    SpriteTransform(const Vector2& offset, const Vector2& scale, int rotation) : offset{offset}, rotation{rotation}, scale{scale} {};
 };
 
 void move_position(Position& pos, const Velocity& vel, float delta);
 void move_position(Position& pos, Velocity& vel, const Acceleration& acc, float delta);
 void next_frame(SpriteSheet& sprite);
 void prev_frame(SpriteSheet& sprite);
-void draw_sprite(const SpriteSheet& sprite, const Position& pos);
+Rectangle transform_frame_rect(const Rectangle& source, const SpriteTransform& transform);
+void draw_sprite(const SpriteSheet& sprite, const SpriteTransform& transform, const Position& pos);
+inline void draw_sprite(const SpriteSheet& sprite, const Position& pos){
+    draw_sprite(sprite, SpriteTransform(), pos);
+}

@@ -65,10 +65,12 @@ CollisionComponent& LevelRegistry::create_static_body(const Position& pos, std::
 }
 
 void LevelRegistry::handle_collisions_general(){
-    auto collisionEntities = registry->view<CollisionComponent, const Position>();
-    for(auto[entity_i, collision_i, position_i] : collisionEntities.each()){
-        for(auto[entity_j, collision_j, position_j] : collisionEntities.each()){
-            if(entity_i < entity_j && (!collision_i.isStatic || !collision_j.isStatic)){
+    auto collisionEntities = registry->view<CollisionComponent, const Position, const BoundingBoxComponent>();
+    for(auto[entity_i, collision_i, position_i, bb_i] : collisionEntities.each()){
+        for(auto[entity_j, collision_j, position_j, bb_j] : collisionEntities.each()){
+            if(entity_i < entity_j // avoid repeated collisions
+                && (!collision_i.isStatic || !collision_j.isStatic) // no need to check if both bodies are static
+                && overlapping_bb(bb_i, bb_j, position_i, position_j)){ // only check if their bounding boxes are colliding
 
                 CollisionInformation info = get_collision(collision_i, collision_j, position_i, position_j);
                 if(info.collision){
