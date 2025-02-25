@@ -3,9 +3,9 @@
 CameraView camera_centered_at(const Position& pos){
     static const float DEFAULT_CAMERA_ZOOM = 1.0;
     return CameraView{ Camera2D{
-        {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f}, // cam.offset
-        to_Vector2(pos),                                     // cam.target
-        0.0, DEFAULT_CAMERA_ZOOM                             // cam.rotation, cam.zoom
+        .offset = {GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f}, 
+        .target = to_Vector2(pos),                                     
+        .rotation = 0.0, .zoom = DEFAULT_CAMERA_ZOOM                             
     }};
 }
 

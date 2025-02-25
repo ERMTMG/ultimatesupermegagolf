@@ -25,6 +25,8 @@ class LevelRegistry{
     entt::entity commonEntities[ENTITY_TYPE_ENUM_SIZE];
     void handle_collisions_general();
     void handle_animations(float delta);
+    void handle_camera(float delta);
+    void handle_input_and_player();
     entt::entity create_player(const Position& pos);
     entt::entity create_goal(const Position& pos);
     entt::entity create_camera_centered_at(const Position& pos);
@@ -47,6 +49,5 @@ class LevelRegistry{
     CollisionComponent& create_static_body(const Position& pos, std::vector<LayerType>&& layers);
     void update(float delta);
     void draw(bool debugMode = false) const;
-    
 };
 
