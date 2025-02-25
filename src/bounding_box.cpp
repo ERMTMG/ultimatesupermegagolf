@@ -63,7 +63,7 @@ BoundingBoxComponent bb_union(const BoundingBoxComponent& bb1, const BoundingBox
 }
 
 BoundingBoxComponent calculate_bb(const CollisionComponent& collision, float margin){
-    BoundingBoxComponent output {{0,0}, 0, 0};
+    BoundingBoxComponent output {VEC2_ZERO, 0, 0};
     for(const auto& shapePtr : collision.shapes){
         BoundingBoxComponent currBB = calculate_bb(shapePtr.get());
         output = bb_union(output, currBB);

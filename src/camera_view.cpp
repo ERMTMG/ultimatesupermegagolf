@@ -31,7 +31,7 @@ void zoom_camera(CameraView& camera, float zoomFactor, bool zoomMode = CAMERA_ZO
 BoundingBoxComponent get_camera_bb(const CameraView& camera, bool includeMargin = true){
     static const Vector2 MARGIN = {10, 10};
 
-    Vector2 topLeft = GetScreenToWorld2D({0,0}, camera.cam);
+    Vector2 topLeft = GetScreenToWorld2D(VEC2_ZERO, camera.cam);
     Vector2 bottomRight = GetScreenToWorld2D({GetScreenWidth(), GetScreenHeight()}, camera.cam);
     if(includeMargin){
         topLeft -= MARGIN;

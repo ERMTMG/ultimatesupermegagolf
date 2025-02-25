@@ -43,12 +43,12 @@ void set_layers(CollisionComponent &collision, std::vector<LayerType> &&layers){
 }
 
 CollisionInformation get_collision(const CollisionComponent& collision1, const CollisionComponent& collision2, const Position& pos1, const Position& pos2){
-    CollisionInformation output {false, {0,0}};
+    CollisionInformation output {false, VEC2_ZERO};
     if(!has_common_layers(collision1, collision2)) return output;
     int shapeCount = 0; // for cumulative calculation of average normal vector
     for(const auto& shapePtr1 : collision1.shapes){
         CollisionShape* currentShape = shapePtr1.get();
-        Vector2 currentShapeAverageNormal {0,0}; // same but on the individual shape
+        Vector2 currentShapeAverageNormal = VEC2_ZERO; // same but on the individual shape
         int currentShapeAveCount = 0;
         for(const auto& shapePtr2 : collision2.shapes){
             CollisionShape* checkingShape = shapePtr2.get();
@@ -59,7 +59,7 @@ CollisionInformation get_collision(const CollisionComponent& collision1, const C
                 currentShapeAverageNormal = currentShapeAverageNormal * (currentShapeAveCount - 1) / currentShapeAveCount + (currentNormal/currentShapeAveCount);
             }
         }
-        if(currentShapeAverageNormal != Vector2{0,0}){
+        if(currentShapeAverageNormal != VEC2_ZERO){
             shapeCount++;
             output.unitNormal = output.unitNormal * (shapeCount - 1) / shapeCount + (currentShapeAverageNormal / shapeCount);
         }

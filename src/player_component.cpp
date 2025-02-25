@@ -53,7 +53,7 @@ void update_player(PlayerComponent& player, Velocity& vel, const InputManager& i
 
 void release_player_drag_velocity(PlayerComponent& player, Velocity& vel){
     vel = Velocity(player.potentialVelocity);
-    player.potentialVelocity = {0,0};
+    player.potentialVelocity = VEC2_ZERO;
     player.mouseAnchorPosition = {0,0};
     player.canDrag = false;
     player.totalImpulses++;

@@ -55,7 +55,8 @@ CollisionInformation get_collision(const CollisionComponent& collision1, const C
 void draw_collision_debug(const CollisionComponent& collision, const Position& pos = {0,0});
 
 /*
-Literally just a component that stores a normal vector between registry function calls
+Literally just a component that stores a normal vector between registry function calls.
+Might not be needed, but i'm keeping it
 */
 struct NormalStoreComponent{
     Vector2 collisionNormal;

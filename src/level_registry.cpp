@@ -14,17 +14,27 @@ LevelRegistry::~LevelRegistry(){
 
 LevelRegistry::LevelRegistry(LevelRegistry&& other){
     this->registry = move(other.registry);
-    this->playerEntity = other.playerEntity;
+    for(int i = 0; i < ENTITY_TYPE_ENUM_SIZE; i++){
+        this->commonEntities[i] = other.commonEntities[i];
+    }
     this->numberOfLevelObjects = other.numberOfLevelObjects;
 }
 
 LevelRegistry& LevelRegistry::operator=(LevelRegistry&& rhs){
+    for(int i = 0; i < ENTITY_TYPE_ENUM_SIZE; i++){
+        this->commonEntities[i] = rhs.commonEntities[i];
+    }
     this->registry = move(rhs.registry);
-    this->playerEntity = rhs.playerEntity;
     this->numberOfLevelObjects = rhs.numberOfLevelObjects;
 }
 
-entt::registry& LevelRegistry::get(){
+entt::entity LevelRegistry::get_entity(COMMON_ENTITY_TYPES type) const{
+    assert(type < ENTITY_TYPE_ENUM_SIZE);
+    return commonEntities[type];
+}
+
+entt::registry &LevelRegistry::get()
+{
     return *registry;
 }
 
@@ -37,18 +47,53 @@ entt::entity LevelRegistry::create_player(const Position& pos){
     static const float PLAYER_RADIUS = 8;
 
     entt::entity player = registry->create();
-    playerEntity = player;
+    commonEntities[ENTITY_TYPE_PLAYER] = player;
     numberOfLevelObjects++;
     registry->emplace<Position>(player, pos);
     registry->emplace<Velocity>(player, 0, 0);
     registry->emplace<SpriteSheet>(player, BALL_SPRITE_FILENAME, 16, 16);
-    CollisionComponent& collision = registry->emplace<CollisionComponent>(player, new CollisionCircle({0,0}, PLAYER_RADIUS), 0, false);
+    CollisionComponent& collision = registry->emplace<CollisionComponent>(player, new CollisionCircle(VEC2_ZERO, PLAYER_RADIUS), 0, false);
     add_to_layer(collision, PLAYER_COLLISION_LAYER);
     registry->emplace<NormalStoreComponent>(player);
-    registry->emplace<PlayerComponent>(player, Vector2{0,0}, 0, true);
-    registry->emplace<BoundingBoxComponent>(player, Vector2{-5,-5}, 26, 26);
-
+    registry->emplace<PlayerComponent>(player, VEC2_ZERO, VEC2_ZERO, 0, PlayerComponent::MAX_HEALTH, true);
+    BoundingBoxComponent playerBB = calculate_bb(collision, 0);
+    registry->emplace<BoundingBoxComponent>(player, playerBB);
+    registry->emplace<CollisionHandler>(player, default_collision_handler());
     return player;
+}
+
+entt::entity LevelRegistry::create_goal(const Position& pos){
+    static const char* const GOAL_SPRITE_FILENAME = "resources/sprites/flag.png";
+
+    entt::entity goal = registry->create();
+    commonEntities[ENTITY_TYPE_GOAL] = goal;
+    numberOfLevelObjects++;
+    registry->emplace<Position>(goal, pos);
+    registry->emplace<SpriteSheet>(goal, GOAL_SPRITE_FILENAME, 16, 32);
+    registry->emplace<AnimationHandler>(goal, default_animation_handler<>());
+    CollisionComponent& collision = registry->emplace<CollisionComponent>(goal, new CollisionRect({0,21}, 16, 11), 0, true);
+    add_to_layer(collision, PLAYER_COLLISION_LAYER);
+    BoundingBoxComponent goalBB = calculate_bb(collision, 0);
+    registry->emplace<BoundingBoxComponent>(goal, goalBB);
+
+    return goal;
+}
+
+entt::entity LevelRegistry::create_camera_centered_at(const Position& pos){
+    entt::entity camera = registry->create();
+    commonEntities[ENTITY_TYPE_CAMERA] = camera;
+    registry->emplace<CameraView>(camera, camera_centered_at(pos));
+    return camera;
+}
+
+void LevelRegistry::init_level(const Position& playerPos, const Position& goalPos, const Position& cameraPos){
+    create_player(playerPos);
+    create_goal(goalPos);
+    create_camera_centered_at(cameraPos);
+    // TODO later: level info component 
+    entt::entity input = registry->create();
+    commonEntities[ENTITY_TYPE_INPUT_HANDLER] = input;
+    registry->emplace<InputManager>(input); 
 }
 
 CollisionComponent& LevelRegistry::create_static_body(const Position& pos, std::vector<LayerType>&& layers){
