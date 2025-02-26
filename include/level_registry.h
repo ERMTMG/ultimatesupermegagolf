@@ -8,21 +8,28 @@
 #include"collision_handler.h"
 #include"animation_handler.h"
 #include<memory>
+#include<unordered_map>
+
 
 class LevelRegistry{
   public:
-    enum COMMON_ENTITY_TYPES {
+    /*enum COMMON_ENTITY_TYPES {
         ENTITY_TYPE_PLAYER = 0,
         ENTITY_TYPE_GOAL,
         ENTITY_TYPE_CAMERA,
         ENTITY_TYPE_LEVELINFO,
         ENTITY_TYPE_INPUT_HANDLER,
         ENTITY_TYPE_ENUM_SIZE,
-    };
+    };*/
+    static inline const std::string PLAYER_ENTITY_NAME = "__PLAYER";
+    static inline const std::string GOAL_ENTITY_NAME = "__GOAL";
+    static inline const std::string CAMERA_ENTITY_NAME = "__CAMERA";
+    static inline const std::string INPUT_MANAGER_ENTITY_NAME = "__INPUT";
   private:
     std::unique_ptr<entt::registry> registry;
     unsigned int numberOfLevelObjects;
-    entt::entity commonEntities[ENTITY_TYPE_ENUM_SIZE];
+    std::unordered_map<std::string, entt::entity> entityNames;
+    //entt::entity commonEntities[ENTITY_TYPE_ENUM_SIZE];
     void handle_collisions_general();
     void handle_animations(float delta);
     void handle_camera(float delta);
@@ -43,7 +50,11 @@ class LevelRegistry{
     inline void init_level(const Position& playerPos, const Position& goalPos){
         init_level(playerPos, goalPos, playerPos);
     }
-    entt::entity get_entity(COMMON_ENTITY_TYPES type) const;
+    entt::entity new_entity(const std::string& name);
+    entt::entity new_entity(std::string&& name);
+    entt::entity get_entity(const std::string& name) const;
+    entt::entity get_entity(std::string&& name) const;
+    //entt::entity get_entity(COMMON_ENTITY_TYPES type) const;
     entt::registry& get();
     const entt::registry& get() const;
     CollisionComponent& create_static_body(const Position& pos, std::vector<LayerType>&& layers);
