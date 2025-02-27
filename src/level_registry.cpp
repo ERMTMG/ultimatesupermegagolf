@@ -28,12 +28,14 @@ LevelRegistry& LevelRegistry::operator=(LevelRegistry&& rhs){
 entt::entity LevelRegistry::new_entity(const std::string& name){
     entt::entity newEntity = registry->create();
     registry->emplace<EntityName>(newEntity, name);
+    entityNames[name] = newEntity;
     return newEntity;
 }
 
 entt::entity LevelRegistry::new_entity(std::string&& name){
     entt::entity newEntity = registry->create();
     registry->emplace<EntityName>(newEntity, std::move(name));
+    entityNames[name] = newEntity;
     return newEntity;
 }
 
