@@ -7,6 +7,7 @@
 #include"bounding_box.h"
 #include"collision_handler.h"
 #include"animation_handler.h"
+#include"rng_component.h"
 #include<memory>
 
 class LevelRegistry{
@@ -17,6 +18,7 @@ class LevelRegistry{
         ENTITY_TYPE_CAMERA,
         ENTITY_TYPE_LEVELINFO,
         ENTITY_TYPE_INPUT_HANDLER,
+        ENTITY_TYPE_RNG,
         ENTITY_TYPE_ENUM_SIZE,
     };
   private:

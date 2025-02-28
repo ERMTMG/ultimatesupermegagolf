@@ -95,6 +95,10 @@ void LevelRegistry::init_level(const Position& playerPos, const Position& goalPo
     entt::entity input = registry->create();
     commonEntities[ENTITY_TYPE_INPUT_HANDLER] = input;
     registry->emplace<InputManager>(input); 
+
+    entt::entity rng = registry->create();
+    commonEntities[ENTITY_TYPE_RNG] = rng;
+    registry->emplace<RNGComponent>(rng, new_rng_component());
 }
 
 CollisionComponent& LevelRegistry::create_static_body(const Position& pos, std::vector<LayerType>&& layers){
