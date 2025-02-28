@@ -1,5 +1,6 @@
 #include"level_registry.h"
 
+
 using std::make_unique;
 using std::move;
 
@@ -114,13 +115,17 @@ void LevelRegistry::init_level(const Position& playerPos, const Position& goalPo
     // TODO later: level info component 
     entt::entity input = new_entity(INPUT_MANAGER_ENTITY_NAME);
     registry->emplace<InputManager>(input); 
+
+    entt::entity rng = new_entity(RNG_ENTITY_NAME);
+    registry->emplace<RNGComponent>(rng, new_rng_component());
 }
 
 CollisionComponent& LevelRegistry::create_static_body(const Position& pos, std::vector<LayerType>&& layers){
     using std::forward;
     using std::vector;
 
-    entt::entity body = registry->create();
+    std::string staticBodyName = "staticBody" + std::to_string(numberOfLevelObjects); // could implement a counter for just static bodies but it's probably not necessary
+    entt::entity body = new_entity(staticBodyName);
     numberOfLevelObjects++;
     registry->emplace<Position>(body, pos);
     CollisionComponent& collision = registry->emplace<CollisionComponent>(body);

@@ -7,9 +7,9 @@
 #include"bounding_box.h"
 #include"collision_handler.h"
 #include"animation_handler.h"
+#include"rng_component.h"
 #include<memory>
 #include<unordered_map>
-
 
 class LevelRegistry{
   public:
@@ -25,6 +25,8 @@ class LevelRegistry{
     static inline const std::string GOAL_ENTITY_NAME = "__GOAL";
     static inline const std::string CAMERA_ENTITY_NAME = "__CAMERA";
     static inline const std::string INPUT_MANAGER_ENTITY_NAME = "__INPUT";
+    static inline const std::string RNG_ENTITY_NAME = "__RNG";
+
   private:
     std::unique_ptr<entt::registry> registry;
     unsigned int numberOfLevelObjects;
