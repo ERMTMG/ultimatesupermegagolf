@@ -201,6 +201,12 @@ void LevelRegistry::handle_input_and_player(){
     } else if(is_input_pressed_this_frame(input, InputManager::PAUSE)){
         // TODO: also implement pausing. god i have zero idea how to do this
     }
+
+    const auto& store = registry->get<CollisionEntityStoreComponent>(playerID);
+    if(store.collidedEntityID == commonEntities[ENTITY_TYPE_GOAL]){
+        //TODO: player won, level ends. don't know where to go, just panic segfault
+        int x = *(int*)nullptr;
+    }
 }
 
 void LevelRegistry::update(float delta){
