@@ -54,10 +54,10 @@ CollisionInformation get_collision(const CollisionComponent& collision1, const C
 
 void draw_collision_debug(const CollisionComponent& collision, const Position& pos = {0,0});
 
-/*
-Literally just a component that stores a normal vector between registry function calls.
-Might not be needed, but i'm keeping it
+/* 
+Component that just stores the entityID of the corresponding entity.
+If no collisions are detected, the entityID is set to entt::null.
 */
-struct NormalStoreComponent{
-    Vector2 collisionNormal;
+struct CollisionEntityStoreComponent{
+    entt::entity collidedEntityID;
 };

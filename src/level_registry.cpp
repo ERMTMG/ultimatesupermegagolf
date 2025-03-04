@@ -54,7 +54,7 @@ entt::entity LevelRegistry::create_player(const Position& pos){
     registry->emplace<SpriteSheet>(player, BALL_SPRITE_FILENAME, 16, 16);
     CollisionComponent& collision = registry->emplace<CollisionComponent>(player, new CollisionCircle(VEC2_ZERO, PLAYER_RADIUS), 0, false);
     add_to_layer(collision, PLAYER_COLLISION_LAYER);
-    registry->emplace<NormalStoreComponent>(player); // very very not necessary
+    registry->emplace<CollisionEntityStoreComponent>(player);
     registry->emplace<PlayerComponent>(player, VEC2_ZERO, VEC2_ZERO, 0, PlayerComponent::MAX_HEALTH, true);
     BoundingBoxComponent playerBB = calculate_bb(collision, 0);
     registry->emplace<BoundingBoxComponent>(player, playerBB);
@@ -116,6 +116,12 @@ CollisionComponent& LevelRegistry::create_static_body(const Position& pos, std::
 
 void LevelRegistry::handle_collisions_general(){
     // TODO: divide this into substeps to avoid things clipping through each other. maybe has to be in the update function itself
+    
+    // set all collidedEntityIDs to null
+    auto collisionStoreEntities = registry->view<CollisionEntityStoreComponent>();
+    for(auto[entity, store] : collisionStoreEntities.each()){
+        store.collidedEntityID = entt::null;
+    }
 
     auto collisionEntities = registry->view<CollisionComponent, const Position, const BoundingBoxComponent>();
     for(auto[entity_i, collision_i, position_i, bb_i] : collisionEntities.each()){
@@ -126,6 +132,7 @@ void LevelRegistry::handle_collisions_general(){
 
                 CollisionInformation info = get_collision(collision_i, collision_j, position_i, position_j);
                 if(info.collision){
+                    // call collision handlers
                     Velocity* velocity_i = registry->try_get<Velocity>(entity_i);
                     Velocity* velocity_j = registry->try_get<Velocity>(entity_j);
                     CollisionHandler* handler_i = registry->try_get<CollisionHandler>(entity_i);
@@ -143,6 +150,16 @@ void LevelRegistry::handle_collisions_general(){
                         } else {
                             (handler_i->customHandler)(info, entity_j, entity_i, registry.get());
                         }
+                    }
+
+                    // store collided entity IDs
+                    CollisionEntityStoreComponent* store_i = registry->try_get<CollisionEntityStoreComponent>(entity_i);
+                    CollisionEntityStoreComponent* store_j = registry->try_get<CollisionEntityStoreComponent>(entity_j);
+                    if(store_i != nullptr){
+                        store_i->collidedEntityID = entity_j;
+                    }
+                    if(store_j != nullptr){
+                        store_j->collidedEntityID = entity_i;
                     }
                 }
 
@@ -199,7 +216,9 @@ void LevelRegistry::update(float delta){
     }
 
     handle_collisions_general(); // maybe dispatch this to another thread?
+    handle_input_and_player();
     handle_animations(delta);
+    handle_camera(delta);
     
 }
 
