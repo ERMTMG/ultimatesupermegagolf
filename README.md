@@ -1,5 +1,5 @@
 # Ultimate Super Mega Golf
-##### The golf name we don't need, but the one we deserve
+##### The golf game we don't need, but the one we deserve
 
 Ultimate Super Mega Golf is a small minigolf-style game I'm making in C++ using the [raylib](https://www.raylib.com/) and [EnTT](https://github.com/skypjack/entt) libraries, and (hopefully!) nothing else. Of course, I am aware that this is not the _best_ way there is to develop a game, but I'm mostly just doing this to dip my toes into low-level game development and because I like the multi-paradigm mess that is C++.
 
