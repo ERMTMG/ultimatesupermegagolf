@@ -68,6 +68,10 @@ struct SpriteTransform{
     SpriteTransform(const Vector2& offset, const Vector2& scale, int rotation) : offset{offset}, rotation{rotation}, scale{scale} {};
 };
 
+struct EntityName{
+    std::string name;
+};
+
 void move_position(Position& pos, const Velocity& vel, float delta);
 void move_position(Position& pos, Velocity& vel, const Acceleration& acc, float delta);
 void next_frame(SpriteSheet& sprite);

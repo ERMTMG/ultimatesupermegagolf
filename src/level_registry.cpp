@@ -1,5 +1,6 @@
 #include"level_registry.h"
 
+
 using std::make_unique;
 using std::move;
 
@@ -14,27 +15,50 @@ LevelRegistry::~LevelRegistry(){
 
 LevelRegistry::LevelRegistry(LevelRegistry&& other){
     this->registry = move(other.registry);
-    for(int i = 0; i < ENTITY_TYPE_ENUM_SIZE; i++){
-        this->commonEntities[i] = other.commonEntities[i];
-    }
+    this->entityNames = move(other.entityNames);
     this->numberOfLevelObjects = other.numberOfLevelObjects;
 }
 
 LevelRegistry& LevelRegistry::operator=(LevelRegistry&& rhs){
-    for(int i = 0; i < ENTITY_TYPE_ENUM_SIZE; i++){
-        this->commonEntities[i] = rhs.commonEntities[i];
-    }
+    this->entityNames = move(rhs.entityNames);
     this->registry = move(rhs.registry);
     this->numberOfLevelObjects = rhs.numberOfLevelObjects;
 }
 
-entt::entity LevelRegistry::get_entity(COMMON_ENTITY_TYPES type) const{
-    assert(type < ENTITY_TYPE_ENUM_SIZE);
-    return commonEntities[type];
+
+entt::entity LevelRegistry::new_entity(const std::string& name){
+    entt::entity newEntity = registry->create();
+    registry->emplace<EntityName>(newEntity, name);
+    entityNames[name] = newEntity;
+    return newEntity;
 }
 
-entt::registry &LevelRegistry::get()
-{
+entt::entity LevelRegistry::new_entity(std::string&& name){
+    entt::entity newEntity = registry->create();
+    registry->emplace<EntityName>(newEntity, std::move(name));
+    entityNames[name] = newEntity;
+    return newEntity;
+}
+
+entt::entity LevelRegistry::get_entity(const std::string& name) const{
+    auto itr = entityNames.find(name);
+    if(itr != entityNames.end()){
+        return itr->second;
+    } else {
+        return entt::null;
+    }
+}
+
+entt::entity LevelRegistry::get_entity(std::string&& name) const{
+    auto itr = entityNames.find(std::move(name));
+    if(itr != entityNames.end()){
+        return itr->second;
+    } else {
+        return entt::null;
+    }
+}
+
+entt::registry& LevelRegistry::get(){
     return *registry;
 }
 
@@ -46,8 +70,7 @@ entt::entity LevelRegistry::create_player(const Position& pos){
     static const char* const BALL_SPRITE_FILENAME = "resources/sprites/ball.png";
     static const float PLAYER_RADIUS = 8;
 
-    entt::entity player = registry->create();
-    commonEntities[ENTITY_TYPE_PLAYER] = player;
+    entt::entity player = new_entity(PLAYER_ENTITY_NAME);
     numberOfLevelObjects++;
     registry->emplace<Position>(player, pos);
     registry->emplace<Velocity>(player, 0, 0);
@@ -66,8 +89,7 @@ entt::entity LevelRegistry::create_player(const Position& pos){
 entt::entity LevelRegistry::create_goal(const Position& pos){
     static const char* const GOAL_SPRITE_FILENAME = "resources/sprites/flag.png";
 
-    entt::entity goal = registry->create();
-    commonEntities[ENTITY_TYPE_GOAL] = goal;
+    entt::entity goal = new_entity(GOAL_ENTITY_NAME);
     numberOfLevelObjects++;
     registry->emplace<Position>(goal, pos);
     registry->emplace<SpriteSheet>(goal, GOAL_SPRITE_FILENAME, 16, 32);
@@ -81,8 +103,7 @@ entt::entity LevelRegistry::create_goal(const Position& pos){
 }
 
 entt::entity LevelRegistry::create_camera_centered_at(const Position& pos){
-    entt::entity camera = registry->create();
-    commonEntities[ENTITY_TYPE_CAMERA] = camera;
+    entt::entity camera = new_entity(CAMERA_ENTITY_NAME);
     registry->emplace<CameraView>(camera, camera_centered_at(pos));
     return camera;
 }
@@ -92,12 +113,10 @@ void LevelRegistry::init_level(const Position& playerPos, const Position& goalPo
     create_goal(goalPos);
     create_camera_centered_at(cameraPos);
     // TODO later: level info component 
-    entt::entity input = registry->create();
-    commonEntities[ENTITY_TYPE_INPUT_HANDLER] = input;
+    entt::entity input = new_entity(INPUT_MANAGER_ENTITY_NAME);
     registry->emplace<InputManager>(input); 
 
-    entt::entity rng = registry->create();
-    commonEntities[ENTITY_TYPE_RNG] = rng;
+    entt::entity rng = new_entity(RNG_ENTITY_NAME);
     registry->emplace<RNGComponent>(rng, new_rng_component());
 }
 
@@ -105,7 +124,8 @@ CollisionComponent& LevelRegistry::create_static_body(const Position& pos, std::
     using std::forward;
     using std::vector;
 
-    entt::entity body = registry->create();
+    std::string staticBodyName = "staticBody" + std::to_string(numberOfLevelObjects); // could implement a counter for just static bodies but it's probably not necessary
+    entt::entity body = new_entity(staticBodyName);
     numberOfLevelObjects++;
     registry->emplace<Position>(body, pos);
     CollisionComponent& collision = registry->emplace<CollisionComponent>(body);
@@ -182,18 +202,20 @@ void LevelRegistry::handle_camera(float delta){
     // only moves camera to player, for now
     static const float LERP_WEIGHT = 0.25;
 
-    CameraView& camera = registry->get<CameraView>(commonEntities[ENTITY_TYPE_CAMERA]);
-    const Position& playerPos = registry->get<Position>(commonEntities[ENTITY_TYPE_PLAYER]);
+    CameraView& camera = registry->get<CameraView>(get_entity(CAMERA_ENTITY_NAME));
+    const Position& playerPos = registry->get<Position>(get_entity(PLAYER_ENTITY_NAME));
     Vector2 newCameraPos = camera->target + (to_Vector2(playerPos) - camera->target) * LERP_WEIGHT;
     set_camera_center(camera, Position{newCameraPos});
 }
 
 void LevelRegistry::handle_input_and_player(){
-    InputManager& input = registry->get<InputManager>(commonEntities[ENTITY_TYPE_INPUT_HANDLER]);
-    entt::entity playerID = commonEntities[ENTITY_TYPE_PLAYER];
+    InputManager& input = registry->get<InputManager>(get_entity(INPUT_MANAGER_ENTITY_NAME));
+    entt::entity playerID = get_entity(PLAYER_ENTITY_NAME);
     PlayerComponent& player = registry->get<PlayerComponent>(playerID);
     Velocity& vel = registry->get<Velocity>(playerID);
-    const CameraView& camera = registry->get<CameraView>(commonEntities[ENTITY_TYPE_CAMERA]);
+    const CameraView& camera = registry->get<CameraView>(get_entity(CAMERA_ENTITY_NAME));
+
+    update_input(input);
     update_player(player, vel, input, camera);
 
     if(is_input_pressed_this_frame(input, InputManager::RESET)){
@@ -203,7 +225,7 @@ void LevelRegistry::handle_input_and_player(){
     }
 
     const auto& store = registry->get<CollisionEntityStoreComponent>(playerID);
-    if(store.collidedEntityID == commonEntities[ENTITY_TYPE_GOAL]){
+    if(store.collidedEntityID == entityNames.at(GOAL_ENTITY_NAME)){
         //TODO: player won, level ends. don't know where to go, just panic segfault
         int x = *(int*)nullptr;
     }
@@ -232,7 +254,7 @@ void LevelRegistry::draw(bool debugMode) const{
     static const Color BACKGROUND_COLOR = DARKGRAY;
 
     BeginDrawing();
-        const CameraView& camera = registry->get<CameraView>(commonEntities[ENTITY_TYPE_CAMERA]);
+        const CameraView& camera = registry->get<CameraView>(get_entity(CAMERA_ENTITY_NAME));
         BeginMode2D(camera.cam);
             ClearBackground(BACKGROUND_COLOR);
 
