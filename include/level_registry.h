@@ -55,8 +55,10 @@ class LevelRegistry{
     }
     entt::entity new_entity(const std::string& name);
     entt::entity new_entity(std::string&& name);
+    entt::entity new_level_object(const std::string& namePrefix, const Position& pos = {0,0}, bool uniqueName = false);
     entt::entity get_entity(const std::string& name) const;
     entt::entity get_entity(std::string&& name) const;
+    std::vector<entt::entity> search_entities_by_name(const std::string& prefix) const;
     //entt::entity get_entity(COMMON_ENTITY_TYPES type) const;
     entt::registry& get();
     const entt::registry& get() const;

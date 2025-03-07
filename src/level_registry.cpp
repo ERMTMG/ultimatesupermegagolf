@@ -40,6 +40,18 @@ entt::entity LevelRegistry::new_entity(std::string&& name){
     return newEntity;
 }
 
+entt::entity LevelRegistry::new_level_object(const std::string& namePrefix, const Position& pos, bool uniqueName){
+    entt::entity newEntity;
+    if(uniqueName){
+        newEntity = new_entity(namePrefix);
+    } else {
+        newEntity = new_entity(namePrefix + std::to_string(numberOfLevelObjects));
+    }
+    numberOfLevelObjects++;
+    registry->emplace<Position>(newEntity, pos);
+    return newEntity;
+}
+
 entt::entity LevelRegistry::get_entity(const std::string& name) const{
     auto itr = entityNames.find(name);
     if(itr != entityNames.end()){
@@ -58,6 +70,26 @@ entt::entity LevelRegistry::get_entity(std::string&& name) const{
     }
 }
 
+std::vector<entt::entity> LevelRegistry::search_entities_by_name(const std::string& prefix) const{
+    std::vector<entt::entity> output; 
+    output.reserve(registry->view<entt::entity>().size() / 10); // let's say about a tenth of all entities. might change this later
+    for(const auto&[name, entity] : entityNames){
+        auto nameItr = name.begin(); auto pfxItr = prefix.begin();
+        bool matching = true;
+        const auto nameEnd = name.end(); const auto pfxEnd = prefix.end();
+        while(pfxItr != pfxEnd && nameItr != nameEnd && matching){
+            if(*pfxItr != *nameItr){
+                matching = false;
+            }
+            ++nameItr; ++pfxItr;
+        }
+        if(matching){
+            output.push_back(entity);
+        }
+    }
+    return output;
+}
+
 entt::registry& LevelRegistry::get(){
     return *registry;
 }
@@ -70,9 +102,7 @@ entt::entity LevelRegistry::create_player(const Position& pos){
     static const char* const BALL_SPRITE_FILENAME = "resources/sprites/ball.png";
     static const float PLAYER_RADIUS = 8;
 
-    entt::entity player = new_entity(PLAYER_ENTITY_NAME);
-    numberOfLevelObjects++;
-    registry->emplace<Position>(player, pos);
+    entt::entity player = new_level_object(PLAYER_ENTITY_NAME, pos, true);
     registry->emplace<Velocity>(player, 0, 0);
     registry->emplace<SpriteSheet>(player, BALL_SPRITE_FILENAME, 16, 16);
     CollisionComponent& collision = registry->emplace<CollisionComponent>(player, new CollisionCircle(VEC2_ZERO, PLAYER_RADIUS), 0, false);
@@ -89,9 +119,7 @@ entt::entity LevelRegistry::create_player(const Position& pos){
 entt::entity LevelRegistry::create_goal(const Position& pos){
     static const char* const GOAL_SPRITE_FILENAME = "resources/sprites/flag.png";
 
-    entt::entity goal = new_entity(GOAL_ENTITY_NAME);
-    numberOfLevelObjects++;
-    registry->emplace<Position>(goal, pos);
+    entt::entity goal = new_level_object(GOAL_ENTITY_NAME, pos, true);
     registry->emplace<SpriteSheet>(goal, GOAL_SPRITE_FILENAME, 16, 32);
     registry->emplace<AnimationHandler>(goal, default_animation_handler<>());
     CollisionComponent& collision = registry->emplace<CollisionComponent>(goal, new CollisionRect({0,21}, 16, 11), 0, true);
@@ -124,10 +152,7 @@ CollisionComponent& LevelRegistry::create_static_body(const Position& pos, std::
     using std::forward;
     using std::vector;
 
-    std::string staticBodyName = "staticBody" + std::to_string(numberOfLevelObjects); // could implement a counter for just static bodies but it's probably not necessary
-    entt::entity body = new_entity(staticBodyName);
-    numberOfLevelObjects++;
-    registry->emplace<Position>(body, pos);
+    entt::entity body = new_level_object("staticBody", pos);
     CollisionComponent& collision = registry->emplace<CollisionComponent>(body);
     set_layers(collision, forward<vector<LayerType>>(layers));
 
