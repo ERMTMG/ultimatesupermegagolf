@@ -3,7 +3,7 @@ CollisionComponent::CollisionComponent(unsigned short layer, bool isStatic): lay
     shapes.reserve(3);
 }
 
-CollisionComponent::CollisionComponent(const CollisionShape* shape, unsigned short layer, bool isStatic): layerFlags(layer), isStatic(isStatic){
+CollisionComponent::CollisionComponent(CollisionShape* shape, unsigned short layer, bool isStatic): layerFlags(layer), isStatic(isStatic){
     shapes.reserve(3);
     shapes.emplace_back(shape); // constructs a unique_ptr from that shape. no need to move it :3
 }
@@ -70,7 +70,7 @@ CollisionInformation get_collision(const CollisionComponent& collision1, const C
 
 
 
-void draw_collision_debug(const CollisionComponent &collision, const Position &pos = {0, 0})
+void draw_collision_debug(const CollisionComponent &collision, const Position &pos)
 {
     static const Color DEBUG_COLLISION_COLOR = LIME;
     static const float POINT_THICKNESS = 1.5;

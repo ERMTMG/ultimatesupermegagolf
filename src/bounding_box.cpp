@@ -29,21 +29,25 @@ BoundingBoxComponent calculate_bb(const CollisionShape* shape){
         // for sure) so im sticking with a switch statement. the fuck you gonna do about it, cry?
         // maybe piss your pants?
         switch (shape->get_type()){
-          case CollisionShapeType::CIRCLE:
+          case CollisionShapeType::CIRCLE: {
             const CollisionCircle* circle = static_cast<const CollisionCircle*>(shape);
             Vector2 bbOffset = circle->offset - Vector2{circle->radius, circle->radius};
             return BoundingBoxComponent{bbOffset, 2*circle->radius, 2*circle->radius};
-          case CollisionShapeType::RECT:
+          }
+          case CollisionShapeType::RECT: {
             const CollisionRect* rect = static_cast<const CollisionRect*>(shape);
             return BoundingBoxComponent{rect->offset, rect->width, rect->height};
-          case CollisionShapeType::LINE:
+          }
+          case CollisionShapeType::LINE: {
             const CollisionLine* line = static_cast<const CollisionLine*>(shape);
             Vector2 lineEnd = line->offset + line->target;
             Vector2 minEdge = {min(line->offset.x, lineEnd.x), min(line->offset.y, lineEnd.y)};
             Vector2 maxEdge = {max(line->offset.x, lineEnd.x), max(line->offset.y, lineEnd.y)};
             return BoundingBoxComponent{minEdge, (maxEdge - minEdge).x, (maxEdge - minEdge).y};
-          case CollisionShapeType::POINT:
+          }
+          case CollisionShapeType::POINT: {
             return BoundingBoxComponent{shape->offset, 0, 0};
+          }
           default:
             return BB_INVALID;
         }

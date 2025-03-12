@@ -1,5 +1,6 @@
 #pragma once
 #include"raylib.h"
+#include"entt.hpp"
 #include"vector2_utilities.h"
 #include"basic_components.h"
 #include"collision_shapes.h"
@@ -16,7 +17,9 @@ struct CollisionComponent{
         #define COLLISION_COMPONENT_NOT_STATIC false
     
     CollisionComponent(unsigned short layer = 0, bool isStatic = true);
-    CollisionComponent(const CollisionShape* shape, unsigned short layer = 0, bool isStatic = true);
+    CollisionComponent(CollisionShape* shape, unsigned short layer = 0, bool isStatic = true);
+    CollisionComponent(const CollisionComponent&) = delete;
+    CollisionComponent& operator=(const CollisionComponent&) = delete;
     void add_circle(float radius, const Vector2& pos = {0,0});
     void add_rect(float width, float height, const Vector2& pos = {0,0});
     void add_rect_centered(float width, float height);

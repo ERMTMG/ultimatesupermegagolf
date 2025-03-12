@@ -1,6 +1,5 @@
 #include"level_registry.h"
 
-
 using std::make_unique;
 using std::move;
 
@@ -23,6 +22,7 @@ LevelRegistry& LevelRegistry::operator=(LevelRegistry&& rhs){
     this->entityNames = move(rhs.entityNames);
     this->registry = move(rhs.registry);
     this->numberOfLevelObjects = rhs.numberOfLevelObjects;
+    return *this;
 }
 
 

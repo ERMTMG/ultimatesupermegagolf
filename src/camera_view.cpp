@@ -20,7 +20,7 @@ void set_camera_center(CameraView& camera, const Position& pos){
     camera->target = center - halfSize;
 }
 
-void zoom_camera(CameraView& camera, float zoomFactor, bool zoomMode = CAMERA_ZOOM_IN){
+void zoom_camera(CameraView& camera, float zoomFactor, bool zoomMode){
     if(zoomMode == CAMERA_ZOOM_IN){
         camera->zoom *= zoomFactor;
     } else if(zoomMode == CAMERA_ZOOM_OUT){
@@ -28,7 +28,7 @@ void zoom_camera(CameraView& camera, float zoomFactor, bool zoomMode = CAMERA_ZO
     }
 }
 
-BoundingBoxComponent get_camera_bb(const CameraView& camera, bool includeMargin = true){
+BoundingBoxComponent get_camera_bb(const CameraView& camera, bool includeMargin){
     static const Vector2 MARGIN = {10, 10};
 
     Vector2 topLeft = GetScreenToWorld2D(VEC2_ZERO, camera.cam);

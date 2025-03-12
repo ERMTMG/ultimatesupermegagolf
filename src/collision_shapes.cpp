@@ -177,7 +177,7 @@ constexpr inline int key(CollisionShapeType type1, CollisionShapeType type2){
 }
 
 
-CollisionInformation process_collision(const CollisionShape* shape1, const CollisionShape* shape2, const Position& pos1 = {0,0}, const Position& pos2 = {0,0}){
+CollisionInformation process_collision(const CollisionShape* shape1, const CollisionShape* shape2, const Position& pos1, const Position& pos2){
     assert(shape1 != nullptr && shape2 != nullptr);
     CollisionShapeType type1 = shape1->get_type();
     CollisionShapeType type2 = shape2->get_type();

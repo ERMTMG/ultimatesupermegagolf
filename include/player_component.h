@@ -41,7 +41,7 @@ struct PlayerComponent{
     Position mouseAnchorPosition;
     Vector2 potentialVelocity;
     unsigned int totalImpulses = 0;
-    static const HPType MAX_HEALTH = 100;
+    static constexpr HPType MAX_HEALTH = 100;
     HPType health = MAX_HEALTH;
     bool canDrag;
 };

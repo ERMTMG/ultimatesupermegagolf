@@ -26,6 +26,6 @@ int main(){
     while(!WindowShouldClose()){
         float delta = GetFrameTime();
         registry.update(delta);
-        registry.draw(true);
+        registry.draw(/*debug mode = */true);
     }
 }

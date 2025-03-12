@@ -5,6 +5,21 @@
 //#define max(x,y) ((x) < (y) ? (y) : (x))
 //#define sign(x) ((float)copysign(1, (x)))
 //#define clamp(x, min, max) ((x) < (min) ? (min) : ((x) > (max) ? (max) : (x)))
+inline float max(float x, float y){
+    return (x < y) ? y : x;
+}
+
+inline float min(float x, float y){
+    return (x < y) ? x : y;
+}
+
+inline float sign(float x){
+    return copysign(1, x);
+}
+
+inline float clamp(float x, float min, float max){
+    return ((x < min) ? min : ((x > max) ? max : x));
+}
 
 static const Vector2 VEC2_NULL = {NAN, NAN};
 static const Vector2 VEC2_ZERO = {0,0};
@@ -93,20 +108,4 @@ inline Vector2 reflect_across_normal(const Vector2& v, const Vector2& unitNormal
 inline bool approx_equal(float x1, float x2){
     float margin = max(x1, x2) / 100000;
     return fabs(x1 - x2) < 0.;
-}
-
-inline float max(float x, float y){
-    return (x < y) ? y : x;
-}
-
-inline float min(float x, float y){
-    return (x < y) ? x : y;
-}
-
-inline float sign(float x){
-    return copysign(1, x);
-}
-
-inline float clamp(float x, float min, float max){
-    return ((x < min) ? min : ((x > max) ? max : x));
 }
