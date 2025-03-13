@@ -120,7 +120,8 @@ entt::entity LevelRegistry::create_goal(const Position& pos){
     static const char* const GOAL_SPRITE_FILENAME = "resources/sprites/flag.png";
 
     entt::entity goal = new_level_object(GOAL_ENTITY_NAME, pos, true);
-    registry->emplace<SpriteSheet>(goal, GOAL_SPRITE_FILENAME, 16, 32);
+    SpriteSheet& sprite = registry->emplace<SpriteSheet>(goal, GOAL_SPRITE_FILENAME, 16, 32);
+    sprite.set_animation_length(0, sprite.numberFramesPerRow);
     registry->emplace<AnimationHandler>(goal, default_animation_handler<>());
     CollisionComponent& collision = registry->emplace<CollisionComponent>(goal, new CollisionRect({0,21}, 16, 11), 0, true);
     add_to_layer(collision, PLAYER_COLLISION_LAYER);
@@ -256,8 +257,11 @@ void LevelRegistry::handle_input_and_player(){
     }
 }
 
+#include<iostream>
+
 void LevelRegistry::update(float delta){
     //move objects with velocity
+    std::cout << "frame update!\n";
     auto viewPositionAndVelocity = registry->view<Position, Velocity>();
     for(auto[entity, pos, vel] : viewPositionAndVelocity.each()){
         if(registry->all_of<const Acceleration>(entity)){ //const may not be necessary? 
@@ -319,8 +323,8 @@ void LevelRegistry::draw(bool debugMode) const{
                     draw_bb_debug(bb, pos);
                 }
             }
-            EndMode2D();
-
-            // TODO later: implement and draw UI 
+        EndMode2D();
+        DrawFPS(10,10);
+        // TODO later: implement and draw UI 
     EndDrawing();
 }
