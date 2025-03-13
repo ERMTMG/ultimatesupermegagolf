@@ -110,7 +110,7 @@ void draw_collision_debug(const CollisionComponent &collision, const Position &p
           case CollisionShapeType::CIRCLE:{
             const CollisionCircle& circle = *static_cast<const CollisionCircle*>(shapePtr.get());
             Vector2 center = position + circle.offset;
-            DrawCircle(center.x, center.y, circle.radius, DEBUG_COLLISION_COLOR);
+            DrawCircleLines(center.x, center.y, circle.radius, DEBUG_COLLISION_COLOR);
             break;
           }
           default: break;

@@ -1,6 +1,7 @@
 #pragma once
 #include"raylib.h"
 #include<cmath>
+#include<iostream>
 
 //#define max(x,y) ((x) < (y) ? (y) : (x))
 //#define sign(x) ((float)copysign(1, (x)))
@@ -108,4 +109,9 @@ inline Vector2 reflect_across_normal(const Vector2& v, const Vector2& unitNormal
 inline bool approx_equal(float x1, float x2){
     float margin = max(x1, x2) / 100000;
     return fabs(x1 - x2) < 0.;
+}
+
+inline std::ostream& operator<<(std::ostream& out, const Vector2& v){
+    out << '(' << v.x << ',' << v.y << ')';
+    return out;
 }

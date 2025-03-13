@@ -261,7 +261,7 @@ void LevelRegistry::handle_input_and_player(){
 
 void LevelRegistry::update(float delta){
     //move objects with velocity
-    std::cout << "frame update!\n";
+    //std::cout << "frame update!\n";
     auto viewPositionAndVelocity = registry->view<Position, Velocity>();
     for(auto[entity, pos, vel] : viewPositionAndVelocity.each()){
         if(registry->all_of<const Acceleration>(entity)){ //const may not be necessary? 
@@ -275,7 +275,7 @@ void LevelRegistry::update(float delta){
     handle_collisions_general(); // maybe dispatch this to another thread?
     handle_input_and_player();
     handle_animations(delta);
-    handle_camera(delta);
+    //handle_camera(delta);
     
 }
 
