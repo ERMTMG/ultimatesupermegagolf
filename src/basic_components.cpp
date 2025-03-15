@@ -77,6 +77,6 @@ void draw_sprite(const SpriteSheet& sprite, const SpriteTransform& transform, co
     Rectangle frame {frameWidth * sprite.currentFrame, frameHeight * sprite.currentAnimation, frameWidth, frameHeight};
     Rectangle destFrame = {pos.x - frameWidth/2.0f, pos.y - frameHeight/2.0f, frameWidth, frameHeight};
     destFrame = transform_frame_rect(destFrame, transform);
-    DrawTexturePro(sprite.texture, frame, destFrame, to_Vector2(pos), transform.rotation, WHITE);
+    DrawTexturePro(sprite.texture, frame, destFrame, {0,0}/*to_Vector2(pos)*/, transform.rotation, WHITE);
 }
 

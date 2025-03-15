@@ -62,7 +62,8 @@ class LevelRegistry{
     //entt::entity get_entity(COMMON_ENTITY_TYPES type) const;
     entt::registry& get();
     const entt::registry& get() const;
-    CollisionComponent& create_static_body(const Position& pos, std::vector<LayerType>&& layers);
+    std::pair<entt::entity, CollisionComponent&> create_static_body(const Position& pos, std::vector<LayerType>&& layers);
+    void recalculate_bounding_box(entt::entity entity);
     void update(float delta);
     void draw(bool debugMode = false) const;
 };

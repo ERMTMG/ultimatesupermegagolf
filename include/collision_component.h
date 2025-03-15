@@ -43,7 +43,7 @@ inline void remove_from_layer(CollisionComponent& collision, LayerType layer){
 }
 
 inline bool has_common_layers(const CollisionComponent& collision1, const CollisionComponent& collision2){
-    return (collision1.layerFlags & collision2.layerFlags > 0);
+    return ((collision1.layerFlags & collision2.layerFlags) > 0);
 }
 
 /*

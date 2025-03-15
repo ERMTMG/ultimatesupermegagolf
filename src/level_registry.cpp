@@ -149,15 +149,30 @@ void LevelRegistry::init_level(const Position& playerPos, const Position& goalPo
     registry->emplace<RNGComponent>(rng, new_rng_component());
 }
 
-CollisionComponent& LevelRegistry::create_static_body(const Position& pos, std::vector<LayerType>&& layers){
+std::pair<entt::entity, CollisionComponent&> LevelRegistry::create_static_body(const Position& pos, std::vector<LayerType>&& layers){
     using std::forward;
     using std::vector;
 
     entt::entity body = new_level_object("staticBody", pos);
     CollisionComponent& collision = registry->emplace<CollisionComponent>(body);
     set_layers(collision, forward<vector<LayerType>>(layers));
+    registry->emplace<BoundingBoxComponent>(body);
 
-    return collision;
+    return std::pair(body, std::ref(collision));
+}
+
+void LevelRegistry::recalculate_bounding_box(entt::entity entity){
+    BoundingBoxComponent bb;
+    CollisionComponent* collision = registry->try_get<CollisionComponent>(entity);
+    if(collision != nullptr){
+        bb = calculate_bb(*collision);
+    } else {
+        SpriteSheet* sprite = registry->try_get<SpriteSheet>(entity);
+        if(sprite != nullptr){
+            bb = calculate_bb(*sprite);
+        }
+    }
+    registry->emplace_or_replace<BoundingBoxComponent>(entity, bb);
 }
 
 void LevelRegistry::handle_collisions_general(){
@@ -175,9 +190,11 @@ void LevelRegistry::handle_collisions_general(){
             if(entity_i < entity_j // avoid repeated collisions
                 && (!collision_i.isStatic || !collision_j.isStatic) // no need to check if both bodies are static
                 && overlapping_bb(bb_i, bb_j, position_i, position_j)){ // only check if their bounding boxes are colliding
-
+                if(get_entity(PLAYER_ENTITY_NAME) == entity_i || get_entity(PLAYER_ENTITY_NAME) == entity_j){
+                    std::cout << "checking player!\n";
+                }
                 CollisionInformation info = get_collision(collision_i, collision_j, position_i, position_j);
-                if(info.collision){
+                if(info.collision){ // congrats, they're colliding
                     // call collision handlers
                     Velocity* velocity_i = registry->try_get<Velocity>(entity_i);
                     Velocity* velocity_j = registry->try_get<Velocity>(entity_j);
@@ -207,6 +224,7 @@ void LevelRegistry::handle_collisions_general(){
                     if(store_j != nullptr){
                         store_j->collidedEntityID = entity_i;
                     }
+                    std::cout << "collision detected! entities: " << (unsigned int)entity_i << ", " << (unsigned int)entity_j << "\n";
                 }
 
             }

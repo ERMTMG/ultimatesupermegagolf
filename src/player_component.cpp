@@ -29,7 +29,7 @@ bool is_input_released_this_frame(const InputManager& input, InputManager::Input
 }
 
 void update_player(PlayerComponent& player, Velocity& vel, const InputManager& input, const CameraView& camera){
-    static const float MAX_IMPULSE_STRENGTH = 10 * M_2_PI; // don't take out the "*M_2_PI", it offsets the arctan's pi/2 limit
+    static const float MAX_IMPULSE_STRENGTH = 75 * M_2_PI; // don't take out the "*M_2_PI", it offsets the arctan's pi/2 limit
     static const float IMPULSE_STRENGTH_SMOOTHNESS = 5; // controls the graduality of the curve from 0 impulse strength to max impulse strength
     static const float VELOCITY_MARGIN_SQ = 0.01; // if the velocity's length is less than this value's square root then the player can drag again
     if(player.canDrag){
