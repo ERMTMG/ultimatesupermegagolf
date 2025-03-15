@@ -9,11 +9,14 @@ static const int SCREENWIDTH = 800;
 static const int SCREENHEIGHT = 600;
 
 void add_walls(LevelRegistry& registry){
-    auto[_, walls] = registry.create_static_body(Position{0, 0}, {LevelRegistry::PLAYER_COLLISION_LAYER});
-    walls.add_barrier({0,-200}, {0,1}); // north wall
-    walls.add_barrier({0,200}, {0,-1}); // south wall
-    walls.add_barrier({-200,0}, {1,0}); // west wall
-    walls.add_barrier({200,0}, {-1,0}); // east wall
+    auto[wallEntityID, walls] = registry.create_static_body(Position{0, 0}, {LevelRegistry::PLAYER_COLLISION_LAYER});
+    walls.add_barrier({0,-120}, VEC2_DOWN_UNIT); // north wall
+    walls.add_barrier({0,120}, VEC2_UP_UNIT); // south wall
+    walls.add_barrier({-120,0}, VEC2_RIGHT_UNIT); // west wall
+    walls.add_barrier({120,0}, VEC2_LEFT_UNIT); // east wall
+    auto& bb = registry.get().emplace_or_replace<BoundingBoxComponent>(wallEntityID);
+    bb = BoundingBoxComponent{{-150,-150},300,300};
+    //walls.add_barrier(VEC2_ZERO, {-1,-1});
 }
 
 int main(){

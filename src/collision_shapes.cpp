@@ -136,6 +136,21 @@ CollisionInformation colliding(const CollisionCircle& circle, const CollisionRec
     return output;
 }
 
+CollisionInformation colliding(const CollisionCircle& circle, const CollisionBarrier& barrier){
+    static const CollisionInformation noCollision{false, VEC2_ZERO};
+    Vector2 n = barrier.get_unit_normal();
+    const CollisionInformation collision{true, n};
+    if((circle.offset - barrier.offset)*n <= 0){ // circle's center is INSIDE barrier
+        return collision;  
+    } else {
+        float distance = abs(n.x * (circle.offset.x - barrier.offset.x) + n.y * (circle.offset.y - barrier.offset.y)); //distance from circle's center to barrier line
+        if(distance <= circle.radius){
+          return collision;
+        }
+    }
+    return noCollision;
+}
+
 //dont open this (dogshit code)
 /*
 CollisionInformation colliding(const CollisionShape* shape1, const CollisionShape* shape2, 
@@ -247,6 +262,16 @@ CollisionInformation process_collision(const CollisionShape* shape1, const Colli
         const CollisionPoint* point = static_cast<const CollisionPoint*>(shape2);
         const CollisionLine* line = static_cast<const CollisionLine*>(shape1);
         return colliding(*point + pos2, *line + pos1).reverse_normal();
+      }
+      case key(CollisionShapeType::CIRCLE, CollisionShapeType::BARRIER):{
+        const CollisionCircle* circle = static_cast<const CollisionCircle*>(shape1);
+        const CollisionBarrier* barrier = static_cast<const CollisionBarrier*>(shape2);
+        return colliding(*circle + pos1, *barrier + pos2);
+      }
+      case key(CollisionShapeType::BARRIER, CollisionShapeType::CIRCLE):{
+        const CollisionCircle* circle = static_cast<const CollisionCircle*>(shape2);
+        const CollisionBarrier* barrier = static_cast<const CollisionBarrier*>(shape1);
+        return colliding(*circle + pos1, *barrier + pos2).reverse_normal();
       }
       default: throw std::invalid_argument("Interaction between shapes " + to_string(type1) + " and " + to_string(type2) + " not supported");
     }
