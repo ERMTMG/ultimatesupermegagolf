@@ -123,7 +123,7 @@ entt::entity LevelRegistry::create_goal(const Position& pos){
     SpriteSheet& sprite = registry->emplace<SpriteSheet>(goal, GOAL_SPRITE_FILENAME, 16, 32);
     sprite.set_animation_length(0, sprite.numberFramesPerRow);
     registry->emplace<AnimationHandler>(goal, default_animation_handler<>());
-    CollisionComponent& collision = registry->emplace<CollisionComponent>(goal, new CollisionRect({0,21}, 16, 11), 0, true);
+    CollisionComponent& collision = registry->emplace<CollisionComponent>(goal, new CollisionRect({-8,21-16}, 16, 11), 0, true);
     add_to_layer(collision, PLAYER_COLLISION_LAYER);
     BoundingBoxComponent goalBB = calculate_bb(collision, 0);
     registry->emplace<BoundingBoxComponent>(goal, goalBB);
@@ -271,6 +271,7 @@ void LevelRegistry::handle_input_and_player(){
     if(store.collidedEntityID == entityNames.at(GOAL_ENTITY_NAME)){
         //TODO: player won, level ends. don't know where to go, just panic segfault
         int x = *(int*)nullptr;
+        std::cout << x;
     }
 }
 
@@ -314,7 +315,7 @@ void LevelRegistry::draw(bool debugMode) const{
                     draw_sprite(sprite, pos);
                 }
             }*/
-            auto onlySprites = registry->view<const SpriteSheet, const Position>(); 
+            auto onlySprites = registry->view<const SpriteSheet, const Position>(entt::exclude<SpriteTransform>); 
             for(auto[entity, sprite, pos] : onlySprites.each()){
                 const BoundingBoxComponent* bb = registry->try_get<BoundingBoxComponent>(entity);
                 if(bb != nullptr && is_in_view(camera, *bb, pos)){

@@ -41,6 +41,8 @@ void move_position(Position& pos, Velocity& vel, const Acceleration& acc, float 
     pos.y += vel.v_y * delta;
 }
 
+// TODO: This constructor loads the same image multiple times if it's called multiple times with the same filename.
+// I assume that's pretty bad, so keep track of which textures have been loaded and avoid loading duplicates.
 SpriteSheet::SpriteSheet(const char *filename, unsigned int frameWidth, unsigned int frameHeight): 
 texture(LoadTexture(filename)), numberFramesPerRow(texture.width / frameWidth), numberRows(texture.height / frameHeight), 
 numberFramesPerAnimation(numberRows), currentAnimation(0), currentFrame(0) {}
@@ -64,8 +66,8 @@ void prev_frame(SpriteSheet& sprite){
 
 Rectangle transform_frame_rect(const Rectangle& source, const SpriteTransform& transform){
     return Rectangle{
-        .x = source.x + transform.offset.x,
-        .y = source.y + transform.offset.y,
+        .x = source.x + transform.offset.x - (source.width * (transform.scale.x - 1))/2,
+        .y = source.y + transform.offset.y - (source.height * (transform.scale.y - 1))/2,
         .width = source.width * transform.scale.x,
         .height = source.height * transform.scale.y
     };
@@ -77,6 +79,6 @@ void draw_sprite(const SpriteSheet& sprite, const SpriteTransform& transform, co
     Rectangle frame {frameWidth * sprite.currentFrame, frameHeight * sprite.currentAnimation, frameWidth, frameHeight};
     Rectangle destFrame = {pos.x - frameWidth/2.0f, pos.y - frameHeight/2.0f, frameWidth, frameHeight};
     destFrame = transform_frame_rect(destFrame, transform);
-    DrawTexturePro(sprite.texture, frame, destFrame, {0,0}/*to_Vector2(pos)*/, transform.rotation, WHITE);
+    DrawTexturePro(sprite.texture, frame, destFrame, VEC2_ZERO, transform.rotation, WHITE);
 }
 

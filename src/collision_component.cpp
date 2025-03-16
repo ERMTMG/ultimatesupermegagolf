@@ -74,7 +74,7 @@ CollisionInformation get_collision(const CollisionComponent& collision1, const C
 
 void draw_collision_debug(const CollisionComponent &collision, const Position &pos)
 {
-    static const Color DEBUG_COLLISION_COLOR = LIME;
+    static const Color DEBUG_COLLISION_COLOR = Color{0x40, 0xFF, 0x00, 0xFF};
     static const float POINT_THICKNESS = 1.5;
     static const float BARRIER_THICKNESS = 3;
 
@@ -99,8 +99,9 @@ void draw_collision_debug(const CollisionComponent &collision, const Position &p
             Vector2 vectorAlongBarrier = barrier.get_unit_normal();
             vectorAlongBarrier = {vectorAlongBarrier.y, -vectorAlongBarrier.x}; //normal to the normal
             Vector2 start = position + barrier.offset - 1000*vectorAlongBarrier;
-            Vector2 end = position + barrier.offset - 1000*vectorAlongBarrier;
-            DrawLineEx(start, end, BARRIER_THICKNESS, DEBUG_COLLISION_COLOR);
+            Vector2 end = position + barrier.offset + 1000*vectorAlongBarrier;
+            //DrawLineEx(start, end, BARRIER_THICKNESS, DEBUG_COLLISION_COLOR);
+            DrawLine(start.x, start.y, end.x, end.y, DEBUG_COLLISION_COLOR);
             break;
           }
           case CollisionShapeType::RECT:{
