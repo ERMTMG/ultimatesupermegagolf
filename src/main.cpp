@@ -28,9 +28,11 @@ int main(){
     entt::entity cameraEntity = registry.get_entity(registry.CAMERA_ENTITY_NAME);
     CameraView& camera = registry.get().get<CameraView>(cameraEntity);
     add_walls(registry);
-    //auto[thing, thingCollision] = registry.create_static_body(Position{0,0}, {LevelRegistry::PLAYER_COLLISION_LAYER});
-    //thingCollision.add_circle(25);
-    //registry.recalculate_bounding_box(thing);
+    auto[thing, thingCollision] = registry.create_static_body(Position{0,0}, {LevelRegistry::PLAYER_COLLISION_LAYER});
+    thingCollision.add_line({-20,10},{20,10});
+    thingCollision.add_line({20,10},{0,-15});
+    thingCollision.add_line({0,-15},{-20,10});
+    registry.recalculate_bounding_box(thing);
 
     while(!WindowShouldClose()){
         float delta = GetFrameTime();

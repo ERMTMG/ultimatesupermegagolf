@@ -46,7 +46,6 @@ CollisionInformation get_collision(const CollisionComponent& collision1, const C
     CollisionInformation output {false, VEC2_ZERO};
     if(!has_common_layers(collision1, collision2)) {
         return output;
-        std::cout << "exiting collision checking because no common layers\n";
     }
     int shapeCount = 0; // for cumulative calculation of average normal vector
     for(const auto& shapePtr1 : collision1.shapes){
@@ -58,7 +57,6 @@ CollisionInformation get_collision(const CollisionComponent& collision1, const C
             auto[colliding, currentNormal] = process_collision(currentShape, checkingShape, pos1, pos2);
             if(colliding){
                 output.collision = true;
-                std::cout << "collision found!\n";
                 currentShapeAveCount++;
                 currentShapeAverageNormal = currentShapeAverageNormal * (currentShapeAveCount - 1) / currentShapeAveCount + (currentNormal/currentShapeAveCount);
             }

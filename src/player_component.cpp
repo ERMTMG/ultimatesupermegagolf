@@ -29,9 +29,11 @@ bool is_input_released_this_frame(const InputManager& input, InputManager::Input
 }
 
 void update_player(PlayerComponent& player, Velocity& vel, const InputManager& input, const CameraView& camera){
-    static const float MAX_IMPULSE_STRENGTH = 75 * M_2_PI; // don't take out the "*M_2_PI", it offsets the arctan's pi/2 limit
-    static const float IMPULSE_STRENGTH_SMOOTHNESS = 5; // controls the graduality of the curve from 0 impulse strength to max impulse strength
-    static const float VELOCITY_MARGIN_SQ = 0.01; // if the velocity's length is less than this value's square root then the player can drag again
+    static const float MAX_IMPULSE_STRENGTH = 300 * M_2_PI; // don't take out the "*M_2_PI", it offsets the arctan's pi/2 limit
+    static const float IMPULSE_STRENGTH_SMOOTHNESS = 100; // controls the graduality of the curve from 0 impulse strength to max impulse strength
+    static const float VELOCITY_MARGIN_SQ = 2; // if the velocity's length is less than this value's square root then the player can drag again
+    static const float MIN_GROUND_RESISTANCE = 0.99;
+    static const float MAX_GROUND_RESISTANCE = 0.93;
     if(player.canDrag){
         if(is_input_pressed_this_frame(input, InputManager::MOUSE_CLICK)){
             Vector2 positionInWorld = GetScreenToWorld2D(input.mouseScreenPosition, camera.cam);
@@ -39,16 +41,18 @@ void update_player(PlayerComponent& player, Velocity& vel, const InputManager& i
         } else if(is_input_active(input, InputManager::MOUSE_CLICK)){
             Vector2 screenAnchor = GetWorldToScreen2D(to_Vector2(player.mouseAnchorPosition), camera.cam);
             Vector2 difference = input.mouseScreenPosition - screenAnchor;
-            float totalStrength = MAX_IMPULSE_STRENGTH * atan(IMPULSE_STRENGTH_SMOOTHNESS * length(difference));
+            float totalStrength = MAX_IMPULSE_STRENGTH * atan( length(difference)/IMPULSE_STRENGTH_SMOOTHNESS);
             player.potentialVelocity = totalStrength * unit_vector(difference);
         } else if(is_input_released_this_frame(input, InputManager::MOUSE_CLICK)){
             release_player_drag_velocity(player, vel);
         }
 
-        player.canDrag = (length_squared(to_Vector2(vel)) < VELOCITY_MARGIN_SQ);
-
+        
         //TODO later: do something with the health? still gotta program something that takes away health in the first place tho
     }
+    float groundResistance = (length(to_Vector2(vel)) > 10) ? MIN_GROUND_RESISTANCE : MAX_GROUND_RESISTANCE;
+    vel = {groundResistance*vel.v_x, groundResistance*vel.v_y};
+    player.canDrag = (length_squared(to_Vector2(vel)) < VELOCITY_MARGIN_SQ);
 }
 
 void release_player_drag_velocity(PlayerComponent& player, Velocity& vel){
