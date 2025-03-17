@@ -70,7 +70,30 @@ CollisionInformation get_collision(const CollisionComponent& collision1, const C
     return output;    
 }
 
+void mutually_move_objects_out_of_collision(const CollisionComponent& collision1, const CollisionComponent& collision2, Position& pos1, Position& pos2, const CollisionInformation& info){
+    static const float STEP_MULTIPLIER = 1.02;
+    CollisionInformation current{};
+    Vector2 normalVector = info.unitNormal;
+    do {
+        Vector2 newPos1 = to_Vector2(pos1) + normalVector;
+        Vector2 newPos2 = to_Vector2(pos2) - normalVector;
+        pos1 = Position{newPos1}; pos2 = Position{newPos2};
+        normalVector *= STEP_MULTIPLIER;
+        current = get_collision(collision1, collision2, pos1, pos2);
+    } while (current.collision);
+}
 
+void move_object_out_of_collision(const CollisionComponent& movingCollision, const CollisionComponent& staticCollision, Position& movingPosition, const Position& staticPosition, const CollisionInformation& info){
+    static const float STEP_MULTIPLIER = 1.05; // multiplies normal vector each check so that if objects are colliding too deep then it takes less steps
+    CollisionInformation current{};
+    Vector2 normalVector = info.unitNormal;
+    do {
+        Vector2 newPos = to_Vector2(movingPosition) + normalVector;
+        movingPosition = Position(newPos);
+        normalVector *= STEP_MULTIPLIER;
+        current = get_collision(movingCollision, staticCollision, movingPosition, staticPosition);
+    } while(current.collision);
+}
 
 void draw_collision_debug(const CollisionComponent &collision, const Position &pos)
 {

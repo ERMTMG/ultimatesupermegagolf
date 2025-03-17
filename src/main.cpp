@@ -48,7 +48,7 @@ int main(){
     registry.recalculate_bounding_box(thing);
     registry.get().emplace<SpriteSheet>(thing, "resources/sprites/triangle_thing.png", 40, 25);
 
-    for(int i = 0; i < 20; i++) add_random_jolly(registry);
+    for(int i = 0; i < 4; i++) add_random_jolly(registry);
 
     while(!WindowShouldClose()){
         float delta = GetFrameTime();

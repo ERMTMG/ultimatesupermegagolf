@@ -186,17 +186,27 @@ void LevelRegistry::handle_collisions_general(){
         store.collidedEntityID = entt::null;
     }
 
-    auto collisionEntities = registry->view<CollisionComponent, const Position, const BoundingBoxComponent>();
+    auto collisionEntities = registry->view<CollisionComponent, Position, const BoundingBoxComponent>();
     for(auto[entity_i, collision_i, position_i, bb_i] : collisionEntities.each()){
         for(auto[entity_j, collision_j, position_j, bb_j] : collisionEntities.each()){
             if(entity_i < entity_j // avoid repeated collisions
-                && (!collision_i.isStatic || !collision_j.isStatic) // no need to check if both bodies are static
-                && overlapping_bb(bb_i, bb_j, position_i, position_j)){ // only check if their bounding boxes are colliding
+             && (!collision_i.isStatic || !collision_j.isStatic) // no need to check if both bodies are static
+             && overlapping_bb(bb_i, bb_j, position_i, position_j)){ // only check if their bounding boxes are colliding
+
                 CollisionInformation info = get_collision(collision_i, collision_j, position_i, position_j);
                 if(info.collision){ // congrats, they're colliding
-                    // call collision handlers
                     Velocity* velocity_i = registry->try_get<Velocity>(entity_i);
                     Velocity* velocity_j = registry->try_get<Velocity>(entity_j);
+                    // fix collision (move objects out of the way)
+                    if(velocity_i != nullptr && velocity_j != nullptr){ // neither object is static
+                        mutually_move_objects_out_of_collision(collision_i, collision_j, position_i, position_j, info);
+                    } else if(velocity_i != nullptr){ // entity_i isn't static
+                        move_object_out_of_collision(collision_i, collision_j, position_i, position_j, info);
+                    } else { // entity_j isn't static
+                        move_object_out_of_collision(collision_j, collision_i, position_j, position_i, info);
+                    }
+
+                    // call collision handlers
                     CollisionHandler* handler_i = registry->try_get<CollisionHandler>(entity_i);
                     CollisionHandler* handler_j = registry->try_get<CollisionHandler>(entity_j);
                     if(handler_i != nullptr){

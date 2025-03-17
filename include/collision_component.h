@@ -53,7 +53,18 @@ the collisions for each shape and then averaging the normals of each shape for t
 */
 CollisionInformation get_collision(const CollisionComponent& collision1, const CollisionComponent& collision2, const Position& pos1 = {0,0}, const Position& pos2 = {0,0});
 
+/*
+Modifies the moving object's position such that its collider is no longer colliding with staticCollision. Assumes the 
+"static" object doesn't move and that the given CollisionInformation indicates the two objects are colliding
+*/
+void move_object_out_of_collision(const CollisionComponent& movingCollision, const CollisionComponent& staticCollision, Position& movingPosition, const Position& staticPosition, const CollisionInformation& info);
 
+/*
+Similar to last function, except now both objects are not static and move out of each other's collisions. Object with 
+collision1 moves in the same direction as info.unitNormal and object with collision2 moves in the opposite direction as
+info.unitNormal
+*/
+void mutually_move_objects_out_of_collision(const CollisionComponent& collision1, const CollisionComponent& collision2, Position& pos1, Position& pos2, const CollisionInformation& info);
 
 void draw_collision_debug(const CollisionComponent& collision, const Position& pos = {0,0});
 
