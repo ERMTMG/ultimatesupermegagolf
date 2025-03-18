@@ -106,6 +106,14 @@ inline Vector2 reflect_across_normal(const Vector2& v, const Vector2& unitNormal
     return v - 2 * (unitNormal * v) * unitNormal;
 }
 
+inline Vector2 rotate(const Vector2& v, float angle){
+    return {v.x * cos(angle) - v.y * sin(angle), v.x * sin(angle) + v.y * cos(angle)};
+}
+
+inline Vector2 rotate_degrees(const Vector2& v, int degrees){
+    return rotate(v, degrees * M_PI / 180.0);
+}
+
 inline bool approx_equal(float x1, float x2){
     float margin = max(x1, x2) / 100000;
     return fabs(x1 - x2) < 0.;

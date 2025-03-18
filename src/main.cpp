@@ -31,6 +31,19 @@ void add_random_jolly(LevelRegistry& registry){
     registry.get().emplace_or_replace<BoundingBoxComponent>(entity, calculate_bb(collision));
 }
 
+void add_thing(LevelRegistry& registry, const Position& pos, int rotationDegrees){
+    static const Vector2 POINT1 = {-20,10};
+    static const Vector2 POINT2 = {20,10};
+    static const Vector2 POINT3 = {0,-15};
+    auto[thing, thingCollision] = registry.create_static_body(pos, {LevelRegistry::PLAYER_COLLISION_LAYER});
+    thingCollision.add_line(rotate_degrees(POINT1, rotationDegrees), rotate_degrees(POINT2, rotationDegrees));
+    thingCollision.add_line(rotate_degrees(POINT2, rotationDegrees), rotate_degrees(POINT3, rotationDegrees));
+    thingCollision.add_line(rotate_degrees(POINT3, rotationDegrees), rotate_degrees(POINT1, rotationDegrees));
+    registry.get().emplace<SpriteSheet>(thing, "resources/sprites/triangle_thing.png", 40, 25);
+    registry.get().emplace<SpriteTransform>(thing, VEC2_ZERO, 1, rotationDegrees);
+    registry.recalculate_bounding_box(thing);
+}
+
 int main(){
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Ultimate Super Mega Golf");
     SetTargetFPS(60);
@@ -41,19 +54,16 @@ int main(){
     CameraView& camera = registry.get().get<CameraView>(cameraEntity);
     camera->zoom = 1.5;
     add_walls(registry);
-    auto[thing, thingCollision] = registry.create_static_body(Position{0,0}, {LevelRegistry::PLAYER_COLLISION_LAYER});
-    thingCollision.add_line({-20,10},{20,10});
-    thingCollision.add_line({20,10},{0,-15});
-    thingCollision.add_line({0,-15},{-20,10});
-    registry.recalculate_bounding_box(thing);
-    registry.get().emplace<SpriteSheet>(thing, "resources/sprites/triangle_thing.png", 40, 25);
-
+    add_thing(registry, {0,-50}, 0);
+    add_thing(registry, {0,50}, 180);
+    add_thing(registry, {50,0}, 90);
+    add_thing(registry, {-50,0}, 270);
     for(int i = 0; i < 4; i++) add_random_jolly(registry);
 
     while(!WindowShouldClose()){
         float delta = GetFrameTime();
         registry.update(delta);
-        registry.draw(/*debug mode = */false);
+        registry.draw(/*debug mode = */true);
         if(IsKeyDown(KEY_KP_ADD)){
             zoom_camera(camera, 1.01, CAMERA_ZOOM_IN);
         } else if(IsKeyDown(KEY_KP_SUBTRACT)){

@@ -100,8 +100,8 @@ CollisionInformation colliding(const CollisionCircle& circle, const CollisionLin
     // thank you jeffrey thompson for the algorithm and math
 
     CollisionInformation output;
-    auto[firstEndColliding, normalFromFirstEnd] = colliding(CollisionPoint{line.offset}, circle);
-    auto[secondEndColliding, normalFromSecondEnd] = colliding(CollisionPoint{line.offset + line.target}, circle);
+    auto[firstEndColliding, normalFromFirstEnd] = colliding(CollisionPoint{line.offset}, circle).reverse_normal();
+    auto[secondEndColliding, normalFromSecondEnd] = colliding(CollisionPoint{line.offset + line.target}, circle).reverse_normal();
     if(firstEndColliding || secondEndColliding){
         output.collision = true;
         output.unitNormal = firstEndColliding ? normalFromFirstEnd : normalFromSecondEnd; // if both ends are colliding, then woops
