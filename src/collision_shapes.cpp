@@ -3,7 +3,7 @@
 
 #include"collision_shapes.h"
 #include<type_traits>
-#include"vector2_utilities.h"
+#include"utility.h"
 #include<cassert>
 
 template<class ShapeType> ShapeType operator+(const ShapeType& shape, const Position& pos){

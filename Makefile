@@ -5,8 +5,7 @@ LIB_DIR="./lib"
 CPP_FILES := $(wildcard src/*.cpp)
 MAIN := src/main.cpp
 COLLISION_TEST := src/collision_test.cpp
-SOURCE_FILES := $(filter-out $(COLLISION_TEST) $(MAIN), $(CPP_FILES)) src/DS/*.cpp
-
+SOURCE_FILES := $(filter-out $(COLLISION_TEST) $(MAIN), $(CPP_FILES)) 
 all: bin/main1
 
 

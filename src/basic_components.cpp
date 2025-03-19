@@ -1,6 +1,6 @@
 #include"basic_components.h"
 #include<cmath>
-#include"vector2_utilities.h"
+#include"utility.h"
 
 Position::Position(float coord1, float coord2, CoordinateType type){
     if(type == COORDINATES_CARTESIAN){
@@ -73,6 +73,7 @@ Rectangle transform_frame_rect(const Rectangle& source, const SpriteTransform& t
     };
 }
 
+// TODO: this rotates the sprite around the top left point. Make it so that it rotatesaround its center
 void draw_sprite(const SpriteSheet& sprite, const SpriteTransform& transform, const Position& pos){
     int frameWidth = sprite.texture.width / sprite.numberFramesPerRow;
     int frameHeight = sprite.texture.height / sprite.numberRows;

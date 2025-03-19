@@ -5,7 +5,7 @@
 #ifndef ULTIMATESUPERMEGAGOLF_3DGEOMETRY_H
 #define ULTIMATESUPERMEGAGOLF_3DGEOMETRY_H
 #include "raylib.h"
-#include "vector3_utilities.h" //defines operators on Raylib's Vector3 class
+#include "utility.h" //defines operators on Raylib's Vector3 class
 #include <unordered_map>
 #include <vector>
 #include <memory>

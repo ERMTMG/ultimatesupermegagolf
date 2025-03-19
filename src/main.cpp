@@ -1,6 +1,6 @@
 #include"raylib.h"
 #include"entt.hpp"
-#include"vector2_utilities.h"
+#include"utility.h"
 #include"basic_components.h"
 #include"level_registry.h"
 #include<iostream>
@@ -55,9 +55,9 @@ int main(){
     camera->zoom = 1.5;
     add_walls(registry);
     add_thing(registry, {0,-50}, 0);
-    add_thing(registry, {0,50}, 180);
-    add_thing(registry, {50,0}, 90);
-    add_thing(registry, {-50,0}, 270);
+    //add_thing(registry, {0,50}, 180);
+    //add_thing(registry, {50,0}, 90);
+    //add_thing(registry, {-50,0}, 270);
     for(int i = 0; i < 4; i++) add_random_jolly(registry);
 
     while(!WindowShouldClose()){
