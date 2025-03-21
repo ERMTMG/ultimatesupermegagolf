@@ -105,6 +105,7 @@ entt::entity LevelRegistry::create_player(const Position& pos){
     entt::entity player = new_level_object(PLAYER_ENTITY_NAME, pos, true);
     registry->emplace<Velocity>(player, 0, 0);
     registry->emplace<SpriteSheet>(player, BALL_SPRITE_FILENAME, 16, 16);
+    registry->emplace<SpriteTransform>(player, VEC2_ZERO, 1, 0);
     CollisionComponent& collision = registry->emplace<CollisionComponent>(player, new CollisionCircle(VEC2_ZERO, PLAYER_RADIUS), 0, false);
     add_to_layer(collision, PLAYER_COLLISION_LAYER);
     registry->emplace<CollisionEntityStoreComponent>(player);

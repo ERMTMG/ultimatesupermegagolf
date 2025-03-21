@@ -41,7 +41,7 @@ void add_thing(LevelRegistry& registry, const Position& pos, int rotationDegrees
     thingCollision.add_line(rotate_degrees(POINT3, rotationDegrees), rotate_degrees(POINT1, rotationDegrees));
     registry.get().emplace<SpriteSheet>(thing, "resources/sprites/triangle_thing.png", 40, 25);
     registry.get().emplace<SpriteTransform>(thing, VEC2_ZERO, 1, rotationDegrees);
-    registry.recalculate_bounding_box(thing);
+    registry.get().emplace_or_replace<BoundingBoxComponent>(thing, BoundingBoxComponent{.offset = {-100,-100}, .width = 200, .height = 200});
 }
 
 int main(){
@@ -54,11 +54,11 @@ int main(){
     CameraView& camera = registry.get().get<CameraView>(cameraEntity);
     camera->zoom = 1.5;
     add_walls(registry);
-    add_thing(registry, {0,-50}, 0);
-    //add_thing(registry, {0,50}, 180);
-    //add_thing(registry, {50,0}, 90);
-    //add_thing(registry, {-50,0}, 270);
-    for(int i = 0; i < 4; i++) add_random_jolly(registry);
+    add_thing(registry, {0,-25}, 0);
+    add_thing(registry, {0,25}, 180);
+    add_thing(registry, {25,0}, 90);
+    add_thing(registry, {-25,0}, 270);
+    //for(int i = 0; i < 4; i++) add_random_jolly(registry);
 
     while(!WindowShouldClose()){
         float delta = GetFrameTime();
