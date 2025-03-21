@@ -1,5 +1,5 @@
 #include<raylib.h>
-#include"vector2_utilities.h"
+#include"utility.h"
 #include"basic_components.h"
 #include"collision_component.h"
 
@@ -28,9 +28,10 @@ int main(){
 
     CollisionComponent collider1(new CollisionCircle(VEC2_ZERO, 32));
     CollisionComponent collider2;
-    collider2.add_line({-2*TRIANGLE_SIZE, TRIANGLE_SIZE}, {2*TRIANGLE_SIZE, TRIANGLE_SIZE});
+    /*collider2.add_line({-2*TRIANGLE_SIZE, TRIANGLE_SIZE}, {2*TRIANGLE_SIZE, TRIANGLE_SIZE});
     collider2.add_line({2*TRIANGLE_SIZE, TRIANGLE_SIZE},  {0, -2*TRIANGLE_SIZE});
-    collider2.add_line({0, -2*TRIANGLE_SIZE}, {-2*TRIANGLE_SIZE, TRIANGLE_SIZE});
+    collider2.add_line({0, -2*TRIANGLE_SIZE}, {-2*TRIANGLE_SIZE, TRIANGLE_SIZE});*/
+    collider2.add_rect_centered(100, 100);
     add_to_layer(collider1, LAYER); add_to_layer(collider2, LAYER);
 
     while(!WindowShouldClose()){

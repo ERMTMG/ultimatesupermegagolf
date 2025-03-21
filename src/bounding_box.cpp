@@ -18,6 +18,8 @@ void draw_bb_debug(const BoundingBoxComponent& bb, const Position& pos){
     DrawRectangleLines(bbTruePos.x, bbTruePos.y, bb.width, bb.height, DEBUG_BOUNDING_BOX_COLOR);
 }
 
+//TODO: something in these calculate_bb functions is awry. fix whatever it is, maybe do another separate program
+
 BoundingBoxComponent calculate_bb(const CollisionShape* shape){
     if(shape == nullptr){
         return BB_INVALID;

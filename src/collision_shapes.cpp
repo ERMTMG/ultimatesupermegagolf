@@ -125,13 +125,17 @@ CollisionInformation colliding(const CollisionCircle& circle, const CollisionRec
     // this one is from some newcastle university document i think
 
     CollisionInformation output;
-    Vector2 rectCenter = rect.offset + Vector2{rect.width / 2, rect.height / 2};
-    Vector2 closestPoint = circle.offset - rectCenter;
+    Vector2 closestPoint = circle.offset; //- rectCenter;
     closestPoint.x = clamp(closestPoint.x, rect.offset.x, rect.offset.x + rect.width);
     closestPoint.y = clamp(closestPoint.y, rect.offset.y, rect.offset.y + rect.height);
     output.collision = (length_squared(closestPoint - circle.offset) <= circle.radius*circle.radius);
     if(output.collision){
-        output.unitNormal = unit_vector(circle.offset - closestPoint);
+        if(circle.offset == closestPoint){
+            Vector2 rectCenter = rect.offset + Vector2{rect.width / 2, rect.height / 2};
+            output.unitNormal = unit_vector(circle.offset - rectCenter);
+        } else {
+            output.unitNormal = unit_vector(circle.offset - closestPoint);
+        }
     }
     return output;
 }
