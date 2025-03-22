@@ -10,10 +10,10 @@ static const int SCREENHEIGHT = 600;
 
 void add_walls(LevelRegistry& registry){
     auto[wallEntityID, walls] = registry.create_static_body(Position{0, 0}, {LevelRegistry::PLAYER_COLLISION_LAYER});
-    walls.add_barrier({0,-120}, VEC2_DOWN_UNIT); // north wall
-    walls.add_barrier({0,120}, VEC2_UP_UNIT); // south wall
-    walls.add_barrier({-120,0}, VEC2_RIGHT_UNIT); // west wall
-    walls.add_barrier({120,0}, VEC2_LEFT_UNIT); // east wall
+    walls.add_barrier({0,-128}, VEC2_DOWN_UNIT); // north wall
+    walls.add_barrier({0,128}, VEC2_UP_UNIT); // south wall
+    walls.add_barrier({-128,0}, VEC2_RIGHT_UNIT); // west wall
+    walls.add_barrier({128,0}, VEC2_LEFT_UNIT); // east wall
     auto& bb = registry.get().emplace_or_replace<BoundingBoxComponent>(wallEntityID);
     bb = BoundingBoxComponent{{-150,-150},300,300};
     //walls.add_barrier(VEC2_ZERO, {-1,-1});
@@ -29,6 +29,13 @@ void add_random_jolly(LevelRegistry& registry){
     registry.get().emplace<SpriteSheet>(entity, "resources/sprites/jolly_little_guy.png", 32, 32);
     registry.get().emplace<SpriteTransform>(entity, VEC2_ZERO, radius/16.0, 0);
     registry.get().emplace_or_replace<BoundingBoxComponent>(entity, calculate_bb(collision));
+}
+
+void add_square(LevelRegistry& registry, const Position& pos){
+    auto[square, collision] = registry.create_static_body(pos, {LevelRegistry::PLAYER_COLLISION_LAYER});
+    registry.get().emplace<SpriteSheet>(square, "resources/sprites/usmg_block.png", 32, 32);
+    collision.add_rect_centered(32, 32);
+    registry.recalculate_bounding_box(square);
 }
 
 void add_thing(LevelRegistry& registry, const Position& pos, int rotationDegrees){
@@ -54,16 +61,22 @@ int main(){
     CameraView& camera = registry.get().get<CameraView>(cameraEntity);
     camera->zoom = 1.5;
     add_walls(registry);
-    add_thing(registry, {0,-25}, 0);
-    add_thing(registry, {0,25}, 180);
-    add_thing(registry, {25,0}, 90);
-    add_thing(registry, {-25,0}, 270);
+    for(int i = -128; i < 128; i += 32){
+        for(int j = -128; j < 128; j += 32){
+            if((j == 64 || j == -64) && i <= 64){
+                add_square(registry, {i+16,j+16});
+            }
+            if(j == 0 && i >= -64){
+                add_square(registry, {i+16,j+16});
+            }
+        }
+    }
     //for(int i = 0; i < 4; i++) add_random_jolly(registry);
 
     while(!WindowShouldClose()){
         float delta = GetFrameTime();
         registry.update(delta);
-        registry.draw(/*debug mode = */false);
+        registry.draw(/*debug mode = */true);
         if(IsKeyDown(KEY_KP_ADD)){
             zoom_camera(camera, 1.01, CAMERA_ZOOM_IN);
         } else if(IsKeyDown(KEY_KP_SUBTRACT)){

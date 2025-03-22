@@ -177,8 +177,6 @@ void LevelRegistry::recalculate_bounding_box(entt::entity entity){
 }
 
 void LevelRegistry::handle_collisions_general(){
-
-    // TODO: fix bug where stuff gets stuck in collision. might have to do with there not being enough substeps? or maybe just move the things until they're not colliding? idk man
     // TODO: divide this into substeps to avoid things clipping through each other. maybe has to be in the update function itself
     
     // set all collidedEntityIDs to null
@@ -271,7 +269,6 @@ void LevelRegistry::handle_input_and_player(){
 
     update_input(input);
     update_player(player, vel, input, camera);
-    std::cout << "player velocity is (" << vel.v_x << "," << vel.v_y << "). Value of canDrag is: " << player.canDrag << "\n";
     if(is_input_pressed_this_frame(input, InputManager::RESET)){
         // TODO: implement level resetting
     } else if(is_input_pressed_this_frame(input, InputManager::PAUSE)){
