@@ -1,6 +1,7 @@
 #pragma once
 #include"raylib.h"
 #include"utility.h"
+#include"sprite_loader.h"
 #include<vector>
 
 enum CoordinateType {

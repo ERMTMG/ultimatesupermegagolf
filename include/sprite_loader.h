@@ -1,6 +1,7 @@
 #pragma once
 #include"raylib.h"
 #include<memory>
+#include<string>
 #include<unordered_map>
 
 namespace SpriteLoader{
@@ -11,7 +12,7 @@ namespace SpriteLoader{
         TextureInfo(const char* filepath);
         ~TextureInfo();
     };
-    std::unordered_map<std::string, TextureInfo> _spriteFileMap;
+    inline std::unordered_map<std::string, TextureInfo> _spriteFileMap;
 
     /* 
     Gets a newly loaded texture independently of if it's already loaded that filename.

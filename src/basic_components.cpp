@@ -44,11 +44,14 @@ void move_position(Position& pos, Velocity& vel, const Acceleration& acc, float 
 // TODO: This constructor loads the same image multiple times if it's called multiple times with the same filename.
 // I assume that's pretty bad, so keep track of which textures have been loaded and avoid loading duplicates.
 SpriteSheet::SpriteSheet(const char *filename, unsigned int frameWidth, unsigned int frameHeight): 
-texture(LoadTexture(filename)), numberFramesPerRow(texture.width / frameWidth), numberRows(texture.height / frameHeight), 
-numberFramesPerAnimation(numberRows), currentAnimation(0), currentFrame(0) {}
+texture(SpriteLoader::load_or_get_texture(filename)), 
+numberFramesPerRow(texture.width / frameWidth), 
+numberRows(texture.height / frameHeight), 
+numberFramesPerAnimation(numberRows), 
+currentAnimation(0), currentFrame(0) {}
 
 SpriteSheet::~SpriteSheet(){
-    UnloadTexture(texture);
+    SpriteLoader::return_texture(texture);
 }
 
 void SpriteSheet::set_animation_length(unsigned int animationRow, unsigned int length){
