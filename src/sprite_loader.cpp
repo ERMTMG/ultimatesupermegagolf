@@ -3,10 +3,12 @@
 #include<algorithm>
 
 // this assumes that constructing a texture means someone is gonna use it right now
-SpriteLoader::TextureInfo::TextureInfo(const char* filepath) : texture(LoadTexture(filepath)), refCount(1) {}
+SpriteLoader::TextureInfo::TextureInfo(const char* filepath) : texture(LoadTexture(filepath)), refCount(1), unloadOnDestruct(false) {}
 SpriteLoader::TextureInfo::~TextureInfo(){
-    //if(refCount > 0) throw std::runtime_error("Unloading a texture with ref count greater than zero");
-    UnloadTexture(texture);
+    if(unloadOnDestruct){
+        if(refCount > 0) throw std::runtime_error("Unloading a texture with ref count greater than zero");
+        UnloadTexture(texture);
+    }
 }
 
 Texture SpriteLoader::load_new_texture_always(const char* filepath){
@@ -16,6 +18,7 @@ Texture SpriteLoader::load_new_texture_always(const char* filepath){
         uniqueFileName += '_';
     }
     _spriteFileMap.emplace(uniqueFileName, std::move(texture));
+    _spriteFileMap[uniqueFileName].unloadOnDestruct = true;
     return texture.texture;
 }
 
@@ -27,6 +30,7 @@ Texture SpriteLoader::load_or_get_texture(const char* filepath){
     } else {
         TextureInfo textureInfo{filepath};
         _spriteFileMap.emplace(filepath, std::move(textureInfo));
+        _spriteFileMap[filepath].unloadOnDestruct = true;
         return textureInfo.texture;
     }
 }

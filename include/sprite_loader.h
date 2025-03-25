@@ -8,9 +8,14 @@ namespace SpriteLoader{
     struct TextureInfo{
         size_t refCount;
         Texture texture;
-
+        TextureInfo() = default;
         TextureInfo(const char* filepath);
+        TextureInfo(TextureInfo&&) = default;
         ~TextureInfo();
+      private:
+        bool unloadOnDestruct = false;
+        friend Texture load_new_texture_always(const char*); 
+        friend Texture load_or_get_texture(const char*);
     };
     inline std::unordered_map<std::string, TextureInfo> _spriteFileMap;
 

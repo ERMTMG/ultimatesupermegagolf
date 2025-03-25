@@ -56,7 +56,7 @@ int main(){
     SetTargetFPS(60);
 
     LevelRegistry registry;
-    registry.init_level(Position{-100, -100}, Position{100, 75}, Position{0,0});
+    registry.init_level(Position{-100, -100}, Position{110, 100}, Position{0,0});
     entt::entity cameraEntity = registry.get_entity(registry.CAMERA_ENTITY_NAME);
     CameraView& camera = registry.get().get<CameraView>(cameraEntity);
     camera->zoom = 1.5;
@@ -71,12 +71,15 @@ int main(){
             }
         }
     }
-    //for(int i = 0; i < 4; i++) add_random_jolly(registry);
+    for(int i = -128; i <= 128; i+=40){
+        add_thing(registry, {i+20,-128+12}, 180);
+        add_thing(registry, {i+20,+128-12}, 0);
+    }
 
     while(!WindowShouldClose()){
         float delta = GetFrameTime();
         registry.update(delta);
-        registry.draw(/*debug mode = */true);
+        registry.draw(/*debug mode = */false);
         if(IsKeyDown(KEY_KP_ADD)){
             zoom_camera(camera, 1.01, CAMERA_ZOOM_IN);
         } else if(IsKeyDown(KEY_KP_SUBTRACT)){
