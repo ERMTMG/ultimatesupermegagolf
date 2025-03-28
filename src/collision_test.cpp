@@ -3,16 +3,6 @@
 #include"basic_components.h"
 #include"collision_component.h"
 
-inline void draw_arrow(const Vector2& start, const Vector2& end, Color color, int arrowTipLength = 2){
-    Vector2 vec = end - start;
-    Vector2 arrowTipUnit = unit_vector(Vector2{vec.y, -vec.x});
-    DrawLine(start.x, start.y, end.x, end.y, color);
-    Vector2 arrowTip = end + arrowTipLength * (arrowTipUnit - unit_vector(vec));
-    DrawLine(end.x, end.y, arrowTip.x, arrowTip.y, color);
-    arrowTip = end + arrowTipLength * (-arrowTipUnit - unit_vector(vec));
-    DrawLine(end.x, end.y, arrowTip.x, arrowTip.y, color);
-}
-
 const int SCREENWIDTH = 500;
 const int SCREENHEIGHT = 500;
 const int TRIANGLE_SIZE = 75;

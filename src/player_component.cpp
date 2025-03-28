@@ -28,12 +28,13 @@ bool is_input_released_this_frame(const InputManager& input, InputManager::Input
     return (!input.keys[check] && input.keysLastFrame[check]);
 }
 
+static const float MAX_IMPULSE_STRENGTH = 300 * M_2_PI; // don't take out the "*M_2_PI", it offsets the arctan's pi/2 limit
+static const float IMPULSE_STRENGTH_SMOOTHNESS = 100; // controls the graduality of the curve from 0 impulse strength to max impulse strength
+static const float VELOCITY_MARGIN_SQ = 2; // if the velocity's length is less than this value's square root then the player can drag again
+static const float MIN_GROUND_RESISTANCE = 0.99;
+static const float MAX_GROUND_RESISTANCE = 0.93;
+
 void update_player(PlayerComponent& player, Velocity& vel, const InputManager& input, const CameraView& camera){
-    static const float MAX_IMPULSE_STRENGTH = 300 * M_2_PI; // don't take out the "*M_2_PI", it offsets the arctan's pi/2 limit
-    static const float IMPULSE_STRENGTH_SMOOTHNESS = 100; // controls the graduality of the curve from 0 impulse strength to max impulse strength
-    static const float VELOCITY_MARGIN_SQ = 2; // if the velocity's length is less than this value's square root then the player can drag again
-    static const float MIN_GROUND_RESISTANCE = 0.99;
-    static const float MAX_GROUND_RESISTANCE = 0.93;
     if(player.canDrag){
         if(is_input_pressed_this_frame(input, InputManager::MOUSE_CLICK)){
             Vector2 positionInWorld = GetScreenToWorld2D(input.mouseScreenPosition, camera.cam);
@@ -42,7 +43,7 @@ void update_player(PlayerComponent& player, Velocity& vel, const InputManager& i
             Vector2 screenAnchor = GetWorldToScreen2D(to_Vector2(player.mouseAnchorPosition), camera.cam);
             Vector2 difference = input.mouseScreenPosition - screenAnchor;
             float totalStrength = MAX_IMPULSE_STRENGTH * atan( length(difference)/IMPULSE_STRENGTH_SMOOTHNESS);
-            player.potentialVelocity = totalStrength * unit_vector(difference);
+            player.potentialVelocity = -totalStrength * unit_vector(difference);
         } else if(is_input_released_this_frame(input, InputManager::MOUSE_CLICK)){
             release_player_drag_velocity(player, vel);
         }
@@ -61,4 +62,15 @@ void release_player_drag_velocity(PlayerComponent& player, Velocity& vel){
     player.mouseAnchorPosition = {0,0};
     player.canDrag = false;
     player.totalImpulses++;
+}
+
+void draw_player_drag_velocity(const PlayerComponent &player, const Position& pos){
+    static const float LOW_HUE = 200;
+    static const int ARROW_THICKNESS = 3;
+    static const int ARROW_TIP_SIZE = 5;
+
+    Vector2 potentialVelocity = player.potentialVelocity;
+    float hue = LOW_HUE*(1 - (length(potentialVelocity)/MAX_IMPULSE_STRENGTH*M_PI_2));
+    Color color = ColorFromHSV(hue, 1, 1);
+    draw_arrow(to_Vector2(pos), to_Vector2(pos)+potentialVelocity, color, ARROW_TIP_SIZE, ARROW_THICKNESS);
 }

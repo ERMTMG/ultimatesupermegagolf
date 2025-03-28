@@ -48,4 +48,4 @@ struct PlayerComponent{
 
 void update_player(PlayerComponent& player, Velocity& vel, const InputManager& input, const CameraView& camera);
 void release_player_drag_velocity(PlayerComponent& player, Velocity& vel);
-
+void draw_player_drag_velocity(const PlayerComponent& player, const Position& pos);

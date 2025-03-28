@@ -349,6 +349,10 @@ void LevelRegistry::draw(bool debugMode) const{
                     draw_bb_debug(bb, pos);
                 }
             }
+            entt::entity playerEntity = get_entity(PLAYER_ENTITY_NAME);
+            const PlayerComponent& player = registry->get<PlayerComponent>(playerEntity);
+            const Position& pos = registry->get<Position>(playerEntity);
+            draw_player_drag_velocity(player, pos);
         EndMode2D();
         DrawFPS(10,10);
         // TODO later: implement and draw UI 
