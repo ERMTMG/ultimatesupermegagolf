@@ -57,20 +57,29 @@ void update_player(PlayerComponent& player, Velocity& vel, const InputManager& i
 }
 
 void release_player_drag_velocity(PlayerComponent& player, Velocity& vel){
-    vel = Velocity(player.potentialVelocity);
-    player.potentialVelocity = VEC2_ZERO;
-    player.mouseAnchorPosition = {0,0};
-    player.canDrag = false;
-    player.totalImpulses++;
+    std::cout << "player velocity released!: " << player.potentialVelocity << '\n';
+    if(!is_vector2_nan(player.potentialVelocity)){
+        vel = Velocity(player.potentialVelocity);
+        player.potentialVelocity = VEC2_ZERO;
+        player.mouseAnchorPosition = {0,0};
+        player.canDrag = false;
+        player.totalImpulses++;
+    }
 }
 
 void draw_player_drag_velocity(const PlayerComponent &player, const Position& pos){
     static const float LOW_HUE = 200;
     static const int ARROW_THICKNESS = 3;
     static const int ARROW_TIP_SIZE = 5;
+    static const float ARROW_SIZE_REDUCTION_FACTOR = 2.5;
+    static const unsigned char ARROW_ALPHA = 192;
 
-    Vector2 potentialVelocity = player.potentialVelocity;
-    float hue = LOW_HUE*(1 - (length(potentialVelocity)/MAX_IMPULSE_STRENGTH*M_PI_2));
-    Color color = ColorFromHSV(hue, 1, 1);
-    draw_arrow(to_Vector2(pos), to_Vector2(pos)+potentialVelocity, color, ARROW_TIP_SIZE, ARROW_THICKNESS);
+    Vector2 arrowLength = player.potentialVelocity / ARROW_SIZE_REDUCTION_FACTOR;
+    float l = length(arrowLength);
+    if(l > 0.01){
+        float hue = LOW_HUE - LOW_HUE * l/(MAX_IMPULSE_STRENGTH * M_PI_2 / ARROW_SIZE_REDUCTION_FACTOR);
+        Color color = ColorFromHSV(hue, 1, 1);
+        color.a = ARROW_ALPHA;
+        draw_arrow(to_Vector2(pos), to_Vector2(pos)+arrowLength, color, ARROW_TIP_SIZE, ARROW_THICKNESS);
+    }
 }

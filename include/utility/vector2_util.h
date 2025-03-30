@@ -109,3 +109,7 @@ inline std::ostream& operator<<(std::ostream& out, const Vector2& v){
     out << '(' << v.x << ',' << v.y << ')';
     return out;
 }
+
+inline bool is_vector2_nan(const Vector2& v){
+    return (v.x != v.x || v.y != v.y);
+}
