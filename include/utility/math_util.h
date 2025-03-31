@@ -30,17 +30,19 @@ inline float to_radians(float degrees){
     return float((double)degrees * DEG_2_RAD_FACTOR);
 }
 
+// Returns the imput `x` restrained to the range `[min, max]`.
 inline float clamp(float x, float min, float max){
     return ((x < min) ? min : ((x > max) ? max : x));
 }
 
 static const float FLOAT_EQUIVALENCE_MARGIN = 0.00001;
-
+// More lenient equality check based on the relative scale of `x1` and `x2`.
 inline bool approx_equal(float x1, float x2){
     float margin = max(x1, x2) * FLOAT_EQUIVALENCE_MARGIN;
     return abs(x1 - x2) < 0.;
 }
 
+// Standard linear interpolation function
 inline float lerp(float from, float to, float factor){
     return from + factor*(to - from);
 }

@@ -1,7 +1,9 @@
-//
-// Created by usuario on 1/19/25.
-//
-
+/*
+  FILE: 3dgeometry.h
+  Defines Vertex, Edge and Mesh3D which provide an interface for three-dimensional meshes.
+  Has little relation to the rest of the project. Might be used later on backgrounds as a cool
+  effect but most likely it'll be replaced by Raylib's default 3D functionality.
+*/
 #ifndef ULTIMATESUPERMEGAGOLF_3DGEOMETRY_H
 #define ULTIMATESUPERMEGAGOLF_3DGEOMETRY_H
 #include "raylib.h"

@@ -13,22 +13,29 @@ class HeapArray{
 
   public:
     const SizeType size;
+    // No default constructor, needs to have at least a size
     HeapArray() = delete;
     HeapArray(SizeType size, const TYPE& fill = TYPE{});
+    // Constructs from an std::initializer_list, automatically deduces size
     HeapArray(const std::initializer_list<TYPE>& initList);
+    // Copy/Move constructors, destructor, assignment operators
     HeapArray(const HeapArray<TYPE>& other);
     HeapArray(HeapArray<TYPE>&& other);
     ~HeapArray();
     HeapArray<TYPE>& operator=(const HeapArray<TYPE>& rhs);
     HeapArray& operator=(HeapArray<TYPE>&& rhs);
+    // Sets all elements to `TYPE{}`.
     void clear_data();
+    // Indexing operators. Operator () admits numbers outside the range [0,size) and reduces modulo size.
     TYPE& operator[](SizeType i);
     const TYPE& operator[](SizeType i) const;
     TYPE& operator()(long i);
     const TYPE& operator()(long i) const;
     bool operator==(const HeapArray<TYPE>& rhs) const;
+    // Sets all elements to the one specified by `fill`.
     void fill(const TYPE& fill);
     void swap(HeapArray<TYPE>& other);
+    // Iterator classes, works with range-for loops.
     class Iterator;
     class ConstIterator;
 
