@@ -67,7 +67,7 @@ struct Edge{
 /*
     Class that holds a set of vertices and edges joining those vertices. Uses pointers to 
     dynamically-allocated vertices and edges, so the destructor calls `delete` on all the elements
-    of the vertex and edge containers. Do not use with pointers to Vertex/Edge variables in the heap. Do not.
+    of the vertex and edge containers. Do not use with pointers to Vertex/Edge variables in the stack. Do not.
 */
 class Mesh3D{
 private:

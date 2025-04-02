@@ -117,11 +117,18 @@ void move_position(Position& pos, const Velocity& vel, float delta);
 // Moves a position according to a velocity which itself gets moved according to
 // a constant acceleration, both with the specified delta-time
 void move_position(Position& pos, Velocity& vel, const Acceleration& acc, float delta);
-// switches the given SpriteSheet to the next frame, looping back to the start when the
+// Switches the given SpriteSheet to the next frame, looping back to the start when the
 // animation's end is reached.
 void next_frame(SpriteSheet& sprite);
+// Switches the given SpriteSheet to the previous frame, looping back to the end when
+// the animation's start is surpassed.
 void prev_frame(SpriteSheet& sprite);
+// [Auxiliary] Outputs the Rectangle resulting from applying the given SpriteTransform
+// to the given rectangle which would correspond to the drawing rectangle of a SpriteSheet frame.
 Rectangle transform_frame_rect(const Rectangle& source, const SpriteTransform& transform);
+
+// Draws a sprite to the screen, with or without a SpriteTransform.
+// Made to be used within Raylib's BeginDrawing() ... EndDrawing() functions.
 void draw_sprite(const SpriteSheet& sprite, const SpriteTransform& transform, const Position& pos);
 inline void draw_sprite(const SpriteSheet& sprite, const Position& pos){
     draw_sprite(sprite, SpriteTransform(), pos);

@@ -1,3 +1,10 @@
+/*
+    FILE: bounding_box.h
+    Defines the bounding box component, used to check if objects are "close enough"
+    to each other for it to make sense to check for any interactions between them, or
+    if they are even in view of the camera and therefore needed to draw.
+
+*/
 #pragma once
 #include"raylib.h"
 #include"utility.h"
@@ -18,20 +25,30 @@ struct BoundingBoxComponent{
     float height;
 };
 
+// If you're getting this as a result of anything, you're doing something wrong
 inline static const BoundingBoxComponent BB_INVALID = {VEC2_NULL, NAN, NAN};
 
+// Checks validity of bounding box so that the above result doesn't fuck you up
 inline bool is_bb_valid(const BoundingBoxComponent& bb){
-    return (bb.offset != VEC2_NULL && bb.width == bb.width && bb.height == bb.height);
+    return (!is_vector2_nan(bb.offset) && bb.width == bb.width && bb.height == bb.height);
 }
 
+// Basic bounding box intersection check
 bool overlapping_bb(const BoundingBoxComponent& bb1, const BoundingBoxComponent& bb2, const Position& pos1 = {0,0}, const Position& pos2 = {0,0});
 
+// Draws the bounding box to the screen, meant to be used between Raylib's BeginDrawing() and EndDrawing()
 void draw_bb_debug(const BoundingBoxComponent& bb, const Position& pos = {0,0});
 
+// Calculates a minimal bounding box that totally covers the given collision shape
 BoundingBoxComponent calculate_bb(const CollisionShape* shape);
 
+// Calculates a minimal bounding box that totally covers both given bounding boxes
 BoundingBoxComponent bb_union(const BoundingBoxComponent& bb1, const BoundingBoxComponent& bb2);
 
+// Calculates a minimal bounding box that totally covers the given collision component
+// with a margin to spare
 BoundingBoxComponent calculate_bb(const CollisionComponent& collision, float margin = 0);
 
+// Calculates a minimal bounding box that totally covers the given sprite with a margin
+// to spare
 BoundingBoxComponent calculate_bb(const SpriteSheet& sprite, float margin = 0);
