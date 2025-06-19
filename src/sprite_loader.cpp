@@ -2,7 +2,6 @@
 #include<stdexcept>
 #include<algorithm>
 
-// this assumes that constructing a texture means someone is gonna use it right now
 SpriteLoader::TextureInfo::TextureInfo(const char* filepath) : texture(LoadTexture(filepath)), refCount(1), unloadOnDestruct(false) {}
 SpriteLoader::TextureInfo::~TextureInfo(){
     if(unloadOnDestruct){

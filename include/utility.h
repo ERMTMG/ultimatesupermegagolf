@@ -1,3 +1,7 @@
+/*
+    FILE: utility.h
+    Loads all the utility files in one.
+*/
 #pragma once
 #include"utility/math_util.h"
 #include"utility/vector2_util.h"

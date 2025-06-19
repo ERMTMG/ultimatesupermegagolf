@@ -1,8 +1,14 @@
 #include "rng_component.h"
+#include<ctime>
 
 RNGComponent new_rng_component(){
     std::string seedString = "hello world";
     unsigned int seed = *(unsigned int*)(&seedString);
+    return new_rng_component(seed);
+}
+
+RNGComponent new_rng_component_safe(){
+    unsigned int seed = time(nullptr);
     return new_rng_component(seed);
 }
 
