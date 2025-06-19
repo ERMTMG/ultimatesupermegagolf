@@ -39,7 +39,7 @@ static const float FLOAT_EQUIVALENCE_MARGIN = 0.00001;
 // More lenient equality check based on the relative scale of `x1` and `x2`.
 inline bool approx_equal(float x1, float x2){
     float margin = max(x1, x2) * FLOAT_EQUIVALENCE_MARGIN;
-    return abs(x1 - x2) < 0.;
+    return abs(x1 - x2) < margin;
 }
 
 // Standard linear interpolation function
