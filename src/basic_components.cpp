@@ -54,7 +54,7 @@ SpriteSheet::~SpriteSheet(){
     SpriteLoader::return_texture(texture);
 }
 
-void SpriteSheet::set_animation_length(unsigned int animationRow, unsigned int length){
+void SpriteSheet::set_animation_length(unsigned int animationRow, unsigned short length){
     numberFramesPerAnimation[animationRow] = length;
 }
 
