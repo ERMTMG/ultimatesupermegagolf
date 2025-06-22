@@ -54,7 +54,9 @@ void add_thing(LevelRegistry& registry, const Position& pos, int rotationDegrees
 int main(){
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Ultimate Super Mega Golf");
     SetTargetFPS(60);
-
+    Image windowIcon = LoadImage("resources/sprites/ball_icon.png");
+    SetWindowIcon(windowIcon); // This doesn't work because ubuntu uses GNOME for its desktop apparently. fuck
+    UnloadImage(windowIcon);
     LevelRegistry registry;
     registry.init_level(Position{-100, -100}, Position{110, 100}, Position{0,0});
     entt::entity cameraEntity = registry.get_entity(registry.CAMERA_ENTITY_NAME);
@@ -75,11 +77,11 @@ int main(){
         add_thing(registry, {i+20,-128+12}, 180);
         add_thing(registry, {i+20,+128-12}, 0);
     }
-
+    
     while(!WindowShouldClose()){
         float delta = GetFrameTime();
         registry.update(delta);
-        registry.draw(/*debug mode = */true);
+        registry.draw(/*debug mode = */false);
         if(IsKeyDown(KEY_KP_ADD)){
             zoom_camera(camera, 1.01, CAMERA_ZOOM_IN);
         } else if(IsKeyDown(KEY_KP_SUBTRACT)){
