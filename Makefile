@@ -5,7 +5,8 @@ LIB_DIR="./lib"
 CPP_FILES := $(wildcard src/*.cpp)
 MAIN := src/main.cpp
 COLLISION_TEST := src/collision_test.cpp
-SOURCE_FILES := $(filter-out $(COLLISION_TEST) $(MAIN), $(CPP_FILES)) 
+BB_CALCULATE_TEST := src/bb_calculate_test.cpp
+SOURCE_FILES := $(filter-out $(COLLISION_TEST) $(BB_CALCULATE_TEST) $(MAIN), $(CPP_FILES)) 
 all: bin/main1
 
 OBJ_FILES := $(patsubst src/%.cpp, obj/%.o, $(SOURCE_FILES))
@@ -18,3 +19,6 @@ bin/main1: src/main.cpp $(OBJ_FILES)
 
 collision_test:
 	g++ $(SOURCE_FILES) $(COLLISION_TEST) -g -O3 -o bin/collision_test -I$(INCLUDE_DIR) -I. -L$(LIB_DIR) -std=c++17 -lraylib -Wno-narrowing
+
+bb_calculate_test:
+	g++ $(OBJ_FILES) $(BB_CALCULATE_TEST) -g -O3 -o bin/bb_calculate_test -I$(INCLUDE_DIR) -I. -L$(LIB_DIR) -std=c++17 -lraylib -Wno-narrowing

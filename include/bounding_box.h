@@ -27,6 +27,9 @@ struct BoundingBoxComponent{
 
 // If you're getting this as a result of anything, you're doing something wrong
 inline static const BoundingBoxComponent BB_INVALID = {VEC2_NULL, NAN, NAN};
+// Not necessarily invalid, just null
+inline static const BoundingBoxComponent BB_ZERO = {VEC2_ZERO, 0.0, 0.0};
+
 
 // Checks validity of bounding box so that the above result doesn't fuck you up
 inline bool is_bb_valid(const BoundingBoxComponent& bb){

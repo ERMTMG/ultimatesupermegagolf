@@ -41,8 +41,6 @@ void move_position(Position& pos, Velocity& vel, const Acceleration& acc, float 
     pos.y += vel.v_y * delta;
 }
 
-// TODO: This constructor loads the same image multiple times if it's called multiple times with the same filename.
-// I assume that's pretty bad, so keep track of which textures have been loaded and avoid loading duplicates.
 SpriteSheet::SpriteSheet(const char *filename, unsigned int frameWidth, unsigned int frameHeight): 
 texture(SpriteLoader::load_or_get_texture(filename)), 
 numberFramesPerRow(texture.width / frameWidth), 
@@ -76,7 +74,6 @@ Rectangle transform_frame_rect(const Rectangle& source, const SpriteTransform& t
     };
 }
 
-// TODO: this rotates the sprite around the top left point. Make it so that it rotatesaround its center
 void draw_sprite(const SpriteSheet& sprite, const SpriteTransform& transform, const Position& pos){
     int frameWidth = sprite.texture.width / sprite.numberFramesPerRow;
     int frameHeight = sprite.texture.height / sprite.numberRows;

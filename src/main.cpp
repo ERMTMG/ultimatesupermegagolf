@@ -48,7 +48,8 @@ void add_thing(LevelRegistry& registry, const Position& pos, int rotationDegrees
     thingCollision.add_line(rotate_degrees(POINT3, rotationDegrees), rotate_degrees(POINT1, rotationDegrees));
     registry.get().emplace<SpriteSheet>(thing, "resources/sprites/triangle_thing.png", 40, 25);
     registry.get().emplace<SpriteTransform>(thing, VEC2_ZERO, 1, rotationDegrees);
-    registry.get().emplace_or_replace<BoundingBoxComponent>(thing, BoundingBoxComponent{.offset = {-100,-100}, .width = 200, .height = 200});
+    BoundingBoxComponent bb = calculate_bb(thingCollision);
+    registry.get().emplace_or_replace<BoundingBoxComponent>(thing, bb);
 }
 
 int main(){
@@ -74,14 +75,14 @@ int main(){
         }
     }
     for(int i = -128; i <= 128; i+=40){
-        add_thing(registry, {i+20,-128+12}, 180);
-        add_thing(registry, {i+20,+128-12}, 0);
+        add_thing(registry, {i+20,-128+12}, 23);
+        add_thing(registry, {i+20,+128-12}, 536);
     }
     
     while(!WindowShouldClose()){
         float delta = GetFrameTime();
         registry.update(delta);
-        registry.draw(/*debug mode = */false);
+        registry.draw(/*debug mode = */true);
         if(IsKeyDown(KEY_KP_ADD)){
             zoom_camera(camera, 1.01, CAMERA_ZOOM_IN);
         } else if(IsKeyDown(KEY_KP_SUBTRACT)){

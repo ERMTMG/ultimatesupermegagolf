@@ -69,13 +69,22 @@ BoundingBoxComponent bb_union(const BoundingBoxComponent& bb1, const BoundingBox
 }
 
 BoundingBoxComponent calculate_bb(const CollisionComponent& collision, float margin){
-    BoundingBoxComponent output {VEC2_ZERO, 0, 0};
-    for(const auto& shapePtr : collision.shapes){
-        BoundingBoxComponent currBB = calculate_bb(shapePtr.get());
-        output = bb_union(output, currBB);
-        if(!is_bb_valid(output)){
-            return output; // no matter what we do it's still gonna be invalid so might as well return it directly
+    const auto& shapeVec = collision.shapes;
+    BoundingBoxComponent output;
+    if(shapeVec.empty()){
+        return BB_ZERO;
+    } else {
+        const CollisionShape* firstShape = shapeVec[0].get();
+        output = calculate_bb(firstShape);
+        for(size_t i = 1; i < shapeVec.size(); i++){
+            const CollisionShape* ithShape = shapeVec[i].get();
+            BoundingBoxComponent ithBB = calculate_bb(ithShape);
+            output = bb_union(output, ithBB);
+            if(!is_bb_valid(output)){
+                return output; // no matter what we do it's still gonna be invalid so might as well return it directly
+            }
         }
+
     }
     if(margin != 0){
         output.offset -= {margin, margin};

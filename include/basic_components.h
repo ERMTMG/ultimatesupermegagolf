@@ -50,8 +50,6 @@ struct Acceleration{
     Acceleration(const Vector2& v) : Acceleration(v.x, v.y) {};
 };
 
-//TODO: replace all hacky Vector2 <-> Position conversions with these functions and/or Position(Vector2) constructor.
-
 inline Vector2 to_Vector2(const Position& pos){
     return {pos.x, pos.y};
 }
