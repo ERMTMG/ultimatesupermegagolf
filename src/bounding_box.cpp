@@ -58,12 +58,12 @@ BoundingBoxComponent calculate_bb(const CollisionShape* shape){
 
 BoundingBoxComponent bb_union(const BoundingBoxComponent& bb1, const BoundingBoxComponent& bb2){
     if(is_bb_valid(bb1) && is_bb_valid(bb2)){
-        Vector2 min1 = bb1.offset; 
-        Vector2 min2 = bb2.offset;
-        Vector2 max1 = bb1.offset + Vector2{bb1.width, bb1.height};
-        Vector2 max2 = bb2.offset + Vector2{bb2.width, bb2.height};
-        Vector2 overallMin = {min(min1.x, min2.x), min(min1.y, min2.y)};
-        Vector2 overallMax = {max(max1.x, max2.x), max(max2.y, max2.y)};
+        Vector2 p1 = bb1.offset; 
+        Vector2 p2 = bb2.offset;
+        Vector2 p3 = bb1.offset + Vector2{bb1.width, bb1.height};
+        Vector2 p4 = bb2.offset + Vector2{bb2.width, bb2.height};
+        Vector2 overallMin = {min(p1.x, p2.x, p3.x, p4.x), min(p1.y, p2.y, p3.y, p4.y)};
+        Vector2 overallMax = {max(p1.x, p2.x, p3.x, p4.x), max(p1.y, p2.y, p3.y, p4.y)};
         return BoundingBoxComponent{overallMin, (overallMax - overallMin).x, (overallMax - overallMin).y};
     } else return BB_INVALID;
 }

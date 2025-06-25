@@ -18,6 +18,22 @@ inline float min(float x, float y){
     return (x < y) ? x : y;
 }
 
+inline float max(float x1, float x2, float x3){
+    return max(max(x1, x2), x3);
+}
+
+inline float min(float x1, float x2, float x3){
+    return min(min(x1, x2), x3);
+}
+
+inline float max(float x1, float x2, float x3, float x4){
+    return max(max(x1, x2), max(x3, x4));
+}
+
+inline float min(float x1, float x2, float x3, float x4){
+    return min(min(x1, x2), min(x3, x4));
+}
+
 inline float sign(float x){
     return copysign(1, x);
 }
