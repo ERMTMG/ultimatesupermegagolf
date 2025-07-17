@@ -1,0 +1,61 @@
+#include"raylib.h"
+#include"entt.hpp"
+#include"utility.h"
+#include"collision_component.h"
+#include<unordered_map>
+#include<vector>
+
+using TileID = size_t;
+
+struct TilesetTile {
+    CollisionComponent collision;
+    Texture texture;
+    TileID id;
+};
+
+struct TilePosition {
+    int row;
+    int col;
+    bool operator==(const TilePosition& other) const {
+        return (this->row == other.row && this->col == other.col);
+    }
+};
+
+template<>
+struct std::hash<TilePosition>{
+    size_t operator()(const TilePosition& pos) const noexcept {
+        return size_t(pos.row << 10 + pos.col);
+    }
+};
+
+struct TilesetComponent {
+    std::vector<TilesetTile> tiles;
+    std::unordered_map<TilePosition, TileID> map;
+    Vector2 tileSize;
+};
+
+TileID tileset_add_new_tile(TilesetComponent& tileset, TilesetTile& tile);
+
+void tileset_clear_all(TilesetComponent& tileset);
+
+TileID tileset_get_tile_at(const TilesetComponent& tileset, int row, int col);
+
+inline bool tileset_has_tile_at(const TilesetComponent& tileset, int row, int col){
+    return tileset_get_tile_at(tileset, row, col) != -1;
+}
+
+inline Vector2 tileset_get_tile_pos(const TilesetComponent& tileset, int row, int col){
+    return Vector2{tileset.tileSize.x * col, tileset.tileSize.y * row};
+}
+
+void tileset_place_tile(TilesetComponent& tileset, int row, int col, TileID id);
+
+void tileset_remove_tile(TilesetComponent& tileset, int row, int col);
+
+void tileset_remove_all_tiles(TilesetComponent& tileset, TileID id = -1);
+
+void tileset_fill_tiles(TilesetComponent& tileset, int beginRow, int endRow, int beginCol, int endCol, TileID fill);
+
+void tileset_get_complete_collision(const TilesetComponent& tileset, CollisionComponent& collision);
+
+void draw_tileset(const TilesetComponent& tileset);
