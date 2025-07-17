@@ -72,7 +72,7 @@ void draw_player_drag_velocity(const PlayerComponent &player, const Position& po
     static const int ARROW_THICKNESS = 3;
     static const int ARROW_TIP_SIZE = 5;
     static const float ARROW_SIZE_REDUCTION_FACTOR = 2.5;
-    static const unsigned char ARROW_ALPHA = 192;
+    static const unsigned char ARROW_ALPHA = 96;
 
     Vector2 arrowLength = player.potentialVelocity / ARROW_SIZE_REDUCTION_FACTOR;
     float l = length(arrowLength);

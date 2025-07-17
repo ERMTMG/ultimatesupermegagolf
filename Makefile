@@ -14,7 +14,7 @@ OBJ_FILES := $(patsubst src/%.cpp, obj/%.o, $(SOURCE_FILES))
 obj/%.o: src/%.cpp
 	g++ -c $< -o $@ -I$(INCLUDE_DIR) -I. -std=c++17 -O3
 
-bin/main1: src/main.cpp $(OBJ_FILES)
+bin/main1: src/main.cpp $(OBJ_FILES) 
 	g++ $(OBJ_FILES) $(MAIN) $(INCLUDE_DIR)/entt.hpp -O3 -o bin/main1 -I$(INCLUDE_DIR) -I. -L$(LIB_DIR) -std=c++17 -lraylib -Wno-narrowing
 
 collision_test:
