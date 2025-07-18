@@ -49,8 +49,8 @@ struct CollisionComponent{
     // Intended syntax: CollisionComponent collision(new CollisionCircle(VEC2_ZERO, 16), 1, true);
     CollisionComponent(CollisionShape* shape, unsigned short layer = 0, bool isStatic = true);
     ;// No copy constructor/assignment? TODO later: figure out why not
-    CollisionComponent(const CollisionComponent&) = delete;
-    CollisionComponent& operator=(const CollisionComponent&) = delete;
+    //CollisionComponent(const CollisionComponent&) = delete;
+    //CollisionComponent& operator=(const CollisionComponent&) = delete;
     ;//Basic methods that just add shapes to the collision component. add_rect_centered is special 
     ;//in that it, well, centers the rectangle at {0,0}.
     void add_circle(float radius, const Vector2& pos = {0,0});

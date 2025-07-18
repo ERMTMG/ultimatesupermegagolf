@@ -2,8 +2,12 @@
 
 TileID tileset_add_new_tile(TilesetComponent& tileset, const TilesetTile& tile){
     TileID newTileID = tileset.tiles.size();
-    tileset.tiles.push_back(tile);
-    tileset.tiles[newTileID].id = newTileID;
+    tileset.tiles.push_back(TilesetTile{
+        .collision = CollisionComponent(), //TODO: copy collision component over to the tile in tileset.tiles
+        .texture = tile.texture,
+        .id = newTileID
+    });
+    return newTileID;
 }
 
 void tileset_clear_all(TilesetComponent& tileset){
@@ -21,10 +25,6 @@ TileID tileset_get_tile_at(const TilesetComponent& tileset, int row, int col){
     }
 }
 
-inline bool tileset_has_tile_at(const TilesetComponent& tileset, int row, int col){
-    return tileset_get_tile_at(tileset, row, col) != -1;
-}
-
 void tileset_place_tile(TilesetComponent& tileset, int row, int col, TileID id){
     if(id == -1){
         tileset.map.erase({row, col});
@@ -37,16 +37,17 @@ void tileset_remove_tile(TilesetComponent& tileset, int row, int col){
     tileset.map.erase({row, col});
 }
 
-void tileset_remove_all_tiles(TilesetComponent& tileset, TileID id = -1){
+void tileset_remove_all_tiles(TilesetComponent& tileset, TileID id){
     if(id == -1){
         tileset.map.clear();
     } else {
-        using TilesetMapPairType = decltype(tileset.map)::iterator::value_type;
-        std::remove_if(tileset.map.begin(), tileset.map.end(),
-            [id](const TilesetMapPairType& pair) -> bool {
-                return pair.second == id;
+        for(auto itr = tileset.map.begin(); itr != tileset.map.end(); ){
+            if(itr->second == id){
+                itr == tileset.map.erase(itr);
+            } else {
+                ++itr;
             }
-        );
+        }
     }
 }
 
