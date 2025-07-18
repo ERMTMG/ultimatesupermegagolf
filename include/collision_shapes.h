@@ -26,6 +26,7 @@ struct CollisionShape{
     Vector2 offset;
     virtual inline CollisionShapeType get_type() const{  return CollisionShapeType::NONE;  };
     CollisionShape(const Vector2& offset): offset(offset) {};
+    virtual std::unique_ptr<CollisionShape> clone() const = 0; // allows for deep cloning of shapes
 };
 
 // Adds the specified position to the offset of the given shape. ShapeType must inherit from CollisionShape.
@@ -35,6 +36,10 @@ template<class ShapeType> ShapeType operator+(const ShapeType& shape, const Posi
 struct CollisionPoint : CollisionShape{
     inline CollisionShapeType get_type() const override{  return CollisionShapeType::POINT;  };
     CollisionPoint(const Vector2& offset): CollisionShape(offset){};
+    CollisionPoint(const CollisionPoint& other) : CollisionShape(other.offset) {};
+    std::unique_ptr<CollisionShape> clone() const override {
+        return std::make_unique<CollisionPoint>(*this);
+    }
 };
 
 // Defines a collision shape consisting of a half-plane whose border contains offset and 
@@ -48,12 +53,20 @@ struct CollisionBarrier : CollisionShape{
     inline Vector2 get_unit_normal() const{
         return {cos(normalAngle), sin(normalAngle)};
     }
+    CollisionBarrier(const CollisionBarrier& other) : CollisionBarrier(other.offset, other.normalAngle) {};
+    std::unique_ptr<CollisionShape> clone() const override {
+        return std::make_unique<CollisionBarrier>(*this);
+    }
 };
 
 // Defines a collision shape consisting of the line segment between offset and (offset + target)
 struct CollisionLine : CollisionShape{
     CollisionLine(const Vector2& offset, const Vector2& target): CollisionShape(offset), target(target) {}
     inline CollisionShapeType get_type() const override{  return CollisionShapeType::LINE;  };
+    CollisionLine(const CollisionLine& other) : CollisionLine(other.offset, other.target) {};
+    std::unique_ptr<CollisionShape> clone() const override {
+        return std::make_unique<CollisionLine>(*this);
+    }
 
     Vector2 target;
 };
@@ -63,6 +76,10 @@ struct CollisionLine : CollisionShape{
 struct CollisionRect : CollisionShape{
     CollisionRect(const Vector2& offset, float width, float height): CollisionShape(offset), width(width), height(height) {}
     inline CollisionShapeType get_type() const override{  return CollisionShapeType::RECT;  };
+    CollisionRect(const CollisionRect& other) : CollisionRect(other.offset, other.width, other.height) {};
+    std::unique_ptr<CollisionShape> clone() const override {
+        return std::make_unique<CollisionRect>(*this);
+    }
 
     float width;
     float height;
@@ -73,6 +90,10 @@ struct CollisionRect : CollisionShape{
 struct CollisionCircle : CollisionShape{
     CollisionCircle(const Vector2& offset, float radius): CollisionShape(offset), radius(radius) {};
     inline CollisionShapeType get_type() const override{  return CollisionShapeType::CIRCLE;  };
+    CollisionCircle(const CollisionCircle& other) : CollisionCircle(other.offset, other.radius) {};
+    std::unique_ptr<CollisionShape> clone() const override {
+        return std::make_unique<CollisionCircle>(*this);
+    }
 
     float radius;
 };
