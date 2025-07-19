@@ -12,6 +12,7 @@
 #include"bounding_box.h"
 #include"collision_handler.h"
 #include"animation_handler.h"
+#include"tileset_component.h"
 #include"rng_component.h"
 #include<memory>
 #include<unordered_map>

@@ -338,6 +338,14 @@ void LevelRegistry::draw(bool debugMode) const{
                 }
             }
 
+            auto tilemaps = registry->view<const TilesetComponent, const Position>();
+            for(auto[entity, tilemap, pos] : tilemaps.each()){
+                const BoundingBoxComponent* bb = registry->try_get<BoundingBoxComponent>(entity);
+                if(bb != nullptr && is_in_view(camera, *bb, pos)){
+                    draw_tileset(tilemap);
+                }
+            }
+
             if(debugMode){
                 auto collisionEntites = registry->view<const CollisionComponent, const Position>();
                 for(auto[entity, collision, pos] : collisionEntites.each()){
