@@ -2,11 +2,10 @@
 
 TileID tileset_add_new_tile(TilesetComponent& tileset, const TilesetTile& tile){
     TileID newTileID = tileset.tiles.size();
-    tileset.tiles.push_back(TilesetTile{
-        .collision = CollisionComponent(), //TODO: copy collision component over to the tile in tileset.tiles
-        .texture = tile.texture,
-        .id = newTileID
-    });
+    tileset.tiles.push_back(TilesetTile());
+    clone_collision(tile.collision, tileset.tiles[newTileID].collision);
+    tileset.tiles[newTileID].texture = tile.texture;
+    tileset.tiles[newTileID].id = newTileID;
     return newTileID;
 }
 
@@ -69,21 +68,18 @@ void tileset_fill_tiles(TilesetComponent& tileset, int beginRow, int endRow, int
 
 void tileset_get_complete_collision(const TilesetComponent& tileset, CollisionComponent& collision){
     collision.shapes.clear();
-    collision.layerFlags = 0;
     collision.isStatic = true;
     for(const auto& [pos, tileID] : tileset.map){
         const TilesetTile& tile = tileset.tiles[tileID];
-        Vector2 tilePos = tileset_get_tile_pos(tileset, pos.row, pos.col);
-        for(const auto& shape : tile.collision.shapes){
-            //TODO: complete this, i gotta make sure the shapes are being cloned correctly
-        }
+        Position tilePos = tileset_get_tile_pos(tileset, pos.row, pos.col);
+        add_collision(collision, tile.collision, tilePos);
     }
 }
 
 void draw_tileset(const TilesetComponent& tileset){
     for(const auto& [pos, tileID] : tileset.map){
         const TilesetTile& tile = tileset.tiles[tileID];
-        Vector2 tilePos = tileset_get_tile_pos(tileset, pos.row, pos.col);
+        Vector2 tilePos = to_Vector2(tileset_get_tile_pos(tileset, pos.row, pos.col));
         Rectangle tileRect = {
             .x = 0,
             .y = 0,

@@ -85,6 +85,12 @@ inline bool has_common_layers(const CollisionComponent& collision1, const Collis
     return ((collision1.layerFlags & collision2.layerFlags) > 0);
 }
 
+// Clones the collision component source into destination. Assumes that source and destination aren't the same object and that destination is "empty".
+void clone_collision(const CollisionComponent& source, CollisionComponent& destination);
+
+// Adds all shapes of collision2 to collision1 with an added offset given by pos. Doesn't modify the layers of collision1, just adds the shapes.
+void add_collision(CollisionComponent& collision1, const CollisionComponent& collision2, const Position& pos = {0,0});
+
 /*
 Returns the total collision information of the collision between the given components and the given positions.
 For the result, it checks each shape of collision1 against each shape of collision2, averaging the normals of all

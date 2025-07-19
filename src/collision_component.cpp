@@ -42,6 +42,22 @@ void set_layers(CollisionComponent &collision, std::vector<LayerType> &&layers){
     }
 }
 
+void clone_collision(const CollisionComponent& source, CollisionComponent& destination){
+    destination.isStatic = source.isStatic;
+    destination.layerFlags = source.layerFlags;
+    for(const auto& shapePtr : source.shapes){
+        destination.shapes.push_back(shapePtr->clone());
+    }
+}
+
+void add_collision(CollisionComponent& collision1, const CollisionComponent& collision2, const Position& pos){
+    for(const auto& shapePtr : collision2.shapes){
+        std::unique_ptr<CollisionShape> newShape = shapePtr->clone();
+        newShape->offset += to_Vector2(pos);
+        collision1.shapes.push_back(newShape);
+    } 
+}
+
 CollisionInformation get_collision(const CollisionComponent& collision1, const CollisionComponent& collision2, const Position& pos1, const Position& pos2){
     CollisionInformation output {false, VEC2_ZERO};
     if(!has_common_layers(collision1, collision2)) {

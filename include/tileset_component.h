@@ -10,6 +10,8 @@ struct TilesetTile {
     CollisionComponent collision;
     Texture texture;
     TileID id;
+
+    TilesetTile() : collision(), texture(), id(-1) {}
 };
 
 struct TilePosition {
@@ -43,8 +45,8 @@ inline bool tileset_has_tile_at(const TilesetComponent& tileset, int row, int co
     return tileset_get_tile_at(tileset, row, col) != -1;
 }
 
-inline Vector2 tileset_get_tile_pos(const TilesetComponent& tileset, int row, int col){
-    return Vector2{tileset.tileSize.x * col, tileset.tileSize.y * row};
+inline Position tileset_get_tile_pos(const TilesetComponent& tileset, int row, int col){
+    return Position{tileset.tileSize.x * col, tileset.tileSize.y * row};
 }
 
 void tileset_place_tile(TilesetComponent& tileset, int row, int col, TileID id);
