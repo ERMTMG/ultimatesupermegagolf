@@ -3,6 +3,7 @@
 #include"utility.h"
 #include"basic_components.h"
 #include"level_registry.h"
+#include"tileset_component.h"
 #include<iostream>
 
 static const int SCREENWIDTH = 800;
@@ -50,6 +51,51 @@ void add_thing(LevelRegistry& registry, const Position& pos, int rotationDegrees
     registry.get().emplace<SpriteTransform>(thing, VEC2_ZERO, 1, rotationDegrees);
     BoundingBoxComponent bb = calculate_bb(thingCollision, 10.0);
     registry.get().emplace_or_replace<BoundingBoxComponent>(thing, bb);
+}
+
+void load_placeholder_tilemap(LevelRegistry& registry, const Position& pos){
+    auto[tilemapEntity, tileCollision] = registry.create_static_body(pos, {registry.PLAYER_COLLISION_LAYER});
+    auto& tilemap = registry.get().emplace<TilesetComponent>(tilemapEntity);
+    TilesetTile tiles[] = {
+        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_0.png"),
+        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_1.png"),
+        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_2.png"),
+        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_3.png"),
+        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_4.png"),
+        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_5.png"),
+        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_6.png"),
+        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_7.png"),
+        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_8.png"),
+        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_9.png"),
+        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_10.png"),
+        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_11.png"),
+        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_12.png"),
+    };
+    for(const TilesetTile& tile : tiles){
+        tileset_add_new_tile(tilemap, tile);
+    }
+    tileset_place_tile(tilemap, 0, 0, 0);
+    tileset_place_tile(tilemap, 0, 1, 1);
+    tileset_place_tile(tilemap, 0, 2, 2);
+    tileset_place_tile(tilemap, 1, 0, 7);
+    tileset_place_tile(tilemap, 1, 1, 8);
+    tileset_place_tile(tilemap, 1, 2, 12);
+    tileset_place_tile(tilemap, 1, 3, 1);
+    tileset_place_tile(tilemap, 1, 4, 1);
+    tileset_place_tile(tilemap, 1, 5, 2);
+    tileset_place_tile(tilemap, 2, 0, 6);
+    tileset_place_tile(tilemap, 2, 1, 5);
+    tileset_place_tile(tilemap, 2, 2, 10);
+    tileset_place_tile(tilemap, 2, 3, 8);
+    tileset_place_tile(tilemap, 2, 4, 8);
+    tileset_place_tile(tilemap, 2, 5, 3);
+    tileset_place_tile(tilemap, 3, 2, 6);
+    tileset_place_tile(tilemap, 3, 3, 5);
+    tileset_place_tile(tilemap, 3, 4, 5);
+    tileset_place_tile(tilemap, 3, 5, 4);
+    tileset_get_complete_collision(tilemap, tileCollision);
+    BoundingBoxComponent bb = calculate_bb(tileCollision, 1.f);
+    registry.get().emplace<BoundingBoxComponent>(tilemapEntity, bb);
 }
 
 int main(){

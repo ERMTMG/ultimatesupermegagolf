@@ -1,5 +1,11 @@
 #include "tileset_component.h"
 
+TilesetTile::TilesetTile(const char* textureFilename){
+    texture = SpriteLoader::load_or_get_texture(textureFilename);
+    collision = CollisionComponent(new CollisionRect(VEC2_ZERO, texture.width, texture.height));
+    id = -1;
+}
+
 TileID tileset_add_new_tile(TilesetComponent& tileset, const TilesetTile& tile){
     TileID newTileID = tileset.tiles.size();
     tileset.tiles.push_back(TilesetTile());

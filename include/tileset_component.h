@@ -1,6 +1,7 @@
 #include"raylib.h"
 #include"utility.h"
 #include"collision_component.h"
+#include"sprite_loader.h"
 #include<unordered_map>
 #include<vector>
 
@@ -12,6 +13,7 @@ struct TilesetTile {
     TileID id;
 
     TilesetTile() : collision(), texture(), id(-1) {}
+    TilesetTile(const char* textureFilename);
 };
 
 struct TilePosition {
@@ -35,7 +37,7 @@ struct TilesetComponent {
     Vector2 tileSize;
 };
 
-TileID tileset_add_new_tile(TilesetComponent& tileset, TilesetTile& tile);
+TileID tileset_add_new_tile(TilesetComponent& tileset, const TilesetTile& tile);
 
 void tileset_clear_all(TilesetComponent& tileset);
 
