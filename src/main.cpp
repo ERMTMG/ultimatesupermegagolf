@@ -3,7 +3,6 @@
 #include"utility.h"
 #include"basic_components.h"
 #include"level_registry.h"
-#include"tileset_component.h"
 #include<iostream>
 
 static const int SCREENWIDTH = 800;
@@ -56,6 +55,7 @@ void add_thing(LevelRegistry& registry, const Position& pos, int rotationDegrees
 void load_placeholder_tilemap(LevelRegistry& registry, const Position& pos){
     auto[tilemapEntity, tileCollision] = registry.create_static_body(pos, {registry.PLAYER_COLLISION_LAYER});
     auto& tilemap = registry.get().emplace<TilesetComponent>(tilemapEntity);
+    tilemap.tileSize = {16,16};
     TilesetTile tiles[] = {
         TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_0.png"),
         TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_1.png"),
@@ -79,13 +79,13 @@ void load_placeholder_tilemap(LevelRegistry& registry, const Position& pos){
     tileset_place_tile(tilemap, 0, 2, 2);
     tileset_place_tile(tilemap, 1, 0, 7);
     tileset_place_tile(tilemap, 1, 1, 8);
-    tileset_place_tile(tilemap, 1, 2, 12);
+    tileset_place_tile(tilemap, 1, 2, 10);
     tileset_place_tile(tilemap, 1, 3, 1);
     tileset_place_tile(tilemap, 1, 4, 1);
     tileset_place_tile(tilemap, 1, 5, 2);
     tileset_place_tile(tilemap, 2, 0, 6);
     tileset_place_tile(tilemap, 2, 1, 5);
-    tileset_place_tile(tilemap, 2, 2, 10);
+    tileset_place_tile(tilemap, 2, 2, 12);
     tileset_place_tile(tilemap, 2, 3, 8);
     tileset_place_tile(tilemap, 2, 4, 8);
     tileset_place_tile(tilemap, 2, 5, 3);
@@ -95,7 +95,7 @@ void load_placeholder_tilemap(LevelRegistry& registry, const Position& pos){
     tileset_place_tile(tilemap, 3, 5, 4);
     tileset_get_complete_collision(tilemap, tileCollision);
     BoundingBoxComponent bb = calculate_bb(tileCollision, 1.f);
-    registry.get().emplace<BoundingBoxComponent>(tilemapEntity, bb);
+    registry.get().emplace_or_replace<BoundingBoxComponent>(tilemapEntity, bb);
 }
 
 int main(){
@@ -110,6 +110,7 @@ int main(){
     CameraView& camera = registry.get().get<CameraView>(cameraEntity);
     camera->zoom = 1.5;
     add_walls(registry);
+    /*
     for(int i = -128; i < 128; i += 32){
         for(int j = -128; j < 128; j += 32){
             if((j == 64 || j == -64) && i <= 64){
@@ -119,7 +120,8 @@ int main(){
                 add_square(registry, {i+16,j+16});
             }
         }
-    }
+    }*/
+    load_placeholder_tilemap(registry, {32,32});
     for(int i = -128; i <= 128; i+=40){
         add_thing(registry, {i+20,-128+12}, 23);
         add_thing(registry, {i+20,+128-12}, 536);
@@ -128,7 +130,7 @@ int main(){
     while(!WindowShouldClose()){
         float delta = GetFrameTime();
         registry.update(delta);
-        registry.draw(/*debug mode = */false);
+        registry.draw(/*debug mode = */true);
         if(IsKeyDown(KEY_KP_ADD)){
             zoom_camera(camera, 1.01, CAMERA_ZOOM_IN);
         } else if(IsKeyDown(KEY_KP_SUBTRACT)){

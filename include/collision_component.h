@@ -43,6 +43,14 @@ struct CollisionComponent{
     // SIZE CALCULATIONS:
     // 24 bytes (vector) + 2 bytes (layer flags) + 1 byte (isStatic) = 27 bytes -> 5 bytes left until size is > 32
 
+    // defaulted moves
+    CollisionComponent(CollisionComponent&&) noexcept            = default;
+    CollisionComponent& operator=(CollisionComponent&&) noexcept = default;
+
+    // disable copying
+    CollisionComponent(const CollisionComponent&)            = delete;
+    CollisionComponent& operator=(const CollisionComponent&) = delete;
+    
     // Normal constructor. NOTE: this and other constructors reserve a capacity of three for the shape vector
     CollisionComponent(unsigned short layer = 0, bool isStatic = true);
     // Constructs a component from a shape, the hitbox being only that shape.

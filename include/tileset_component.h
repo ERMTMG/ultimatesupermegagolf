@@ -35,6 +35,12 @@ struct TilesetComponent {
     std::vector<TilesetTile> tiles;
     std::unordered_map<TilePosition, TileID> map;
     Vector2 tileSize;
+
+    TilesetComponent(const TilesetComponent&) = delete;
+    TilesetComponent& operator=(const TilesetComponent&) = delete;
+
+    TilesetComponent(TilesetComponent&&) = default;
+    TilesetComponent& operator=(TilesetComponent&&) = default;
 };
 
 TileID tileset_add_new_tile(TilesetComponent& tileset, const TilesetTile& tile);

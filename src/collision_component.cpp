@@ -50,11 +50,12 @@ void clone_collision(const CollisionComponent& source, CollisionComponent& desti
     }
 }
 
+// Adds all shapes of collision2 to collision1 with an added offset given by pos. Doesn't modify the layers of collision1, just adds the shapes.
 void add_collision(CollisionComponent& collision1, const CollisionComponent& collision2, const Position& pos){
     for(const auto& shapePtr : collision2.shapes){
         std::unique_ptr<CollisionShape> newShape = shapePtr->clone();
         newShape->offset += to_Vector2(pos);
-        collision1.shapes.push_back(newShape);
+        collision1.shapes.push_back(std::move(newShape));
     } 
 }
 
