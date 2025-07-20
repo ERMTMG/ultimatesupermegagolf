@@ -2,30 +2,25 @@
 #include "entt.hpp"
 
 TilesetTile::TilesetTile(const char* textureFilename){
-    std::cout << "TilesetTile: constructor called\n";
     texture = SpriteLoader::load_or_get_texture(textureFilename);
     collision = CollisionComponent(new CollisionRect(VEC2_ZERO, texture.width, texture.height));
     id = -1;
 }
 
 TilesetTile::~TilesetTile() {
-    std::cout << "TilesetTile: Destructor called\n";
     SpriteLoader::return_texture(texture);
 }
 
 TilesetTile::TilesetTile(const TilesetTile& other){
-    std::cout << "TilesetTile: copy constructor called\n";
     this->id = other.id;
     clone_collision(other.collision, this->collision);
     if(other.texture.id != 0) this->texture = SpriteLoader::get_texture_copy(other.texture);
 }
 
 TilesetComponent::~TilesetComponent(){
-    std::cout << "TilesetComponent: destructor called. Size of `tiles`: " << tiles.size() << '\n';
 }
 
 TilesetComponent::TilesetComponent(TilesetComponent&& other){
-    std::cout << "TilesetComponent: move constructor called\n";
     tiles = std::move(other.tiles);
     map = std::move(other.map);
     tileSize = other.tileSize;

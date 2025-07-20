@@ -12,9 +12,7 @@ struct TilesetTile {
     Texture texture;
     TileID id;
 
-    TilesetTile() : collision(), texture(), id(-1) {
-        std::cout << "TilesetTile: constructor called\n";
-    }
+    TilesetTile() : collision(), texture(), id(-1) {}
     TilesetTile(const char* textureFilename);
     /*
         NOTE: this cost me an hour of debugging. Turns out, g++ compiler optimizations 
@@ -49,9 +47,7 @@ struct TilesetComponent {
     Vector2 tileSize;
 
 
-    TilesetComponent(){
-        std::cout << "TilesetComponent: constructor called\n";
-    }
+    TilesetComponent() = default;
     virtual ~TilesetComponent();
 
     TilesetComponent(const TilesetComponent&) = delete;

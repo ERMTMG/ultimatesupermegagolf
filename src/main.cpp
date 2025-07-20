@@ -101,13 +101,6 @@ void load_placeholder_tilemap(LevelRegistry& registry, const Position& pos){
 int main(){
     
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Ultimate Super Mega Golf");
-    {
-        std::cout << "=============================================================\n";
-        TilesetComponent component; component.tiles.reserve(2);
-        component.tiles.emplace_back("resources/sprites/placeholder_tileset/tile_placeholder_0.png");
-        component.tiles.emplace_back("resources/sprites/placeholder_tileset/tile_placeholder_1.png");
-    }
-    std::cout << "=============================================================\n";
     SetTargetFPS(60);
     Image windowIcon = LoadImage("resources/sprites/ball_icon.png");
     SetWindowIcon(windowIcon); // This doesn't work because ubuntu uses GNOME for its desktop apparently. fuck
@@ -159,6 +152,5 @@ int main(){
         //std::cout << "camera coordinates: " << GetScreenToWorld2D({0,0}, camera.cam) << " to " << GetScreenToWorld2D({SCREENWIDTH, SCREENHEIGHT}, camera.cam) << '\n';
         //std::cout << "\tplayer position: " << to_Vector2(registry.get().get<Position>(registry.get_entity(registry.PLAYER_ENTITY_NAME))) << '\n';
     }
-    std::cout << "Window should close!\n";
     registry.get().clear();
 }
