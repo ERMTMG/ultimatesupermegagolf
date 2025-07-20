@@ -6,6 +6,10 @@ TilesetTile::TilesetTile(const char* textureFilename){
     id = -1;
 }
 
+TilesetTile::~TilesetTile(){
+    SpriteLoader::return_texture(texture);
+}
+
 TileID tileset_add_new_tile(TilesetComponent& tileset, const TilesetTile& tile){
     TileID newTileID = tileset.tiles.size();
     tileset.tiles.push_back(TilesetTile());

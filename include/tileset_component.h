@@ -14,6 +14,25 @@ struct TilesetTile {
 
     TilesetTile() : collision(), texture(), id(-1) {}
     TilesetTile(const char* textureFilename);
+    ~TilesetTile();
+
+    TilesetTile(const TilesetTile&) = delete;
+    TilesetTile& operator=(const TilesetTile&) = delete;
+
+    TilesetTile(TilesetTile&& other){
+        this->texture = other.texture;
+        this->collision = std::move(other.collision);
+        this->id = other.id;
+    }
+    TilesetTile& operator=(TilesetTile&& other){
+        if(this != &other){
+            SpriteLoader::return_texture(this->texture);
+            this->texture = other.texture;
+            this->collision = std::move(other.collision);
+            this->id = other.id;
+        }
+        return *this;
+    }
 };
 
 struct TilePosition {
