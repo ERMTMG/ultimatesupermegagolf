@@ -17,9 +17,6 @@ TilesetTile::TilesetTile(const TilesetTile& other){
     if(other.texture.id != 0) this->texture = SpriteLoader::get_texture_copy(other.texture);
 }
 
-TilesetComponent::~TilesetComponent(){
-}
-
 TilesetComponent::TilesetComponent(TilesetComponent&& other){
     tiles = std::move(other.tiles);
     map = std::move(other.map);
