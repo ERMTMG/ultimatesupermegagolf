@@ -121,7 +121,7 @@ int main(){
             }
         }
     }*/
-    load_placeholder_tilemap(registry, {32,32});
+    load_placeholder_tilemap(registry, {-48,-32});
     for(int i = -128; i <= 128; i+=40){
         add_thing(registry, {i+20,-128+12}, 23);
         add_thing(registry, {i+20,+128-12}, 536);
@@ -151,4 +151,5 @@ int main(){
         //std::cout << "camera coordinates: " << GetScreenToWorld2D({0,0}, camera.cam) << " to " << GetScreenToWorld2D({SCREENWIDTH, SCREENHEIGHT}, camera.cam) << '\n';
         //std::cout << "\tplayer position: " << to_Vector2(registry.get().get<Position>(registry.get_entity(registry.PLAYER_ENTITY_NAME))) << '\n';
     }
+    registry.get().clear();
 }

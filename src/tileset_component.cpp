@@ -82,10 +82,11 @@ void tileset_get_complete_collision(const TilesetComponent& tileset, CollisionCo
     }
 }
 
-void draw_tileset(const TilesetComponent& tileset){
+void draw_tileset(const TilesetComponent& tileset, const Position& pos){
+    Vector2 posVector = to_Vector2(pos);
     for(const auto& [pos, tileID] : tileset.map){
         const TilesetTile& tile = tileset.tiles[tileID];
-        Vector2 tilePos = to_Vector2(tileset_get_tile_pos(tileset, pos.row, pos.col));
+        Vector2 tilePos = to_Vector2(tileset_get_tile_pos(tileset, pos.row, pos.col)) + posVector;
         Rectangle tileRect = {
             .x = 0,
             .y = 0,

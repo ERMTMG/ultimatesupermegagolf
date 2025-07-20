@@ -342,7 +342,7 @@ void LevelRegistry::draw(bool debugMode) const{
             for(auto[entity, tilemap, pos] : tilemaps.each()){
                 const BoundingBoxComponent* bb = registry->try_get<BoundingBoxComponent>(entity);
                 if(bb != nullptr && is_in_view(camera, *bb, pos)){
-                    draw_tileset(tilemap);
+                    draw_tileset(tilemap, pos);
                 }
             }
 

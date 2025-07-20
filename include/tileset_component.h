@@ -67,4 +67,4 @@ void tileset_fill_tiles(TilesetComponent& tileset, int beginRow, int endRow, int
 
 void tileset_get_complete_collision(const TilesetComponent& tileset, CollisionComponent& collision);
 
-void draw_tileset(const TilesetComponent& tileset);
+void draw_tileset(const TilesetComponent& tileset, const Position& pos);
