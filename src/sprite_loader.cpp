@@ -2,6 +2,8 @@
 #include<stdexcept>
 #include<algorithm>
 
+#include<iostream>
+
 SpriteLoader::TextureInfo::TextureInfo(const char* filepath) : texture(LoadTexture(filepath)), refCount(1), unloadOnDestruct(false) {}
 SpriteLoader::TextureInfo::~TextureInfo(){
     if(unloadOnDestruct){
@@ -25,11 +27,13 @@ Texture SpriteLoader::load_or_get_texture(const char* filepath){
     auto itr = _spriteFileMap.find(filepath);
     if(itr != _spriteFileMap.end()){
         itr->second.refCount++;
+        std::cout << "DEBUG: Increased refcount of texture \"" << filepath << "\" to " << itr->second.refCount << "\n"; 
         return itr->second.texture;
     } else {
         TextureInfo textureInfo{filepath};
         _spriteFileMap.emplace(filepath, std::move(textureInfo));
         _spriteFileMap[filepath].unloadOnDestruct = true;
+        std::cout << "DEBUG: Loaded texture \"" << filepath << "\" for first time\n"; 
         return textureInfo.texture;
     }
 }
@@ -45,9 +49,23 @@ void SpriteLoader::return_texture(Texture texture){
 
     if(iter != _spriteFileMap.end()){
         iter->second.refCount--;
+        std::cout << "DEBUG: Decreased refcount of texture \"" << iter->first << "\" to " << iter->second.refCount << "\n"; 
         if(iter->second.refCount == 0){
             _spriteFileMap.erase(iter);
         }
+    }
+}
+
+Texture SpriteLoader::get_texture_copy(Texture texture){
+    auto iter = std::find_if(_spriteFileMap.begin(), _spriteFileMap.end(), [&texture](const std::pair<const std::string, TextureInfo>& pair){
+        return pair.second.texture == texture;
+    });
+    if(iter != _spriteFileMap.end()){
+        iter->second.refCount++;
+        std::cout << "DEBUG: Increased refcount of texture \"" << iter->first << "\" to " << iter->second.refCount << "\n"; 
+        return texture;
+    } else {
+        throw std::invalid_argument("Copying texture not registered by SpriteLoader");
     }
 }
 

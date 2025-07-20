@@ -1,0 +1,396 @@
+INFO: Initializing raylib 4.6-dev
+INFO: Supported raylib modules:
+INFO:     > rcore:..... loaded (mandatory)
+INFO:     > rlgl:...... loaded (mandatory)
+INFO:     > rshapes:... loaded (optional)
+INFO:     > rtextures:. loaded (optional)
+INFO:     > rtext:..... loaded (optional)
+INFO:     > rmodels:... loaded (optional)
+INFO:     > raudio:.... loaded (optional)
+INFO: DISPLAY: Device initialized successfully
+INFO:     > Display size: 1920 x 954
+INFO:     > Screen size:  800 x 600
+INFO:     > Render size:  800 x 600
+INFO:     > Viewport offsets: 0, 0
+INFO: GLAD: OpenGL extensions loaded successfully
+INFO: GL: Supported extensions count: 224
+INFO: GL: OpenGL device information:
+INFO:     > Vendor:   Mesa
+INFO:     > Renderer: llvmpipe (LLVM 17.0.6, 256 bits)
+INFO:     > Version:  4.5 (Core Profile) Mesa 24.0.9-0ubuntu0.2
+INFO:     > GLSL:     4.50
+INFO: GL: VAO extension detected, VAO functions loaded successfully
+INFO: GL: NPOT textures extension detected, full NPOT textures supported
+INFO: GL: DXT compressed textures supported
+INFO: GL: ETC2/EAC compressed textures supported
+INFO: TEXTURE: [ID 1] Texture loaded successfully (1x1 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 1] Default texture loaded successfully
+INFO: SHADER: [ID 1] Vertex shader compiled successfully
+INFO: SHADER: [ID 2] Fragment shader compiled successfully
+INFO: SHADER: [ID 3] Program shader loaded successfully
+INFO: SHADER: [ID 3] Default shader loaded successfully
+INFO: RLGL: Render batch vertex buffers loaded successfully in RAM (CPU)
+INFO: RLGL: Render batch vertex buffers loaded successfully in VRAM (GPU)
+INFO: RLGL: Default OpenGL state initialized successfully
+INFO: TEXTURE: [ID 2] Texture loaded successfully (128x128 | GRAY_ALPHA | 1 mipmaps)
+INFO: FONT: Default font loaded successfully (224 glyphs)
+INFO: TIMER: Target time per frame: 16.667 milliseconds
+INFO: FILEIO: [resources/sprites/ball_icon.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (32x32 | R8G8B8A8 | 1 mipmaps)
+INFO: FILEIO: [resources/sprites/ball.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 3] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/ball.png" for first time
+INFO: FILEIO: [resources/sprites/flag.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (48x32 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 4] Texture loaded successfully (48x32 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/flag.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_0.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 5] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_1.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 6] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" for first time
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 2
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 1
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_2.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 7] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_2.png" for first time
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" to 2
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" to 1
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_3.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 8] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_3.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_4.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 9] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_4.png" for first time
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_2.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_3.png" to 2
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_2.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_3.png" to 1
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_5.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 10] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_5.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_6.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 11] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_6.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_7.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 12] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_7.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_8.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 13] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_8.png" for first time
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_2.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_3.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_4.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_5.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_6.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_7.png" to 2
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_2.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_3.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_4.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_5.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_6.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_7.png" to 1
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_9.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 14] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_9.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_10.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 15] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_10.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_11.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 16] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_11.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_12.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 17] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_12.png" for first time
+INFO: FILEIO: [resources/sprites/triangle_thing.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (40x25 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 18] Texture loaded successfully (40x25 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/triangle_thing.png" for first time
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 3
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 4
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 5
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 6
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 7
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 8
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 9
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 10
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 11
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 12
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 13
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 14
+collision detected! entities: 0, 7
+collision detected! entities: 0, 5
+collision detected! entities: 0, 7
+collision detected! entities: 0, 5
+player velocity released!: (215.778,-42.1747)
+collision detected! entities: 0, 7
+collision detected! entities: 0, 6
+collision detected! entities: 0, 5
+Window should close!
+TilesetComponent: destructor called. Size of `tiles`: 13
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 13
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 12
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 11
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 10
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 9
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 8
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 7
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 6
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 5
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 4
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 3
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 2
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 1
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 0
+INFO: TEXTURE: [ID 18] Unloaded texture data from VRAM (GPU)
+DEBUG: Decreased refcount of texture "resources/sprites/flag.png" to 0
+INFO: TEXTURE: [ID 4] Unloaded texture data from VRAM (GPU)
+DEBUG: Decreased refcount of texture "resources/sprites/ball.png" to 0
+INFO: TEXTURE: [ID 3] Unloaded texture data from VRAM (GPU)
+INFO: Initializing raylib 4.6-dev
+INFO: Supported raylib modules:
+INFO:     > rcore:..... loaded (mandatory)
+INFO:     > rlgl:...... loaded (mandatory)
+INFO:     > rshapes:... loaded (optional)
+INFO:     > rtextures:. loaded (optional)
+INFO:     > rtext:..... loaded (optional)
+INFO:     > rmodels:... loaded (optional)
+INFO:     > raudio:.... loaded (optional)
+INFO: DISPLAY: Device initialized successfully
+INFO:     > Display size: 1920 x 954
+INFO:     > Screen size:  800 x 600
+INFO:     > Render size:  800 x 600
+INFO:     > Viewport offsets: 0, 0
+INFO: GLAD: OpenGL extensions loaded successfully
+INFO: GL: Supported extensions count: 224
+INFO: GL: OpenGL device information:
+INFO:     > Vendor:   Mesa
+INFO:     > Renderer: llvmpipe (LLVM 17.0.6, 256 bits)
+INFO:     > Version:  4.5 (Core Profile) Mesa 24.0.9-0ubuntu0.2
+INFO:     > GLSL:     4.50
+INFO: GL: VAO extension detected, VAO functions loaded successfully
+INFO: GL: NPOT textures extension detected, full NPOT textures supported
+INFO: GL: DXT compressed textures supported
+INFO: GL: ETC2/EAC compressed textures supported
+INFO: TEXTURE: [ID 1] Texture loaded successfully (1x1 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 1] Default texture loaded successfully
+INFO: SHADER: [ID 1] Vertex shader compiled successfully
+INFO: SHADER: [ID 2] Fragment shader compiled successfully
+INFO: SHADER: [ID 3] Program shader loaded successfully
+INFO: SHADER: [ID 3] Default shader loaded successfully
+INFO: RLGL: Render batch vertex buffers loaded successfully in RAM (CPU)
+INFO: RLGL: Render batch vertex buffers loaded successfully in VRAM (GPU)
+INFO: RLGL: Default OpenGL state initialized successfully
+INFO: TEXTURE: [ID 2] Texture loaded successfully (128x128 | GRAY_ALPHA | 1 mipmaps)
+INFO: FONT: Default font loaded successfully (224 glyphs)
+INFO: TIMER: Target time per frame: 16.667 milliseconds
+INFO: FILEIO: [resources/sprites/ball_icon.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (32x32 | R8G8B8A8 | 1 mipmaps)
+INFO: FILEIO: [resources/sprites/ball.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 3] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/ball.png" for first time
+INFO: FILEIO: [resources/sprites/flag.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (48x32 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 4] Texture loaded successfully (48x32 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/flag.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_0.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 5] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_1.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 6] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" for first time
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 2
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 1
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_2.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 7] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_2.png" for first time
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" to 2
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" to 1
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_3.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 8] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_3.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_4.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 9] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_4.png" for first time
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_2.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_3.png" to 2
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_2.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_3.png" to 1
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_5.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 10] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_5.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_6.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 11] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_6.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_7.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 12] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_7.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_8.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 13] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_8.png" for first time
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_2.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_3.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_4.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_5.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_6.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_7.png" to 2
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_0.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_1.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_2.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_3.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_4.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_5.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_6.png" to 1
+TilesetTile: Destructor called
+DEBUG: Decreased refcount of texture "resources/sprites/placeholder_tileset/tile_placeholder_7.png" to 1
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_9.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 14] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_9.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_10.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 15] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_10.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_11.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 16] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_11.png" for first time
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_12.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 17] Texture loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/placeholder_tileset/tile_placeholder_12.png" for first time
+INFO: FILEIO: [resources/sprites/triangle_thing.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (40x25 | R8G8B8A8 | 1 mipmaps)
+INFO: TEXTURE: [ID 18] Texture loaded successfully (40x25 | R8G8B8A8 | 1 mipmaps)
+DEBUG: Loaded texture "resources/sprites/triangle_thing.png" for first time
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 2
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 3
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 4
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 5
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 6
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 7
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 8
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 9
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 10
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 11
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 12
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 13
+DEBUG: Increased refcount of texture "resources/sprites/triangle_thing.png" to 14
+collision detected! entities: 0, 7
+collision detected! entities: 0, 5
+collision detected! entities: 0, 7
+collision detected! entities: 0, 5
+player velocity released!: (241.561,122.039)
+collision detected! entities: 0, 6
+player velocity released!: (-242.586,-97.1416)
+collision detected! entities: 0, 5
+collision detected! entities: 0, 5
+player velocity released!: (255.202,61.1857)
+collision detected! entities: 0, 5
+collision detected! entities: 0, 6
+collision detected! entities: 0, 17
+collision detected! entities: 0, 6
+player velocity released!: (280.215,-1.45642)
+collision detected! entities: 0, 5
+collision detected! entities: 0, 6
+collision detected! entities: 0, 13
+collision detected! entities: 0, 6
+Window should close!
+TilesetComponent: destructor called. Size of `tiles`: 13
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 13
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 12
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 11
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 10
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 9
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 8
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 7
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 6
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 5
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 4
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 3
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 2
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 1
+DEBUG: Decreased refcount of texture "resources/sprites/triangle_thing.png" to 0
+INFO: TEXTURE: [ID 18] Unloaded texture data from VRAM (GPU)
+DEBUG: Decreased refcount of texture "resources/sprites/flag.png" to 0
+INFO: TEXTURE: [ID 4] Unloaded texture data from VRAM (GPU)
+DEBUG: Decreased refcount of texture "resources/sprites/ball.png" to 0
+INFO: TEXTURE: [ID 3] Unloaded texture data from VRAM (GPU)
+=============================================================
+TilesetComponent: constructor called
+TilesetTile: constructor called
+INFO: FILEIO: [resources/sprites/placeholder_tileset/tile_placeholder_0.png] File loaded successfully
+INFO: IMAGE: Data loaded successfully (16x16 | R8G8B8A8 | 1 mipmaps)

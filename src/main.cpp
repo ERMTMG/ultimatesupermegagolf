@@ -56,23 +56,23 @@ void load_placeholder_tilemap(LevelRegistry& registry, const Position& pos){
     auto[tilemapEntity, tileCollision] = registry.create_static_body(pos, {registry.PLAYER_COLLISION_LAYER});
     auto& tilemap = registry.get().emplace<TilesetComponent>(tilemapEntity);
     tilemap.tileSize = {16,16};
-    TilesetTile tiles[] = {
-        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_0.png"),
-        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_1.png"),
-        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_2.png"),
-        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_3.png"),
-        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_4.png"),
-        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_5.png"),
-        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_6.png"),
-        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_7.png"),
-        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_8.png"),
-        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_9.png"),
-        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_10.png"),
-        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_11.png"),
-        TilesetTile("resources/sprites/placeholder_tileset/tile_placeholder_12.png"),
+    const char* tileTextures[] = {
+        ("resources/sprites/placeholder_tileset/tile_placeholder_0.png"),
+        ("resources/sprites/placeholder_tileset/tile_placeholder_1.png"),
+        ("resources/sprites/placeholder_tileset/tile_placeholder_2.png"),
+        ("resources/sprites/placeholder_tileset/tile_placeholder_3.png"),
+        ("resources/sprites/placeholder_tileset/tile_placeholder_4.png"),
+        ("resources/sprites/placeholder_tileset/tile_placeholder_5.png"),
+        ("resources/sprites/placeholder_tileset/tile_placeholder_6.png"),
+        ("resources/sprites/placeholder_tileset/tile_placeholder_7.png"),
+        ("resources/sprites/placeholder_tileset/tile_placeholder_8.png"),
+        ("resources/sprites/placeholder_tileset/tile_placeholder_9.png"),
+        ("resources/sprites/placeholder_tileset/tile_placeholder_10.png"),
+        ("resources/sprites/placeholder_tileset/tile_placeholder_11.png"),
+        ("resources/sprites/placeholder_tileset/tile_placeholder_12.png"),
     };
-    for(const TilesetTile& tile : tiles){
-        tileset_add_new_tile(tilemap, tile);
+    for(const char* filename : tileTextures){
+        tilemap.tiles.emplace_back(filename);
     }
     tileset_place_tile(tilemap, 0, 0, 0);
     tileset_place_tile(tilemap, 0, 1, 1);
@@ -99,7 +99,15 @@ void load_placeholder_tilemap(LevelRegistry& registry, const Position& pos){
 }
 
 int main(){
+    
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Ultimate Super Mega Golf");
+    {
+        std::cout << "=============================================================\n";
+        TilesetComponent component; component.tiles.reserve(2);
+        component.tiles.emplace_back("resources/sprites/placeholder_tileset/tile_placeholder_0.png");
+        component.tiles.emplace_back("resources/sprites/placeholder_tileset/tile_placeholder_1.png");
+    }
+    std::cout << "=============================================================\n";
     SetTargetFPS(60);
     Image windowIcon = LoadImage("resources/sprites/ball_icon.png");
     SetWindowIcon(windowIcon); // This doesn't work because ubuntu uses GNOME for its desktop apparently. fuck
@@ -151,5 +159,6 @@ int main(){
         //std::cout << "camera coordinates: " << GetScreenToWorld2D({0,0}, camera.cam) << " to " << GetScreenToWorld2D({SCREENWIDTH, SCREENHEIGHT}, camera.cam) << '\n';
         //std::cout << "\tplayer position: " << to_Vector2(registry.get().get<Position>(registry.get_entity(registry.PLAYER_ENTITY_NAME))) << '\n';
     }
+    std::cout << "Window should close!\n";
     registry.get().clear();
 }

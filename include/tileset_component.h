@@ -12,8 +12,20 @@ struct TilesetTile {
     Texture texture;
     TileID id;
 
-    TilesetTile() : collision(), texture(), id(-1) {}
+    TilesetTile() : collision(), texture(), id(-1) {
+        std::cout << "TilesetTile: constructor called\n";
+    }
     TilesetTile(const char* textureFilename);
+    /*
+        NOTE: this cost me an hour of debugging. Turns out, g++ compiler optimizations 
+        eat up this destructor and act as if it never existed at all, even though it
+        prints out that it's been called and it also calls SpriteLoader::return_texture.
+        for some godforsaken reason, g++ thinks it isn't important to go ahead and
+        UNLOAD THE FUCKING TEXTURES. so i have to force it to not optimize with this hacky
+        __attribute__((noinline)). istg i'm going to kill somebody
+    */
+    ~TilesetTile() __attribute__((noinline)); 
+    TilesetTile(const TilesetTile& other);
 };
 
 struct TilePosition {
@@ -36,10 +48,16 @@ struct TilesetComponent {
     std::unordered_map<TilePosition, TileID> map;
     Vector2 tileSize;
 
+
+    TilesetComponent(){
+        std::cout << "TilesetComponent: constructor called\n";
+    }
+    virtual ~TilesetComponent();
+
     TilesetComponent(const TilesetComponent&) = delete;
     TilesetComponent& operator=(const TilesetComponent&) = delete;
 
-    TilesetComponent(TilesetComponent&&) = default;
+    TilesetComponent(TilesetComponent&&);
     TilesetComponent& operator=(TilesetComponent&&) = default;
 };
 

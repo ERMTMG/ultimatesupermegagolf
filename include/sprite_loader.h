@@ -52,6 +52,11 @@ namespace SpriteLoader{
     void return_texture(Texture texture);
 
     /*
+        Copies the texture (i.e., increases its ref count). This one also does a linear search.
+    */
+    Texture get_texture_copy(Texture texture);
+
+    /*
         Don't know if this is useful at all honestly. Does what it says on the tin
     */
     size_t _get_texture_ref_count(const char* filepath);
