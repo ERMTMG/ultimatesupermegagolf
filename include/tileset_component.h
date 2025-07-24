@@ -41,24 +41,6 @@ struct TilesetTile {
     TilesetTile(const TilesetTile& other);
 };
 
-// Simple struct that stores a pair of two integers to be used as a key for the map in 
-// TilesetComponent. I'm declaring a struct over just using std::pair<int, int> for 
-// readability reasons.
-struct TilePosition {
-    int row;
-    int col;
-    bool operator==(const TilePosition& other) const {
-        return (this->row == other.row && this->col == other.col);
-    }
-};
-
-// std::hash specialization to be able to declare std::unordered_map<TilePosition>
-template<>
-struct std::hash<TilePosition>{
-    size_t operator()(const TilePosition& pos) const noexcept {
-        return size_t(pos.row << 10 + pos.col);
-    }
-};
 
 /*
     Main component that handles both the list of available tiles and also the whole tilemap.
@@ -69,12 +51,10 @@ struct TilesetComponent {
     // exception being the null TileID (-1).
     std::vector<TilesetTile> tiles;
 
-    // This maps stores, well, the tilemap. Every non-empty position is mapped to 
-    // the ID of the tile in that position. Positions not containing any tile are
-    // simply not stored. Is this more efficient than just storing a 2D array, or a
-    // std::vector<std::vector>? i'm not sure, but this also allows me to place tiles
-    // in negative positions
-    std::unordered_map<TilePosition, TileID> map;
+    // This stores the tilemap itself, in a 2D array starting from offset (0,0). 
+    // Empty tiles are assigned the ID -1.
+    // TODO: make a dedicated class for a 2D array thats wraps over an std::vector and allocates elements contiguously
+    std::vector<std::vector<TileID>> map;
 
     // This defines the size of a grid square in the tilemap. It's used to determine
     // the separation that both tile sprites and tile collisions have between them when
@@ -91,6 +71,8 @@ struct TilesetComponent {
 
     TilesetComponent(TilesetComponent&&) = default;
     TilesetComponent& operator=(TilesetComponent&&) = default;
+
+    TilesetComponent(size_t gridRows, size_t gridCols);
 };
 
 // Adds a new tile to the tileset's tile list (doesn't place it anywhere), and 

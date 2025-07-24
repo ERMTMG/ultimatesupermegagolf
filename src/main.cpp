@@ -54,7 +54,7 @@ void add_thing(LevelRegistry& registry, const Position& pos, int rotationDegrees
 
 void load_placeholder_tilemap(LevelRegistry& registry, const Position& pos){
     auto[tilemapEntity, tileCollision] = registry.create_static_body(pos, {registry.PLAYER_COLLISION_LAYER});
-    auto& tilemap = registry.get().emplace<TilesetComponent>(tilemapEntity);
+    auto& tilemap = registry.get().emplace<TilesetComponent>(tilemapEntity, 4, 6);
     tilemap.tileSize = {16,16};
     const char* tileTextures[] = {
         ("resources/sprites/placeholder_tileset/tile_placeholder_0.png"),

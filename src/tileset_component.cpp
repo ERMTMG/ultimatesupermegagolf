@@ -17,10 +17,11 @@ TilesetTile::TilesetTile(const TilesetTile& other){
     if(other.texture.id != 0) this->texture = SpriteLoader::get_texture_copy(other.texture);
 }
 
-TilesetComponent::TilesetComponent(TilesetComponent&& other){
-    tiles = std::move(other.tiles);
-    map = std::move(other.map);
-    tileSize = other.tileSize;
+TilesetComponent::TilesetComponent(size_t gridRows, size_t gridCols) : TilesetComponent() {
+    map.resize(gridRows);
+    for(size_t i = 0; i < gridRows; i++){
+        map[i] = std::vector<TileID>(gridCols, -1);
+    }
 }
 
 TileID tileset_add_new_tile(TilesetComponent& tileset, const TilesetTile& tile){
@@ -37,52 +38,40 @@ void tileset_clear_all(TilesetComponent& tileset){
 }
 
 TileID tileset_get_tile_at(const TilesetComponent& tileset, int row, int col){
-    auto itr = tileset.map.find({row, col});
-    if(itr == tileset.map.end()){
-        return -1;
-    } else {
-        return itr->second;
-    }
+    return tileset.map[row][col];
+    // This doesn't check whether [row][col] is a valid index for the map.
 }
 
 void tileset_place_tile(TilesetComponent& tileset, int row, int col, TileID id){
-    if(id == -1){
-        tileset.map.erase({row, col});
-    } else {
-        tileset.map[{row, col}] = id;
-    }
+    tileset.map[row][col] = id;
 }
 
 void tileset_remove_tile(TilesetComponent& tileset, int row, int col){
-    tileset.map.erase({row, col});
+    tileset.map[row][col] = -1;
 }
 
-void tileset_remove_all_tiles(TilesetComponent& tileset, TileID id){
-    if(id == -1){
-        tileset.map.clear();
+void tileset_remove_all_tiles(TilesetComponent& tileset, TileID targetID){
+    if(targetID == -1){
+        for(auto& row : tileset.map){
+            for(auto& tileID : row){
+                tileID = -1;
+            }
+        }
     } else {
-        for(auto itr = tileset.map.begin(); itr != tileset.map.end(); ){
-            if(itr->second == id){
-                itr == tileset.map.erase(itr);
-            } else {
-                ++itr;
+        for(auto& row : tileset.map){
+            for(auto& tileID : row){
+                if(tileID == targetID){
+                    tileID = -1;
+                }
             }
         }
     }
 }
 
 void tileset_fill_tiles(TilesetComponent& tileset, int beginRow, int endRow, int beginCol, int endCol, TileID fill){
-    if(fill == -1){
-        for(int row = beginRow; row < endRow; row++){
-            for(int col = beginCol; col < endCol; col++){
-                tileset.map.erase({row, col});
-            }
-        }
-    } else {
-        for(int row = beginRow; row < endRow; row++){
-            for(int col = beginCol; col < endCol; col++){
-                tileset.map[{row, col}] = fill;
-            }
+    for(int i = beginRow; i < endRow; i++){
+        for(int j = beginCol; j < endCol; j++){
+            tileset.map[i][j] = fill;
         }
     }
 }
@@ -90,30 +79,39 @@ void tileset_fill_tiles(TilesetComponent& tileset, int beginRow, int endRow, int
 void tileset_get_complete_collision(const TilesetComponent& tileset, CollisionComponent& collision){
     collision.shapes.clear();
     collision.isStatic = true;
-    for(const auto& [pos, tileID] : tileset.map){
-        const TilesetTile& tile = tileset.tiles[tileID];
-        Position tilePos = tileset_get_tile_pos(tileset, pos.row, pos.col);
-        add_collision(collision, tile.collision, tilePos);
+    size_t tilemapRows = tileset.map.size();
+    size_t tilemapCols = (tilemapRows == 0 ? 0 : tileset.map[0].size());
+    for(size_t i = 0; i < tilemapRows; i++){
+        for(size_t j = 0; j < tilemapCols; j++){
+            TileID tileID = tileset.map[i][j];
+            const TilesetTile& tile = tileset.tiles[tileID];
+            Position tilePos = tileset_get_tile_pos(tileset, i, j);
+            add_collision(collision, tile.collision, tilePos);
+        }
     }
 }
 
 void draw_tileset(const TilesetComponent& tileset, const Position& pos){
     Vector2 posVector = to_Vector2(pos);
-    for(const auto& [pos, tileID] : tileset.map){
-        const TilesetTile& tile = tileset.tiles[tileID];
-        Vector2 tilePos = to_Vector2(tileset_get_tile_pos(tileset, pos.row, pos.col)) + posVector;
-        Rectangle tileRect = {
-            .x = 0,
-            .y = 0,
-            .width = tile.texture.width,
-            .height = tile.texture.height,
-        };
-        Rectangle destRect = {
-            .x = tilePos.x,
-            .y = tilePos.y,
-            .width = tileset.tileSize.x,
-            .height = tileset.tileSize.y
-        };
-        DrawTexturePro(tile.texture, tileRect, destRect, VEC2_ZERO, 0, WHITE);
+    size_t tilemapRows = tileset.map.size();
+    size_t tilemapCols = (tilemapRows == 0 ? 0 : tileset.map[0].size());
+    for(size_t i = 0; i < tilemapRows; i++){
+        for(size_t j = 0; j < tilemapCols; j++){
+            const TilesetTile& tile = tileset.tiles[tileset.map[i][j]];
+            Vector2 tilePos = to_Vector2(tileset_get_tile_pos(tileset, i, j)) + posVector;
+            Rectangle tileRect = {
+                .x = 0,
+                .y = 0,
+                .width = tile.texture.width,
+                .height = tile.texture.height,
+            };
+            Rectangle destRect = {
+                .x = tilePos.x,
+                .y = tilePos.y,
+                .width = tileset.tileSize.x,
+                .height = tileset.tileSize.y
+            };
+            DrawTexturePro(tile.texture, tileRect, destRect, VEC2_ZERO, 0, WHITE);
+        }
     }
 }

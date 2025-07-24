@@ -1,0 +1,68 @@
+>> ULBS (USMG Level Builder Script) format example. This is a comment.
+
+@setleveldata (
+	@name "placeholder level name"
+	@playerat (-100,-100)
+	@goalat (100,100)
+	@cameraat @vzero >> "@vzero" means (0,0)
+)
+
+@loadtiles (
+	tile0 "resources/sprites/placeholder_tileset/tile_placeholder_0.png" @solidcollision
+	tile1 "resources/sprites/placeholder_tileset/tile_placeholder_1.png" @solidcollision
+	>> ... ...
+	tile12 "resources/sprites/placeholder_tileset/tile_placeholder_12.png" @solidcollision
+)
+
+@setcomponent __CAMERA@CameraView@zoom 1.5 >> __CAMERA is a built in entity
+
+@new Walls @staticbody (
+	+@barrier ((0,-128), @vdown) 
+	+@barrier ((0,128), @vup)
+	+@barrier ((-128,0), @vright)
+	+@barrier ((128,0), @vleft)
+	@layers [@playerlayer]
+)
+@addcomponent Walls @BoundingBoxComponent ((-150,-150), 300, 300)
+
+@new Tilemap @tilemap (
+	@tiles [tile0, tile1, tile2, tile3, tile4, tile5, tile6,
+	        tile7, tile8, tile9, tile10, tile11, tile12]
+	@tilegrid (4,6)
+	[
+		[0, 1, 2, -, -, -],
+		[7, 8, 10,1, 1, 2],
+		[6, 5, 12,8, 8, 3],
+		[-, -, 6, 5, 5, 4],
+	]
+)
+@addcomponent Tilemap @BoundingBoxComponent @auto
+
+@defineentity Thing<$x, $y, $r> { >> Parametric entity definition
+	$P1 := @rotatepoint((-20,10), $r)
+	$P2	:= @rotatepoint((0,-15), $r)
+	$P3 := @rotatepoint((20,10), $r)
+	@new Thing @staticbody (
+		+@line ($P1, $P2)
+		+@line ($P2, $P3)
+		+@line ($P3, $P1)
+	)
+	@addcomponent Thing @SpriteSheet ("resources/sprites/triangle_thing.png", 40, 25)
+	@addcomponent Thing @SpriteTransform (@vzero, 1, $r)
+	@addcomponent Thing @BoundingBoxComponent @auto
+}
+
+@new Thing<-108, -116, 180>
+@new Thing<-108, 116, 0>
+@new Thing<-68, -116, 180>
+@new Thing<-68, 116, 0>
+@new Thing<-28, -116, 180>
+@new Thing<-28, 116, 0>
+@new Thing<12, -116, 180>
+@new Thing<12, 116, 0>
+@new Thing<52, -116, 180>
+@new Thing<52, 116, 0>
+@new Thing<92, -116, 180>
+@new Thing<92, 116, 0>
+
+
