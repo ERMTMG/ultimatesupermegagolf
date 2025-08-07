@@ -99,8 +99,8 @@ struct SpriteTransform{
     Vector2 scale; // allows for defining a separate scale in x and y (squish/stretch)
     float rotation; // IN DEGREES!!!
     SpriteTransform() : offset{VEC2_ZERO}, rotation{0}, scale{VEC2_ONE} {};
-    SpriteTransform(const Vector2& offset, float scale, int rotation) : offset{offset}, rotation{rotation}, scale{scale, scale} {};
-    SpriteTransform(const Vector2& offset, const Vector2& scale, int rotation) : offset{offset}, rotation{rotation}, scale{scale} {};
+    SpriteTransform(const Vector2& offset, float scale, float rotation) : offset{offset}, rotation{rotation}, scale{scale, scale} {};
+    SpriteTransform(const Vector2& offset, const Vector2& scale, float rotation) : offset{offset}, rotation{rotation}, scale{scale} {};
 };
 
 /*

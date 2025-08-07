@@ -54,7 +54,7 @@ void add_thing(LevelRegistry& registry, const Position& pos, int rotationDegrees
 
 void load_placeholder_tilemap(LevelRegistry& registry, const Position& pos){
     auto[tilemapEntity, tileCollision] = registry.create_static_body(pos, {registry.PLAYER_COLLISION_LAYER});
-    auto& tilemap = registry.get().emplace<TilesetComponent>(tilemapEntity, 4, 6);
+    auto& tilemap = registry.get().emplace<TilesetComponent>(tilemapEntity, 40, 60);
     tilemap.tileSize = {16,16};
     const char* tileTextures[] = {
         ("resources/sprites/placeholder_tileset/tile_placeholder_0.png"),
@@ -138,16 +138,16 @@ int main(){
             zoom_camera(camera, 1.01, CAMERA_ZOOM_OUT);
         }
         if(IsKeyDown(KEY_W)){
-            move_camera(camera, {0, -10});
+            move_camera(camera, {0, -1});
         }
         if(IsKeyDown(KEY_S)){
-            move_camera(camera, {0, 10});
+            move_camera(camera, {0, 1});
         }
         if(IsKeyDown(KEY_A)){
-            move_camera(camera, {-10, 0});
+            move_camera(camera, {-1, 0});
         }
         if(IsKeyDown(KEY_D)){
-            move_camera(camera, {10, 0});
+            move_camera(camera, {1, 0});
         }
         //std::cout << "camera coordinates: " << GetScreenToWorld2D({0,0}, camera.cam) << " to " << GetScreenToWorld2D({SCREENWIDTH, SCREENHEIGHT}, camera.cam) << '\n';
         //std::cout << "\tplayer position: " << to_Vector2(registry.get().get<Position>(registry.get_entity(registry.PLAYER_ENTITY_NAME))) << '\n';

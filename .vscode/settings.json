@@ -62,6 +62,14 @@
         "list": "cpp",
         "map": "cpp",
         "set": "cpp",
-        "bitset": "cpp"
-    }
+        "bitset": "cpp",
+        "cstring": "cpp"
+    },
+    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
+        "clang-diagnostic-error",
+        "clang-diagnostic-c++11-narrowing",
+        "clang-diagnostic-c++11-narrowing",
+        "clang-diagnostic-c++11-narrowing",
+        "clang-diagnostic-c++11-narrowing"
+    ]
 }

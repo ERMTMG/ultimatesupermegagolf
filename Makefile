@@ -27,3 +27,7 @@ collision_test:
 
 bb_calculate_test: $(BB_CALCULATE_TEST) $(OBJ_FILES)
 	g++ $(OBJ_FILES) $(BB_CALCULATE_TEST) $(DEBUG_COMPILER_OPTIONS) -o bin/bb_calculate_test -I$(INCLUDE_DIR) -I. -L$(LIB_DIR) -std=c++17 -lraylib
+
+clean:
+	rm bin/*
+	rm obj/*.o

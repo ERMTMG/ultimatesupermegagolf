@@ -53,8 +53,7 @@ struct TilesetComponent {
 
     // This stores the tilemap itself, in a 2D array starting from offset (0,0). 
     // Empty tiles are assigned the ID -1.
-    // TODO: make a dedicated class for a 2D array thats wraps over an std::vector and allocates elements contiguously
-    std::vector<std::vector<TileID>> map;
+    util::Matrix<TileID> map;
 
     // This defines the size of a grid square in the tilemap. It's used to determine
     // the separation that both tile sprites and tile collisions have between them when
@@ -82,6 +81,8 @@ TileID tileset_add_new_tile(TilesetComponent& tileset, const TilesetTile& tile);
 
 // Clears all of the tileset's information: available tiles, the tilemap and the tilesize.
 void tileset_clear_all(TilesetComponent& tileset);
+
+bool tileset_is_tile_in_range(const TilesetComponent& tileset, int row, int col);
 
 // If there's a tile placed at (row, col) in the tilemap, returns that tile's ID. 
 // Else, returns -1 (null tile ID)
