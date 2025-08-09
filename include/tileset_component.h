@@ -82,14 +82,15 @@ TileID tileset_add_new_tile(TilesetComponent& tileset, const TilesetTile& tile);
 // Clears all of the tileset's information: available tiles, the tilemap and the tilesize.
 void tileset_clear_all(TilesetComponent& tileset);
 
-bool tileset_is_tile_in_range(const TilesetComponent& tileset, int row, int col);
+// Returns true only if the position (row, col) is within range of the allocated tilemap
+bool tileset_is_tile_in_range(const TilesetComponent& tileset, size_t row, size_t col);
 
 // If there's a tile placed at (row, col) in the tilemap, returns that tile's ID. 
 // Else, returns -1 (null tile ID)
-TileID tileset_get_tile_at(const TilesetComponent& tileset, int row, int col);
+TileID tileset_get_tile_at(const TilesetComponent& tileset, size_t row, size_t col);
 
 // Checks if there's a tile placed at (row, col) in the tilemap.
-inline bool tileset_has_tile_at(const TilesetComponent& tileset, int row, int col){
+inline bool tileset_has_tile_at(const TilesetComponent& tileset, size_t row, size_t col){
     return tileset_get_tile_at(tileset, row, col) != -1;
 }
 
@@ -97,18 +98,22 @@ inline bool tileset_has_tile_at(const TilesetComponent& tileset, int row, int co
 // (the tilemap doesn't need to actually have a tile in that position). To get the
 // _absolute_ position, add the returned position to the tilemap entity's position
 // component.
-inline Position tileset_get_tile_pos(const TilesetComponent& tileset, int row, int col){
+inline Position tileset_get_tile_pos(const TilesetComponent& tileset, size_t row, size_t col){
     return Position{tileset.tileSize.x * col, tileset.tileSize.y * row};
 }
+
+// Resizes the tilemap grid so that all-empty rows or columns at the end of the map
+// get removed
+void tileset_fit_map_to_content(TilesetComponent& tileset);
 
 // Places the tile with the given ID at the (row, col)-th position in the tileset's 
 // tilemap. If id == -1, removes the tile at (row, col) instead (nothing happens if 
 // there's no tile)
-void tileset_place_tile(TilesetComponent& tileset, int row, int col, TileID id);
+void tileset_place_tile(TilesetComponent& tileset, size_t row, size_t col, TileID id);
 
 // Removes the tile placed at the (row, col)-th position in the tileset's tilemap.
 // If there's no tile there, nothing happens.
-void tileset_remove_tile(TilesetComponent& tileset, int row, int col);
+void tileset_remove_tile(TilesetComponent& tileset, size_t row, size_t col);
 
 // Removes all tiles with the given tile ID from the tilemap. If the given ID is
 // -1, the function will remove every single tile in the tilemap instead.
@@ -117,7 +122,7 @@ void tileset_remove_all_tiles(TilesetComponent& tileset, TileID id = -1);
 // Sets all tiles in the rectangle with upper left corner (beginRow, beginCol) and 
 // lower right corner (endRow - 1, endCol - 1) to have the ID `fill`. If fill == -1,
 // then the function removes all the tiles in the rectangle instead.
-void tileset_fill_tiles(TilesetComponent& tileset, int beginRow, int endRow, int beginCol, int endCol, TileID fill);
+void tileset_fill_tiles(TilesetComponent& tileset, size_t beginRow, size_t endRow, size_t beginCol, size_t endCol, TileID fill);
 
 // Constructs the combined collision of the whole tilemap (given each tile type's
 // individual collision) and returns it through the reference parameter `collision`.

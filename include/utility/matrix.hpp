@@ -25,19 +25,19 @@ class Matrix {
     Matrix<Type>& operator= (Matrix<Type>&&) = default;
 
     inline Type& operator() (size_t i, size_t j){
-        return m_vec[i*m_rows + j];
+        return m_vec[i*m_cols + j];
     }
 
     inline const Type& operator() (size_t i, size_t j) const {
-        return m_vec[i*m_rows + j];
+        return m_vec[i*m_cols + j];
     }
 
     inline Type* operator[] (size_t i){
-        return m_vec.data() + i*m_rows;
+        return m_vec.data() + i*m_cols;
     }
 
     inline const Type* operator[] (size_t i) const {
-        return m_vec.data() + i*m_rows;
+        return m_vec.data() + i*m_cols;
     } 
 
     inline size_t rows() const {
@@ -57,6 +57,7 @@ class Matrix {
     }
 
     inline void resize(size_t newRows, size_t newCols, const Type& fill = Type{}){
+        if(m_rows == newRows && m_cols == newCols) return;
         std::vector<Type> newBuffer(newRows * newCols, fill);
         size_t minRows = std::min(newRows, m_rows);
         size_t minCols = std::min(newCols, m_cols);
@@ -147,7 +148,21 @@ class Matrix {
     inline ConstIterator end() const {
         return {m_vec.cend(), m_vec.cend()};
     }
+
+    //friend void std::swap<Matrix<Type>>(Matrix<Type>& m1, Matrix<Type>& m2) noexcept;
 };
 
 
 }
+/*
+namespace std {
+    
+template<class Type>
+void swap<util::Matrix<Type>>(util::Matrix<Type>& m1, util::Matrix<Type>& m2) noexcept {
+    std::swap(m1.m_vec, m2.m_vec);
+    std::swap(m1.m_rows, m2.m_rows);
+    std::swap(m1.m_cols, m2.m_cols);
+}
+
+}
+*/

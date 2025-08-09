@@ -1,4 +1,3 @@
-#pragma once
 #include "tileset_component.h"
 #include "entt.hpp"
 
@@ -20,6 +19,11 @@ TilesetTile::TilesetTile(const TilesetTile& other){
 
 TilesetComponent::TilesetComponent(size_t gridRows, size_t gridCols) : TilesetComponent() {
     map = util::Matrix<TileID>(gridRows, gridCols, -1);
+    for(TileID tileID : map){
+        if(tileID != -1){
+            std::cout << "BAD BAD BAD BAD BAD THIS IS NOT -1 FOR SOME REASON SOFNISODNFSDGS\n";
+        }
+    }
 }
 
 TileID tileset_add_new_tile(TilesetComponent& tileset, const TilesetTile& tile){
@@ -35,21 +39,62 @@ void tileset_clear_all(TilesetComponent& tileset){
     tileset.tileSize = VEC2_ZERO;
 }
 
-bool tileset_is_tile_in_range(const TilesetComponent &tileset, int row, int col)
+bool tileset_is_tile_in_range(const TilesetComponent &tileset, size_t row, size_t col)
 {
-    return (row >= 0 && row < tileset.map.rows() && col >= 0 && col < tileset.map.cols());
+    return (row < tileset.map.rows() && col < tileset.map.cols());
 }
 
-TileID tileset_get_tile_at(const TilesetComponent& tileset, int row, int col){
+TileID tileset_get_tile_at(const TilesetComponent& tileset, size_t row, size_t col){
     return tileset.map[row][col];
     // This doesn't check whether [row][col] is a valid index for the map.
 }
 
-void tileset_place_tile(TilesetComponent& tileset, int row, int col, TileID id){
+void tileset_fit_map_to_content(TilesetComponent& tileset){
+    size_t emptyRowsAtEndBegin = -1; // Beggining of the section of empty rows at the end of the map. kind of an oxymoronic name, i know
+    size_t emptyColsAtEndBegin = -1; // Same thing but with columns
+
+    for(size_t i = 0; i < tileset.map.rows(); i++){
+        bool isRowEmpty = true;
+        for(size_t j = 0; j < tileset.map.cols(); j++){
+            if(tileset.map[i][j] != -1){
+                isRowEmpty = false;
+                break;
+            }
+        }
+        if(isRowEmpty){
+            if(emptyRowsAtEndBegin == -1) emptyRowsAtEndBegin = i;
+        } else {
+            emptyRowsAtEndBegin = -1;
+        }
+    }
+    for(size_t j = 0; j < tileset.map.cols(); j++){
+        bool isColEmpty = false;
+        for(size_t i = 0; i < tileset.map.rows(); i++){
+            if(tileset.map[i][j] != -1){
+                isColEmpty = false;
+                break;
+            }
+        }
+        if(isColEmpty){
+            if(emptyColsAtEndBegin == -1) emptyColsAtEndBegin = j;
+        } else {
+            emptyColsAtEndBegin = -1;
+        }
+    }
+
+    size_t targetRows = (emptyRowsAtEndBegin == -1) ? tileset.map.rows() : emptyColsAtEndBegin;
+    size_t targetCols = (emptyColsAtEndBegin == -1) ? tileset.map.cols() : emptyColsAtEndBegin;
+    tileset.map.resize(targetRows, targetCols);
+}
+
+void tileset_place_tile(TilesetComponent& tileset, size_t row, size_t col, TileID id){
+    if(!tileset_is_tile_in_range(tileset, row, col)){
+        tileset.map.resize(row+1, col+1, -1);
+    }
     tileset.map[row][col] = id;
 }
 
-void tileset_remove_tile(TilesetComponent& tileset, int row, int col){
+void tileset_remove_tile(TilesetComponent& tileset, size_t row, size_t col){
     tileset.map[row][col] = -1;
 }
 
@@ -67,7 +112,10 @@ void tileset_remove_all_tiles(TilesetComponent& tileset, TileID targetID){
     }
 }
 
-void tileset_fill_tiles(TilesetComponent& tileset, int beginRow, int endRow, int beginCol, int endCol, TileID fill){
+void tileset_fill_tiles(TilesetComponent& tileset, size_t beginRow, size_t endRow, size_t beginCol, size_t endCol, TileID fill){
+    if(!tileset_is_tile_in_range(tileset, endRow, endCol)){
+        tileset.map.resize(endRow+1, endCol+1);
+    }
     for(int i = beginRow; i < endRow; i++){
         for(int j = beginCol; j < endCol; j++){
             tileset.map[i][j] = fill;

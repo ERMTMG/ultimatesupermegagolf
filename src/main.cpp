@@ -54,7 +54,7 @@ void add_thing(LevelRegistry& registry, const Position& pos, int rotationDegrees
 
 void load_placeholder_tilemap(LevelRegistry& registry, const Position& pos){
     auto[tilemapEntity, tileCollision] = registry.create_static_body(pos, {registry.PLAYER_COLLISION_LAYER});
-    auto& tilemap = registry.get().emplace<TilesetComponent>(tilemapEntity, 40, 60);
+    auto& tilemap = registry.get().emplace<TilesetComponent>(tilemapEntity, 40, 20);
     tilemap.tileSize = {16,16};
     const char* tileTextures[] = {
         ("resources/sprites/placeholder_tileset/tile_placeholder_0.png"),
@@ -73,6 +73,11 @@ void load_placeholder_tilemap(LevelRegistry& registry, const Position& pos){
     };
     for(const char* filename : tileTextures){
         tilemap.tiles.emplace_back(filename);
+    }
+    for(TileID tileID : tilemap.map){
+        if(tileID != -1){
+            std::abort();
+        }
     }
     tileset_place_tile(tilemap, 0, 0, 0);
     tileset_place_tile(tilemap, 0, 1, 1);
