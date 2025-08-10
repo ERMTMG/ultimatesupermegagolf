@@ -78,7 +78,7 @@ struct SpriteSheet{
         frames.
         TODO later: is there a better way for this?
     */
-    HeapArray<unsigned short> numberFramesPerAnimation; 
+    util::HeapArray<unsigned short> numberFramesPerAnimation; 
     unsigned short currentAnimation;
     unsigned short currentFrame;
 

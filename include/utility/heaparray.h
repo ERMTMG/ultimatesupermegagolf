@@ -1,6 +1,8 @@
 #pragma once
 #include<initializer_list>
 
+
+namespace util {
 /*
 A data structure that stores an array of a fixed, arbitrary size in the heap. 
 Wrapper over a pointer to heap-allocated memory. Size is 16 bytes.
@@ -83,6 +85,8 @@ class HeapArray{
     ConstIterator begin() const;
     ConstIterator end() const;
 };
+
+}
 
 #include "heaparray.cpp"
 //@c-ignore

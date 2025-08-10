@@ -3,6 +3,8 @@
 
 #ifndef USMG_HEAPARRAY_CPP
 #define USMG_HEAPARRAY_CPP
+
+namespace util {
 // Constructor with size and optional fill value
 template<class TYPE>
 HeapArray<TYPE>::HeapArray(SizeType size, const TYPE& fill) : size(size) {
@@ -232,4 +234,7 @@ typename HeapArray<TYPE>::ConstIterator HeapArray<TYPE>::end() const{
     output.ptr = this->__data__ + size; 
     return output;
 }
+
+}
+
 #endif
