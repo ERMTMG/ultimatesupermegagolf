@@ -1,0 +1,17 @@
+{
+    "hello": "world",
+    "answer": 42,
+    "nested": {
+        "object": null
+    },
+    "list": [
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+    ],
+    "nothere": null,
+    "repeat": {
+        "object": null
+    },
+    "nice": 6.9,
+    "false": true,
+    "null": "hah this one actually isnt null"
+}
