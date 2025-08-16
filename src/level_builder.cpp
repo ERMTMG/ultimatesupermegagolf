@@ -24,9 +24,10 @@ void build_level(Context& context, LevelRegistry& registry){
         context.error = error;
         return;
     }
-    build_level_info(context, registry, levelDict);
+    iterate_level_keys(context, registry, levelDict);
     if(context.error){
         std::cerr << "At build_level\n";
+        return;
     }
     // TODO: finish literally everything else: tileset loading, entity spawning, etc.
 }
@@ -45,74 +46,96 @@ static Vector2 parse_Vector2(Context& context, simdjson::ondemand::object& vecto
     }
 }
 
-static void build_level_info(Context& context, LevelRegistry& registry, simdjson::ondemand::object& levelDict){
+static bool level_info_get_Vector2(Context& context, simdjson::simdjson_result<simdjson::ondemand::field>& field, Vector2& outVector2, const char* errorName){
+    using namespace simdjson;
+    ondemand::object vec2;
+    error_code error = field.value().get_object().get(vec2);
+    if(error){
+        std::cerr << "Error on level_info_get_Vector2: value on field \"" << errorName << "\" is not object\n";
+        context.error = error;
+        return false;
+    }
+    Vector2 pos = parse_Vector2(context, vec2);
+    if(context.error){
+        std::cerr << "At build_level_info\n";
+        return false;
+    } else {
+        outVector2 = pos;
+        return true;
+    }
+}
+
+static void build_level_entities(Context& context, LevelRegistry& registry, simdjson::ondemand::object& entitiesDict){
+    using namespace simdjson;
+    for(auto field : entitiesDict){
+        std::string key;
+        ondemand::object entityData;
+        error_code error = field.escaped_key().get(key);
+        if(error){
+            std::cerr << "Error on build_level_entities: unable to get field key\n";
+            context.error = error;
+        }
+        error = field.value().get_object().get(entityData);
+        if(error){
+            std::cerr << "Error on build_level_entities: field \"" << key << "\"'s value is not an object\n";
+        }
+    }
+}
+
+static void iterate_level_keys(Context& context, LevelRegistry& registry, simdjson::ondemand::object& levelDict){
     using namespace simdjson;
     Vector2 playerPos = VEC2_ZERO;
     Vector2 goalPos = VEC2_ZERO;
     Vector2 cameraPos = VEC2_ZERO;
     bool cameraPosIsNonDefault = false;
     std::string levelName;
-    for(auto field: levelDict)
-    {
+    for(auto field: levelDict){
         std::string key;
         error_code error = field.escaped_key().get(key);
         if(error){
-            std::cerr << "Error on build_level_info at field recognition\n";
+            std::cerr << "Error on iterate_level_keys at field recognition\n";
             context.error = error;
             return;
         }
         if(key == "level_name"){
             error = field.value().get_string().get(levelName);
             if(error){
-                std::cerr << "Error on build_level_info: value on field \"level_name\" is not string\n";
+                std::cerr << "Error on iterate_level_keys: value on field \"level_name\" is not string\n";
                 context.error = error;
                 return;
             }
-        } else if(key == "player_position"){ // TODO: offload this into a function that just gets a Vector2 with a generic error message
-            ondemand::object vec2;
-            error = field.value().get_object().get(vec2);
-            if(error){
-                std::cerr << "Error on build_level_info: value on field \"player_position\" is not object\n";
-                context.error = error;
-                return;
-            }
-            Vector2 pos = parse_Vector2(context, vec2);
+        } else if(key == "player_position"){
+            level_info_get_Vector2(context, field, playerPos, "player_position");
             if(context.error){
-                std::cerr << "At build_level_info\n";
+                std::cerr << "At iterate_level_keys\n";
                 return;
-            } else {
-                playerPos = pos;
-            }
+            } 
         } else if(key == "goal_position"){
-            ondemand::object vec2;
-            error = field.value().get_object().get(vec2);
-            if(error){
-                std::cerr << "Error on build_level_info: value on field \"goal_position\" is not object\n";
-                context.error = error;
-                return;
-            }
-            Vector2 pos = parse_Vector2(context, vec2);
+            level_info_get_Vector2(context, field, goalPos, "goal_position");
             if(context.error){
-                std::cerr << "At build_level_info\n";
+                std::cerr << "At iterate_level_keys\n";
                 return;
-            } else {
-                goalPos = pos;
-            }
+            } 
         } else if(key == "camera_position"){
-            ondemand::object vec2;
-            error = field.value().get_object().get(vec2);
+            bool success = level_info_get_Vector2(context, field, cameraPos, "camera_position");
+            if(success){
+                cameraPosIsNonDefault = true;
+            } else if(context.error){
+                std::cerr << "At iterate_level_keys\n";
+            }
+        } else if(key == "tilesets"){
+            // TODO: parse tilesets
+        } else if(key == "entities"){
+            ondemand::object entitiesDict;
+            error = field.value().get_object().get(entitiesDict);
             if(error){
-                std::cerr << "Error on build_level_info: value on field \"camera_position\" is not object\n";
+                std::cerr << "Error on build_level_info: field \"entities\" is not an object\n";
                 context.error = error;
                 return;
             }
-            Vector2 pos = parse_Vector2(context, vec2);
+            build_level_entities(context, registry, entitiesDict);
             if(context.error){
-                std::cerr << "At build_level_info\n";
-                return;
-            } else {
-                cameraPos = pos;
-                cameraPosIsNonDefault = true;
+                std::cerr << "At iterate_level_keys";
             }
         }
     }
@@ -123,5 +146,8 @@ static void build_level_info(Context& context, LevelRegistry& registry, simdjson
         registry.init_level(Position{playerPos}, Position{goalPos});
     }
 }
+
+
+
 
 }
