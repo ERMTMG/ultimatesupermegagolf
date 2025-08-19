@@ -75,12 +75,12 @@ namespace LevelBuilder
         }
         playerPos = json_get_Vector2(context, levelDict.at("player_position"));
         if(context.error){
-            std::cerr << "\tfrom init_level_data (getting `player_position`)";
+            std::cerr << "\tfrom init_level_data (getting `player_position`)\n";
             return;
         }
         goalPos = json_get_Vector2(context, levelDict.at("goal_position"));
         if(context.error){
-            std::cerr << "\tfrom init_level_data (getting `goal_position`)";
+            std::cerr << "\tfrom init_level_data (getting `goal_position`)\n";
             return;
         }
 
@@ -88,7 +88,7 @@ namespace LevelBuilder
             isCameraAtPlayer = false;
             cameraPos = json_get_Vector2(context, levelDict.at("camera_position"));
             if(context.error){
-                std::cerr << "\tfrom init_level_data (getting `camera_position`)";
+                std::cerr << "\tfrom init_level_data (getting `camera_position`)\n";
                 return;
             }
         }
@@ -109,14 +109,55 @@ namespace LevelBuilder
         }
     }
 
+    static void load_level_entity_from_json(Context& context, LevelRegistry& registry, const std::string& entityName, const Json& entityObj){
+        if(!entityObj.contains("entity_default")){
+            // TODO: only load components
+        } else {
+            std::string entityDefault = json_get_string(context, entityObj.at("entity_default"));
+            if(context.error){
+                std::cerr << "\tfrom load_level_entity_from_json (getting `entityDefault`)";
+            }
+            if(entityDefault == "static_body"){
+                // TODO: do static body stuff
+            } else if(entityDefault == "tilemap"){
+                // TODO: do tilemap stuff
+            } else if(entityDefault == "none"){
+                // TODO: only load components, same thing as if there weren't an entity_default field
+            }
+        }
+    }
+
+    static void load_level_entities(Context& context, LevelRegistry& registry, const Json& levelDict){
+        if(!levelDict.contains("entities")){
+            std::cerr << "<WARNING> at load_level_entities: no `entities` field. Level will be empty\n";
+            return;
+        }
+        const Json& entities = levelDict.at("entities");
+        if(!entities.is_object()){
+            context.error = {ErrorType::INVALID_JSON_TYPE, "expected dictionary for field `entities`, received '" + to_string(entities) + '\''};
+            std::cerr << "<ERROR> at load_level_entities: " << context.error;
+            return;
+        }
+        for(const auto& [entityName, entityObj] : entities.items()){
+            load_level_entity_from_json(context, registry, entityName, entityObj);
+            if(context.error){
+                std::cerr << "\tfrom load_level_entities (entity name: '" << entityName << "')\n";
+                return;
+            }
+        }
+    }
+
     static void iterate_level_keys(Context& context, LevelRegistry& registry, const Json& levelDict){
         init_level_data(context, registry, levelDict);
         if(context.error){
             std::cerr << "\tfrom iterate_level_keys\n";
             return;
         }
-
-        
+        load_level_entities(context, registry, levelDict);
+        if(context.error){
+            std::cerr << "\tfrom iterate_level_keys\n";
+            return;
+        }
     }
 
     void build_level(Context& context, LevelRegistry& registry){
