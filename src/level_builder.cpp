@@ -109,13 +109,75 @@ namespace LevelBuilder
         }
     }
 
+    static void load_entity_component_generic(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
+        if(!componentObj.is_object()){
+            context.error = {ErrorType::INVALID_JSON_TYPE, "expected object for `components` array element, found '" + to_string(componentObj) + '\''};
+            std::cerr << "<ERROR> at load_entity_component_generic: " << context.error << '\n';
+            return;
+        }
+        if(!componentObj.contains("type")){
+            context.error = {ErrorType::SETTING_NOT_FOUND, "No `type` field found in component"};
+            std::cerr << "<ERROR> at load_entity_component_generic: " << context.error << '\n';
+            return;
+        }
+        std::string componentType = json_get_string(context, componentObj.at("type"));
+        if(context.error){
+            std::cerr << "\tfrom load_entity_component_generic\n";
+            return;
+        }
+        if(componentType == "Position" || componentType == "Velocity" || componentType == "Acceleration"){
+            // TODO: all of this. Maybe i should use an std::unordered map or similar to check the string value, there are a _lot_ of components
+        } else if(componentType == "SpriteSheet"){
+            
+        } else if(componentType == "SpriteTransform"){
+
+        } else if(componentType == "BoundingBoxComponent"){
+
+        } else if(1/*...*/){
+
+        } else {
+            context.error = {ErrorType::INVALID_SETTING_VALUE, "invalid component type '" + componentType + '\''};
+            std::cerr << "<ERROR> at load_entity_component_generic: " << context.error << '\n';
+            return;
+        }
+    }
+
+    static void load_entity_components_from_json(Context& context, LevelRegistry& registry, const Json& entityObj, entt::entity entityID, 
+                                                 const std::string& entityName){
+        if(!entityObj.contains("components")){
+            std::cerr << "<WARNING> at load_entity_components_from_json (at entity with name " + entityName + "): No `components` field found for entity. Entity will have no additional components\n";
+            return; 
+        }
+        const Json& componentArray = entityObj.at("components");
+        if(!componentArray.is_array()){
+            context.error = {ErrorType::INVALID_JSON_TYPE, "expected array for field `components`, found '" + to_string(componentArray) + '\''};
+            std::cerr << "<ERROR> at load_entity_components_from_json: " << context.error << '\n';
+            return;
+        }
+        size_t i = 0;
+        for(const Json& componentObj : componentArray){
+            load_entity_component_generic(context, registry, componentObj, entityID);
+            if(context.error){
+                std::cerr << "\tfrom load_entity_components_from_json (at component index " + std::to_string(i) + ")\n";
+                return;
+            }
+        }
+    }
+
     static void load_level_entity_from_json(Context& context, LevelRegistry& registry, const std::string& entityName, const Json& entityObj){
         if(!entityObj.contains("entity_default")){
-            // TODO: only load components
+            entt::entity currEntity = registry.new_entity(entityName);
+            load_entity_components_from_json(context, registry, entityObj, currEntity, entityName);
+            if(context.error){
+                std::cerr << "\tfrom load_level_entity_from_json (entity name: " + entityName + ")\n";
+                return;
+            }
         } else {
             std::string entityDefault = json_get_string(context, entityObj.at("entity_default"));
+            entt::entity currEntity = entt::null;
             if(context.error){
-                std::cerr << "\tfrom load_level_entity_from_json (getting `entityDefault`)";
+                std::cerr << "\tfrom load_level_entity_from_json (getting `entityDefault`)\n";
+                return;
             }
             if(entityDefault == "static_body"){
                 // TODO: do static body stuff
@@ -123,7 +185,12 @@ namespace LevelBuilder
                 // TODO: do tilemap stuff
             } else if(entityDefault == "none"){
                 // TODO: only load components, same thing as if there weren't an entity_default field
+            } else {
+                context.error = {ErrorType::INVALID_SETTING_VALUE, "Invalid value '" + entityDefault + "' for `entity_default`"};
+                std::cerr << "<ERROR> at load_level_entity_from_json: " << context.error << '\n';
+                return;
             }
+            load_entity_components_from_json(context, registry, entityObj, currEntity, entityName);
         }
     }
 
@@ -135,7 +202,7 @@ namespace LevelBuilder
         const Json& entities = levelDict.at("entities");
         if(!entities.is_object()){
             context.error = {ErrorType::INVALID_JSON_TYPE, "expected dictionary for field `entities`, received '" + to_string(entities) + '\''};
-            std::cerr << "<ERROR> at load_level_entities: " << context.error;
+            std::cerr << "<ERROR> at load_level_entities: " << context.error << '\n';
             return;
         }
         for(const auto& [entityName, entityObj] : entities.items()){
