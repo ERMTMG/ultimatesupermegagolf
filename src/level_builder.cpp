@@ -1,6 +1,26 @@
 #include"level_builder.h"
 #include<sstream>
 
+#define THROW_ERROR(errorType, errorMsg, location) context.error = {errorType, errorMsg}; \
+std::cerr << "<ERROR> at " #location ": " << context.error << '\n'; \
+return;
+
+#define THROW_ERROR_RETURN(errorType, errorMsg, location, ret) context.error = {errorType, errorMsg}; \
+std::cerr << "<ERROR> at " #location ": " << context.error << '\n'; \
+return (ret);
+
+#define CHECK_ERROR(statement, location) statement; \
+if(context.error){\
+    std::cerr << "\tfrom " #location "\n";\
+    return;\
+}
+
+#define CHECK_ERROR_STR(statement, locationStr) statement; \
+if(context.error){\
+    std::cerr << "\tfrom " + std::string(locationStr) + "\n"; \
+    return; \
+}
+
 namespace LevelBuilder
 {
     using Json = nlohmann::json;
@@ -34,24 +54,33 @@ namespace LevelBuilder
 
     static std::string json_get_string(Context& context, const Json& object){
         if(!object.is_string()){
-            context.error = {ErrorType::INVALID_JSON_TYPE, "expected string, received '" + to_string(object) + '\''};
-            std::cerr << "<ERROR> at json_get_string: " << context.error << '\n';
-            return {};
+            THROW_ERROR_RETURN(
+                ErrorType::INVALID_JSON_TYPE, 
+                "expected string, received '" + to_string(object) + '\'', 
+                json_get_string, 
+                ""
+            );
         }
     }
 
     static Vector2 json_get_Vector2(Context& context, const Json& object){
         if(!object.contains("x") || !object.contains("y")){
-            context.error = {ErrorType::INVALID_JSON_OBJECT_STRUCTURE, "expected Vector2-like object, which needs both `x` and `y` fields"};
-            std::cerr << "<ERROR> at json_get_Vector2: " << context.error << '\n';
-            return VEC2_NULL;
+            THROW_ERROR_RETURN(
+                ErrorType::INVALID_JSON_OBJECT_STRUCTURE, 
+                "expected Vector2-like object, which needs both `x` and `y` fields",
+                json_get_Vector2, 
+                VEC2_NULL
+            );
         }
         const Json& xComponent = object.at("x");
         const Json& yComponent = object.at("y");
         if(!xComponent.is_number() || !yComponent.is_number()){
-            context.error = {ErrorType::INVALID_JSON_TYPE, "expected number, received x: '" + to_string(xComponent) + "' and y: '" + to_string(yComponent) + '\''};
-            std::cerr << "<ERROR> at json_get_Vector2: " << context.error << '\n';
-            return VEC2_NULL;
+            THROW_ERROR_RETURN(
+                ErrorType::INVALID_JSON_TYPE,
+                "expected number, received x: '" + to_string(xComponent) + "' and y: '" + to_string(yComponent) + '\'',
+                json_get_Vector2,
+                VEC2_NULL
+            );
         }
         return Vector2{xComponent.get<float>(), yComponent.get<float>()};
     }
@@ -64,41 +93,41 @@ namespace LevelBuilder
         bool isCameraAtPlayer = true;
 
         if(!levelDict.contains("player_position")){
-            context.error = {ErrorType::SETTING_NOT_FOUND, "No `player_position` setting found in level"};
-            std::cerr << "<ERROR> at init_level_data: " << context.error << '\n';
-            return;
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `player_position` setting found in level",
+                init_level_data
+            );
         }
         if(!levelDict.contains("goal_position")){
-            context.error = {ErrorType::SETTING_NOT_FOUND, "No `goal_position` setting found in level"};
-            std::cerr << "<ERROR> at init_level_data: " << context.error << '\n';
-            return;
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `goal_position` setting found in level",
+                init_level_data
+            );
         }
-        playerPos = json_get_Vector2(context, levelDict.at("player_position"));
-        if(context.error){
-            std::cerr << "\tfrom init_level_data (getting `player_position`)\n";
-            return;
-        }
-        goalPos = json_get_Vector2(context, levelDict.at("goal_position"));
-        if(context.error){
-            std::cerr << "\tfrom init_level_data (getting `goal_position`)\n";
-            return;
-        }
+        CHECK_ERROR(
+            playerPos = json_get_Vector2(context, levelDict.at("player_position"));,
+            init_level_data (getting `player_position`)
+        );
+        CHECK_ERROR(
+            goalPos = json_get_Vector2(context, levelDict.at("goal_position"));,
+            init_level_data (getting `player_position`)
+        );
 
         if(levelDict.contains("camera_position")){
             isCameraAtPlayer = false;
-            cameraPos = json_get_Vector2(context, levelDict.at("camera_position"));
-            if(context.error){
-                std::cerr << "\tfrom init_level_data (getting `camera_position`)\n";
-                return;
-            }
+            CHECK_ERROR(
+                cameraPos = json_get_Vector2(context, levelDict.at("camera_position"));,
+                init_level_data (getting `camera_position`)
+            );
         }
 
         if(levelDict.contains("level_name")){
-            levelName = json_get_string(context, levelDict.at("level_name"));
-            if(context.error){
-                std::cerr << "\tfrom init_level_data (getting `level_name`)\n";
-                return;
-            }
+            CHECK_ERROR(
+                levelName = json_get_string(context, levelDict.at("level_name"));,
+                init_level_data (getting `level_name`)
+            );
         }
 
         // TODO: do something with level name
@@ -111,20 +140,23 @@ namespace LevelBuilder
 
     static void load_entity_component_generic(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
         if(!componentObj.is_object()){
-            context.error = {ErrorType::INVALID_JSON_TYPE, "expected object for `components` array element, found '" + to_string(componentObj) + '\''};
-            std::cerr << "<ERROR> at load_entity_component_generic: " << context.error << '\n';
-            return;
+            THROW_ERROR(
+                ErrorType::INVALID_JSON_TYPE,
+                "expected object for `components` array element, found '" + to_string(componentObj) + '\'',
+                load_entity_component_generic
+            );
         }
         if(!componentObj.contains("type")){
-            context.error = {ErrorType::SETTING_NOT_FOUND, "No `type` field found in component"};
-            std::cerr << "<ERROR> at load_entity_component_generic: " << context.error << '\n';
-            return;
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `type` field found in component",
+                load_entity_component_generic
+            );
         }
-        std::string componentType = json_get_string(context, componentObj.at("type"));
-        if(context.error){
-            std::cerr << "\tfrom load_entity_component_generic\n";
-            return;
-        }
+        CHECK_ERROR(
+            std::string componentType = json_get_string(context, componentObj.at("type"));,
+            load_entity_component_generic
+        );
         if(componentType == "Position" || componentType == "Velocity" || componentType == "Acceleration"){
             // TODO: all of this. Maybe i should use an std::unordered map or similar to check the string value, there are a _lot_ of components
         } else if(componentType == "SpriteSheet"){
@@ -136,9 +168,11 @@ namespace LevelBuilder
         } else if(1/*...*/){
 
         } else {
-            context.error = {ErrorType::INVALID_SETTING_VALUE, "invalid component type '" + componentType + '\''};
-            std::cerr << "<ERROR> at load_entity_component_generic: " << context.error << '\n';
-            return;
+            THROW_ERROR(
+                ErrorType::INVALID_SETTING_VALUE,
+                "invalid component type '" + componentType + '\'',
+                load_entity_component_generic
+            );
         }
     }
 
@@ -150,35 +184,34 @@ namespace LevelBuilder
         }
         const Json& componentArray = entityObj.at("components");
         if(!componentArray.is_array()){
-            context.error = {ErrorType::INVALID_JSON_TYPE, "expected array for field `components`, found '" + to_string(componentArray) + '\''};
-            std::cerr << "<ERROR> at load_entity_components_from_json: " << context.error << '\n';
-            return;
+            THROW_ERROR(
+                ErrorType::INVALID_JSON_TYPE,
+                "expected array for field `components`, found '" + to_string(componentArray) + '\'',
+                load_entity_components_from_json
+            );
         }
         size_t i = 0;
         for(const Json& componentObj : componentArray){
-            load_entity_component_generic(context, registry, componentObj, entityID);
-            if(context.error){
-                std::cerr << "\tfrom load_entity_components_from_json (at component index " + std::to_string(i) + ")\n";
-                return;
-            }
+            CHECK_ERROR_STR(
+                load_entity_component_generic(context, registry, componentObj, entityID);,
+                "load_entity_components_from_json (at component index " + std::to_string(i) + ")"
+            );
         }
     }
 
     static void load_level_entity_from_json(Context& context, LevelRegistry& registry, const std::string& entityName, const Json& entityObj){
         if(!entityObj.contains("entity_default")){
             entt::entity currEntity = registry.new_entity(entityName);
-            load_entity_components_from_json(context, registry, entityObj, currEntity, entityName);
-            if(context.error){
-                std::cerr << "\tfrom load_level_entity_from_json (entity name: " + entityName + ")\n";
-                return;
-            }
+            CHECK_ERROR_STR(
+                load_entity_components_from_json(context, registry, entityObj, currEntity, entityName);,
+                "load_level_entity_from_json (entity name: " +  entityName + ")" 
+            );
         } else {
-            std::string entityDefault = json_get_string(context, entityObj.at("entity_default"));
             entt::entity currEntity = entt::null;
-            if(context.error){
-                std::cerr << "\tfrom load_level_entity_from_json (getting `entityDefault`)\n";
-                return;
-            }
+            CHECK_ERROR(
+                std::string entityDefault = json_get_string(context, entityObj.at("entity_default"));,
+                load_level_entity_from_json (getting `entity_default`)
+            );
             if(entityDefault == "static_body"){
                 // TODO: do static body stuff
             } else if(entityDefault == "tilemap"){
@@ -186,11 +219,16 @@ namespace LevelBuilder
             } else if(entityDefault == "none"){
                 // TODO: only load components, same thing as if there weren't an entity_default field
             } else {
-                context.error = {ErrorType::INVALID_SETTING_VALUE, "Invalid value '" + entityDefault + "' for `entity_default`"};
-                std::cerr << "<ERROR> at load_level_entity_from_json: " << context.error << '\n';
-                return;
+                THROW_ERROR(
+                    ErrorType::INVALID_SETTING_VALUE,
+                    "Invalid value '" + entityDefault + "' for `entity_default`",
+                    load_level_entity_from_json
+                );
             }
-            load_entity_components_from_json(context, registry, entityObj, currEntity, entityName);
+            CHECK_ERROR_STR(
+                load_entity_components_from_json(context, registry, entityObj, currEntity, entityName);,
+                "load_level_entity_from_json (entity name: " + entityName + ")"
+            );
         }
     }
 
@@ -201,44 +239,44 @@ namespace LevelBuilder
         }
         const Json& entities = levelDict.at("entities");
         if(!entities.is_object()){
-            context.error = {ErrorType::INVALID_JSON_TYPE, "expected dictionary for field `entities`, received '" + to_string(entities) + '\''};
-            std::cerr << "<ERROR> at load_level_entities: " << context.error << '\n';
-            return;
+            THROW_ERROR(
+                ErrorType::INVALID_JSON_TYPE,
+                "expected dictionary for field `entities`, received '" + to_string(entities) + '\'',
+                load_level_entities
+            );
         }
         for(const auto& [entityName, entityObj] : entities.items()){
-            load_level_entity_from_json(context, registry, entityName, entityObj);
-            if(context.error){
-                std::cerr << "\tfrom load_level_entities (entity name: '" << entityName << "')\n";
-                return;
-            }
+            CHECK_ERROR_STR(
+                load_level_entity_from_json(context, registry, entityName, entityObj);,
+                "load_level_entities (entity name: '" + entityName + "')"
+            );
         }
     }
 
     static void iterate_level_keys(Context& context, LevelRegistry& registry, const Json& levelDict){
-        init_level_data(context, registry, levelDict);
-        if(context.error){
-            std::cerr << "\tfrom iterate_level_keys\n";
-            return;
-        }
-        load_level_entities(context, registry, levelDict);
-        if(context.error){
-            std::cerr << "\tfrom iterate_level_keys\n";
-            return;
-        }
+        CHECK_ERROR(
+            init_level_data(context, registry, levelDict);,
+            iterate_level_keys
+        );
+        CHECK_ERROR(
+            load_level_entities(context, registry, levelDict);,
+            iterate_level_keys
+        );
     }
 
     void build_level(Context& context, LevelRegistry& registry){
         Json levelObject = context.topLevelJsonObject;
         if(!levelObject.is_object()){
-            context.error = {ErrorType::INVALID_JSON_TYPE, "Top-level JSON must be of type Object."};
-            std::cerr << "<ERROR> at build_level: " << context.error << '\n';
-            return;
+            THROW_ERROR(
+                ErrorType::INVALID_JSON_TYPE,
+                "Top-level JSON must be of type object.",
+                build_level
+            );
         }
-        iterate_level_keys(context, registry, levelObject);
-        if(context.error){
-            std::cerr << "\tfrom build_level\n";
-            return;
-        }
+        CHECK_ERROR(
+            iterate_level_keys(context, registry, levelObject);,
+            build_level
+        );
     }
 }
 
