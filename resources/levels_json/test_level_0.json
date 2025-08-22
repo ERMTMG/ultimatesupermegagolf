@@ -66,6 +66,8 @@
         "Walls": {
             "entity_default": "static_body",
             "layers": [0],
+            "x": -128,
+            "y": -128,
             "colliders": [
                 {
                     "type": "barrier",
@@ -123,6 +125,8 @@
         "Thingy": {
             "entity_default": "static_body",
             "layers": [0],
+            "x": 0,
+            "y": 0,
             "colliders": [
                 {
                     "type": "line",

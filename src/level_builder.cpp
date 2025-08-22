@@ -199,6 +199,108 @@ namespace LevelBuilder
         }
     }
 
+    static void get_collision_layer_array(Context& context, LevelRegistry& registry, const Json& layersJson, std::vector<LayerType>& layersVec){
+        size_t idx = 0;
+        for(const Json& item : layersJson){
+            switch(item.type()){
+              case Json::value_t::number_integer: {
+                int64_t layerValue = item.get<int64_t>();
+                if(layerValue <= 0 || layerValue > NUMBER_OF_LAYERS){
+                    THROW_ERROR(
+                        ErrorType::INVALID_SETTING_VALUE,
+                        "Invalid layer value " + std::to_string(layerValue) + " at `layers` field index " + std::to_string(idx) + "(expected number between 1 and 16 or string 'player')",
+                        get_collision_layer_array
+                    );
+                }
+                layersVec.push_back((LayerType)layerValue);
+                break;
+              }
+              case Json::value_t::string: {
+                std::string stringValue = item.get<std::string>();
+                if(stringValue == "player"){
+                    layersVec.push_back(LevelRegistry::PLAYER_COLLISION_LAYER);
+                } else {
+                    THROW_ERROR(
+                        ErrorType::INVALID_SETTING_VALUE,
+                        "Invalid layer value '" + stringValue + "' at `layers` field index " + std::to_string(idx) + "(expected number between 1 and 16 or string 'player')",
+                        get_collision_layer_array
+                    );
+                }
+                break;
+              }
+              default:
+                THROW_ERROR(
+                    ErrorType::INVALID_JSON_TYPE,
+                    "Expected layer number or string 'player' for `layers` field item at index " + std::to_string(idx) + ", found '" + to_string(item) + '\'',
+                    get_collision_layer_array
+                );
+            }
+            idx++;
+        }
+    }
+
+    static void load_collision_shape_into_component(Context& context, const Json& colliderJson, CollisionComponent& collision){
+        // TODO: this
+    }
+
+    static void load_entity_static_body_colliders(Context& context, const Json& entityObj, entt::entity entityID, CollisionComponent& entityCollision){
+        if(!entityObj.contains("colliders")){
+            std::cerr << "<WARNING> at load_entity_static_body_colliders: no `colliders` field. Static body will be collisionless\n";
+            return;
+        }
+        const Json& collidersJson = entityObj.at("colliders");
+        if(!collidersJson.is_array()){
+            THROW_ERROR(
+                ErrorType::INVALID_JSON_TYPE,
+                "expected number array for field `colliders`, found '" + to_string(collidersJson) + '\'',
+                load_entity_static_body_colliders
+            );
+        }
+        size_t colliderIdx = 0;
+        for(const Json& collider : collidersJson){
+            CHECK_ERROR_STR(
+                load_collision_shape_into_component(context, collider, entityCollision);,
+                "load_entity_static_body_colliders (collider index: " + std::to_string(colliderIdx) + ')'
+            );
+        }
+    }
+
+    static void load_entity_static_body_settings(Context& context, LevelRegistry& registry, const Json& entityObj, entt::entity& entityID, 
+                                                 const std::string& entityName){
+        Vector2 positionVector = VEC2_NULL;
+        std::vector<LayerType> layers;
+        CHECK_ERROR_STR(
+            positionVector = json_get_Vector2(context, entityObj);,
+            "load_entity_static_body_settings (getting position, entity name: " + entityName + ")"
+        );
+        if(!entityObj.contains("layers")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `layers` field found on static body",
+                load_entity_static_body_settings
+            );
+        }
+        const Json& layersJson = entityObj.at("layers");
+        if(!layersJson.is_array()){
+            THROW_ERROR(
+                ErrorType::INVALID_JSON_TYPE,
+                "expected number array for field `layers`, found '" + to_string(layersJson) + '\'',
+                load_entity_static_body_settings
+            );
+        }
+        CHECK_ERROR(
+            get_collision_layer_array(context, registry, layersJson, layers);,
+            load_entity_static_body_settings
+        );
+        auto [temp, entityCollision] = registry.create_static_body(positionVector, std::move(layers));
+        entityID = temp;
+        CHECK_ERROR(
+            load_entity_static_body_colliders(context, entityObj, entityID, entityCollision);,
+            load_entity_static_body_settings
+        )
+
+    }
+
     static void load_level_entity_from_json(Context& context, LevelRegistry& registry, const std::string& entityName, const Json& entityObj){
         if(!entityObj.contains("entity_default")){
             entt::entity currEntity = registry.new_entity(entityName);
@@ -213,11 +315,14 @@ namespace LevelBuilder
                 load_level_entity_from_json (getting `entity_default`)
             );
             if(entityDefault == "static_body"){
-                // TODO: do static body stuff
+                CHECK_ERROR(
+                    load_entity_static_body_settings(context, registry, entityObj, currEntity, entityName);,
+                    load_level_entity_from_json
+                );
             } else if(entityDefault == "tilemap"){
                 // TODO: do tilemap stuff
             } else if(entityDefault == "none"){
-                // TODO: only load components, same thing as if there weren't an entity_default field
+                currEntity = registry.new_entity(entityName);
             } else {
                 THROW_ERROR(
                     ErrorType::INVALID_SETTING_VALUE,
