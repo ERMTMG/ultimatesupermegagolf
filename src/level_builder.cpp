@@ -52,6 +52,18 @@ namespace LevelBuilder
         };
     }
 
+    static float json_get_float(Context& context, const Json& object){
+        if(!object.is_number()){
+            THROW_ERROR_RETURN(
+                ErrorType::INVALID_JSON_TYPE,
+                "expected string, received '" + to_string(object) + '\'',
+                json_get_string,
+                std::numeric_limits<float>::quiet_NaN()
+            );
+        }
+        return object.get<float>();
+    }
+
     static std::string json_get_string(Context& context, const Json& object){
         if(!object.is_string()){
             THROW_ERROR_RETURN(
@@ -61,6 +73,7 @@ namespace LevelBuilder
                 ""
             );
         }
+        return object.get<std::string>();
     }
 
     static Vector2 json_get_Vector2(Context& context, const Json& object){
@@ -239,8 +252,172 @@ namespace LevelBuilder
         }
     }
 
+    static void add_collision_line_to_component(Context& context, const Json& colliderJson, CollisionComponent& collision){
+        if(!colliderJson.contains("from")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `from` field found on \"line\" type collider",
+                add_collision_line_to_component
+            );
+        }
+        if(!colliderJson.contains("to")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `to` field found on \"line\" type collider",
+                add_collision_line_to_component
+            );
+        }
+        Vector2 lineOrigin; Vector2 lineDestination;
+        CHECK_ERROR(
+            lineOrigin = json_get_Vector2(context, colliderJson.at("from"));,
+            add_collision_line_to_component (getting `from`)
+        );
+        CHECK_ERROR(
+            lineDestination = json_get_Vector2(context, colliderJson.at("to"));,
+            add_collision_line_to_component (getting `to`)
+        );
+        collision.add_line(lineOrigin, lineDestination);
+    }
+
+    static void add_centered_collision_rect_to_component(Context& context, const Json& colliderJson, CollisionComponent& collision){
+        if(!colliderJson.contains("width")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `width` field found on \"rect\" type collider",
+                add_centered_collision_rect_to_component
+            );
+        }
+        if(!colliderJson.contains("height")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `height` field found on \"rect\" type collider",
+                add_centered_collision_rect_to_component
+            );
+        }
+        float rectWidth; float rectHeight;
+        CHECK_ERROR(
+            rectWidth = json_get_float(context, colliderJson.at("width"));,
+            add_centered_collision_rect_to_component (getting `width`)
+        );
+        CHECK_ERROR(
+            rectHeight = json_get_float(context, colliderJson.at("height"));,
+            add_centered_collision_rect_to_component (getting `height`)
+        );
+        collision.add_rect_centered(rectWidth, rectHeight);
+    }
+
+    static void add_collision_rect_to_component(Context& context, const Json& colliderJson, const Vector2& colliderPosition, CollisionComponent& collision){
+        if(!colliderJson.contains("width")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `width` field found on \"rect\" type collider",
+                add_collision_rect_to_component
+            );
+        }
+        if(!colliderJson.contains("height")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `height` field found on \"rect\" type collider",
+                add_collision_rect_to_component
+            );
+        }
+        float rectWidth; float rectHeight;
+        CHECK_ERROR(
+            rectWidth = json_get_float(context, colliderJson.at("width"));,
+            add_collision_rect_to_component (getting `width`)
+        );
+        CHECK_ERROR(
+            rectHeight = json_get_float(context, colliderJson.at("height"));,
+            add_collision_rect_to_component (getting `height`)
+        );
+        collision.add_rect(rectWidth, rectHeight, colliderPosition);
+    }
+
+    static void add_collision_circle_to_component(Context& context, const Json& colliderJson, const Vector2& colliderPosition, CollisionComponent& collision){
+        if(!colliderJson.contains("radius")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `radius` field found on \"circle\" type collider",
+                add_collision_circle_to_component
+            );
+        }
+        float circleRadius;
+        CHECK_ERROR(
+            circleRadius = json_get_float(context, colliderJson.at("radius"));,
+            add_collision_circle_to_component (getting `radius`)
+        );
+        collision.add_circle(circleRadius, colliderPosition);
+    }
+
+    static void add_collision_barrier_to_component(Context& context, const Json& colliderJson, const Vector2& colliderPosition, CollisionComponent& collision){
+        if(!colliderJson.contains("normal")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `normal` field found on \"barrier\" type collider",
+                add_collision_barrier_to_component
+            );
+        }
+        Vector2 barrierNormal;
+        CHECK_ERROR(
+            barrierNormal = json_get_Vector2(context, colliderJson.at("normal"));,
+            add_collision_barrier_to_component (getting `normal`)
+        );
+        barrierNormal = {-barrierNormal.y, barrierNormal.x};
+        collision.add_barrier(colliderPosition, barrierNormal);
+    }
+
     static void load_collision_shape_into_component(Context& context, const Json& colliderJson, CollisionComponent& collision){
-        // TODO: this
+        if(!colliderJson.contains("type")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `type` found on collider object. `type` must be one of: \"rect\", \"circle\", \"barrier\" or \"line\"",
+                load_collision_shape_into_component
+            );
+        }
+        std::string colliderType;
+        CHECK_ERROR(
+            colliderType = json_get_string(context, colliderJson.at("type"));,
+            load_collision_shape_into_component (getting `type` field)
+        );
+        if(colliderType == "line"){
+            CHECK_ERROR(
+                add_collision_line_to_component(context, colliderJson, collision);,
+                load_collision_shape_into_component
+            );
+        } else if(colliderJson.contains("centered")){
+            CHECK_ERROR(
+                add_centered_collision_rect_to_component(context, colliderJson, collision);,
+                load_collision_shape_into_component
+            );
+        } else {
+            Vector2 colliderPosition = VEC2_ZERO;
+            if(colliderJson.contains("position")){
+                CHECK_ERROR(
+                    colliderPosition = json_get_Vector2(context, colliderJson.at("position"));,
+                    load_collision_shape_into_component (getting `position` field)
+                );
+            }
+            void (*collider_loading_function)(Context&, const Json&, const Vector2&, CollisionComponent&) = nullptr;
+
+            if(colliderType == "rect"){ // does g++ optimize this if-else chain + function call? good fuckin question!
+                collider_loading_function = add_collision_rect_to_component;
+            } else if(colliderType == "circle"){
+                collider_loading_function = add_collision_circle_to_component;
+            } else if(colliderType == "barrier"){
+                collider_loading_function = add_collision_barrier_to_component;
+            } else {
+                THROW_ERROR(
+                    ErrorType::INVALID_SETTING_VALUE,
+                    "Invalid value '" + colliderType + "' for collider `type`",
+                    load_collision_shape_into_component
+                );
+            }
+
+            CHECK_ERROR(
+                collider_loading_function(context, colliderJson, colliderPosition, collision);,
+                load_collision_shape_into_component
+            )
+        }
     }
 
     static void load_entity_static_body_colliders(Context& context, const Json& entityObj, entt::entity entityID, CollisionComponent& entityCollision){

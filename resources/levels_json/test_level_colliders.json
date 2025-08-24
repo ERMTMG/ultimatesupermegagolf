@@ -1,0 +1,76 @@
+{
+    "level_name": "Collider Test",
+    "player_position": {"x": 0, "y": 0},
+    "goal_position": {"x": 1000, "y": 1000},
+    "entities": {
+        "StaticBody1": {
+            "entity_default": "static_body",
+            "layers": ["player"],
+            "x": -100,
+            "y": -100,
+            "colliders": [
+                {
+                    "type": "rect",
+                    "position": {"x": -25, "y": -25},
+                    "width": 50,
+                    "height": 50
+                }
+            ]
+        },
+
+        "StaticBody2": {
+            "entity_default": "static_body",
+            "layers": ["player"],
+            "x": -200,
+            "y": 0,
+            "colliders": [
+                {
+                    "type": "barrier",
+                    "normal": {"x": 1, "y": 0}
+                }
+            ]
+        },
+
+        "StaticBody3": {
+            "entity_default": "static_body",
+            "layers": ["player"],
+            "x": 100,
+            "y": -100,
+            "colliders": [
+                {
+                    "type": "rect",
+                    "centered": true,
+                    "width": 50,
+                    "height": 50
+                }
+            ]
+        },
+
+        "StaticBody4": {
+            "entity_default": "static_body",
+            "layers": ["player"],
+            "x": -100,
+            "y": 100,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {"x": -30, "y": 30},
+                    "to": {"x": 30, "y": -30}
+                }
+            ]
+        },
+        "StaticBody5": {
+            "entity_default": "static_body",
+            "layers": ["player"],
+            "x": 100,
+            "y": 100,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 25,
+                    "__comment": "no `position` field => position is implied to be 0,0"
+                }
+            ]
+        }
+    }
+}
