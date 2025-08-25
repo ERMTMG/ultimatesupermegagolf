@@ -11,8 +11,8 @@ SIMDJSON_SOURCE := src/simdjson.cpp
 NLOHMANN_JSON_TEST := src/tests/nlohmann_json_test.cpp
 SOURCE_FILES := $(filter-out $(COLLISION_TEST) $(BB_CALCULATE_TEST) $(NLOHMANN_JSON_TEST) $(SIMDJSON_TEST) $(MAIN), $(CPP_FILES)) 
 
-DEBUG_COMPILER_OPTIONS := -O0 -g -ftemplate-backtrace-limit=0 -Wno-narrowing
-RELEASE_COMPILER_OPTIONS := -O3 -Wno-narrowing
+DEBUG_COMPILER_OPTIONS := -O0 -g -ftemplate-backtrace-limit=0 -Wno-narrowing -fPIC
+RELEASE_COMPILER_OPTIONS := -O3 -Wno-narrowing -fPIC
 COMPILER_OPTIONS := $(RELEASE_COMPILER_OPTIONS)
 
 all: bin/main1
@@ -33,7 +33,7 @@ bb_calculate_test: $(BB_CALCULATE_TEST) $(OBJ_FILES)
 
 simdjson_test:
 	g++ $(SIMDJSON_TEST) $(SIMDJSON_SOURCE) -o bin/simdjson_test -I$(INCLUDE_DIR) -I. -L$(LIB_DIR) -std=c++17
-	
+
 nlohmann_json_test: $(NLOHMANN_JSON_TEST)
 	g++ $(NLOHMANN_JSON_TEST) $(RELEASE_COMPILER_OPTIONS) -o bin/nlohmann_json_test -I$(INCLUDE_DIR) -I. -std=c++17
 

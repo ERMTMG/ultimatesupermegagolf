@@ -3,6 +3,8 @@
 using std::make_unique;
 using std::move;
 
+const LayerType LevelRegistry::PLAYER_COLLISION_LAYER = 1;
+
 LevelRegistry::LevelRegistry(){
     registry = make_unique<entt::registry>();
 }

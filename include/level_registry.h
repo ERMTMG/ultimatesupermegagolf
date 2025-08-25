@@ -59,7 +59,7 @@ class LevelRegistry{
     entt::entity create_camera_centered_at(const Position& pos);
   public:
     // Collision layer in which the player resides.
-    static const LayerType PLAYER_COLLISION_LAYER = 1;
+    static const LayerType PLAYER_COLLISION_LAYER;
 
     LevelRegistry();
     ~LevelRegistry();
