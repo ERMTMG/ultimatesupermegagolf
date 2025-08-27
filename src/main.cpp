@@ -3,6 +3,7 @@
 #include"level_registry.h"
 #include"level_builder.h"
 #include<iostream>
+#include<chrono>
 
 const int SCREENWIDTH = 800;
 const int SCREENHEIGHT = 600;
@@ -19,15 +20,24 @@ int main(int argc, char** argv){
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Ultimate Super Mega Golf");
     SetTargetFPS(60);
     LevelRegistry level;
-    LevelBuilder::Context context = LevelBuilder::init_level_parsing(LEVEL_FILENAME);
-    if(context.error){
-        std::cerr << "Error in context initialization, exiting...\n";
-        exit(1);
-    }
-    LevelBuilder::build_level(context, level);
-    if(context.error){
-        std::cerr << "Error in level building, exiting...\n";
-        exit(2);
+    {
+        auto start = std::chrono::high_resolution_clock::now();
+
+        LevelBuilder::Context context = LevelBuilder::init_level_parsing(LEVEL_FILENAME);
+        if(context.error){
+            std::cerr << "Error in context initialization, exiting...\n";
+            exit(1);
+        }
+        LevelBuilder::build_level(context, level);
+
+        auto end = std::chrono::high_resolution_clock::now();
+        using milliseconds = std::chrono::duration<float, std::milli>;
+        auto ms = std::chrono::duration_cast<milliseconds>(end - start);
+        std::cout << "Level parsing complete, time taken: " << ms.count() << "ms\n";
+        if(context.error){
+            std::cerr << "Error in level building, exiting...\n";
+            exit(2);
+        }
     }
 
     while(!WindowShouldClose()){

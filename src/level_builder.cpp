@@ -151,6 +151,72 @@ namespace LevelBuilder
         }
     }
 
+    static void load_bounding_box_component_auto(Context& context, LevelRegistry& registry, entt::entity entityID){
+        CollisionComponent* collision = registry.get().try_get<CollisionComponent>(entityID);
+        SpriteSheet* sprite = registry.get().try_get<SpriteSheet>(entityID);
+        if(collision != nullptr && sprite != nullptr){
+            BoundingBoxComponent bb = bb_union(
+                calculate_bb(*sprite),
+                calculate_bb(*collision)
+            );
+            registry.get().emplace_or_replace<BoundingBoxComponent>(entityID, bb);
+        } else if(collision != nullptr){
+            registry.get().emplace_or_replace<BoundingBoxComponent>(entityID, calculate_bb(*collision));
+        } else if(sprite != nullptr){
+            registry.get().emplace_or_replace<BoundingBoxComponent>(entityID, calculate_bb(*sprite));
+        } else {
+            std::cerr << "<WARNING> at load_bounding_box_component_auto (entity ID " << (int)entityID << "): No SpriteSheet or CollisionComponent components found on entity. Entity will have a zero bounding box\n";
+            registry.get().emplace_or_replace<BoundingBoxComponent>(entityID, VEC2_ZERO, 0, 0); 
+        }
+    }
+
+    static void load_bounding_box_component(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
+        if(componentObj.contains("auto")){
+            return load_bounding_box_component_auto(context, registry, entityID);
+        }
+        if(!componentObj.contains("position")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `position` field found in non-auto BoundingBoxComponent",
+                load_bounding_box_component
+            );
+        }
+        Vector2 bbPosition = VEC2_NULL;
+        CHECK_ERROR(
+            bbPosition = json_get_Vector2(context, componentObj.at("position"));,
+            load_bounding_box_component (getting `position`)
+        );
+        if(!componentObj.contains("width")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `WIDTH` field found in non-auto BoundingBoxComponent",
+                load_bounding_box_component
+            );
+        }
+        if(!componentObj.contains("height")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `height` field found in non-auto BoundingBoxComponent",
+                load_bounding_box_component
+            );
+        }
+        float bbWidth; float bbHeight;
+        CHECK_ERROR(
+            bbWidth = json_get_float(context, componentObj.at("width"));,
+            load_bounding_box_component (getting `width`)
+        );
+        CHECK_ERROR(
+            bbHeight = json_get_float(context, componentObj.at("height"));,
+            load_bounding_box_component (getting `height`)
+        );
+        registry.get().emplace_or_replace<BoundingBoxComponent>(entityID, bbPosition, bbWidth, bbHeight);
+    }
+
+    using ComponentLoadingFunc = void(*)(Context&, LevelRegistry&, const Json&, entt::entity);
+    static const std::map<std::string, ComponentLoadingFunc> COMPONENT_LOADING_FUNCTIONS = {
+        {"BoundingBoxComponent", load_bounding_box_component},
+    };
+
     static void load_entity_component_generic(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
         if(!componentObj.is_object()){
             THROW_ERROR(
@@ -170,22 +236,19 @@ namespace LevelBuilder
             std::string componentType = json_get_string(context, componentObj.at("type"));,
             load_entity_component_generic
         );
-        if(componentType == "Position" || componentType == "Velocity" || componentType == "Acceleration"){
-            // TODO: all of this. Maybe i should use an std::unordered map or similar to check the string value, there are a _lot_ of components
-        } else if(componentType == "SpriteSheet"){
-            
-        } else if(componentType == "SpriteTransform"){
-
-        } else if(componentType == "BoundingBoxComponent"){
-
-        } else if(1/*...*/){
-
-        } else {
+        auto itr = COMPONENT_LOADING_FUNCTIONS.find(componentType);
+        if(itr == COMPONENT_LOADING_FUNCTIONS.end()){
             THROW_ERROR(
                 ErrorType::INVALID_SETTING_VALUE,
                 "invalid component type '" + componentType + '\'',
                 load_entity_component_generic
             );
+        } else {
+            ComponentLoadingFunc componentLoader = itr->second;
+            CHECK_ERROR(
+                componentLoader(context, registry, componentObj, entityID);,
+                load_entity_component_generic
+            )
         }
     }
 
