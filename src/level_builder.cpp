@@ -166,7 +166,7 @@ namespace LevelBuilder
             registry.get().emplace_or_replace<BoundingBoxComponent>(entityID, calculate_bb(*sprite));
         } else {
             std::cerr << "<WARNING> at load_bounding_box_component_auto (entity ID " << (int)entityID << "): No SpriteSheet or CollisionComponent components found on entity. Entity will have a zero bounding box\n";
-            registry.get().emplace_or_replace<BoundingBoxComponent>(entityID, VEC2_ZERO, 0, 0); 
+            registry.add_component<BoundingBoxComponent>(entityID, VEC2_ZERO, 0, 0); 
         }
     }
 
@@ -209,7 +209,7 @@ namespace LevelBuilder
             bbHeight = json_get_float(context, componentObj.at("height"));,
             load_bounding_box_component (getting `height`)
         );
-        registry.get().emplace_or_replace<BoundingBoxComponent>(entityID, bbPosition, bbWidth, bbHeight);
+        registry.add_component<BoundingBoxComponent>(entityID, bbPosition, bbWidth, bbHeight);
     }
 
     using ComponentLoadingFunc = void(*)(Context&, LevelRegistry&, const Json&, entt::entity);

@@ -88,6 +88,25 @@ class LevelRegistry{
     // Gets a vector containing all the entity ID's whose names start with prefix.
     // might not be a good idea to run this while ingame as it can take up a long time.
     std::vector<entt::entity> search_entities_by_name(const std::string& prefix) const;
+
+    // Adds a component with the provided constructor argument. Same functionality as entt::registry::emplace
+    template<class ComponentType, class... Args>
+    void add_component(entt::entity entity, Args&&... args);
+
+    // Returns true only if the passed entity has an associated instance of the specified component
+    template<class ComponentType>
+    bool has_component(entt::entity entity) const;
+
+    // Returns a pointer to the ComponentType instance of the specified entity, if it exists.
+    // If it doesn't, returns a null pointer.
+    template<class ComponentType>
+    ComponentType* get_component(entt::entity entity);
+
+    // Returns a const pointer to the ComponentType instance of the specified entity, if it exists.
+    // If it doesn't, returns a null pointer.
+    template<class ComponentType>
+    const ComponentType* get_component(entt::entity entity) const;
+
     // Returns a reference to the wrapped registry.
     entt::registry& get();
     // Returns a *const* reference to the wrapped registry.
