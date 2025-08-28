@@ -65,7 +65,7 @@
     "entities": {
         "Walls": {
             "entity_default": "static_body",
-            "layers": [0],
+            "layers": ["player"],
             "x": -128,
             "y": -128,
             "colliders": [
@@ -124,7 +124,7 @@
         },
         "Thingy": {
             "entity_default": "static_body",
-            "layers": [0],
+            "layers": ["player"],
             "x": 0,
             "y": 0,
             "colliders": [
