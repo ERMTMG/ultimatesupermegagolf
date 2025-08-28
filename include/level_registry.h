@@ -16,6 +16,7 @@
 #include"rng_component.h"
 #include<memory>
 #include<unordered_map>
+#include<utility>
 
 /*
     Main class that represents a level with all its entities, and allows basic 
@@ -91,21 +92,29 @@ class LevelRegistry{
 
     // Adds a component with the provided constructor argument. Same functionality as entt::registry::emplace
     template<class ComponentType, class... Args>
-    void add_component(entt::entity entity, Args&&... args);
+    inline void add_component(entt::entity entity, Args&&... args){
+        registry->emplace_or_replace<ComponentType>(entity, args...);
+    }
 
     // Returns true only if the passed entity has an associated instance of the specified component
     template<class ComponentType>
-    bool has_component(entt::entity entity) const;
+    inline bool has_component(entt::entity entity) const {
+        return registry->all_of<ComponentType>(entity);
+    }
 
     // Returns a pointer to the ComponentType instance of the specified entity, if it exists.
     // If it doesn't, returns a null pointer.
     template<class ComponentType>
-    ComponentType* get_component(entt::entity entity);
+    inline ComponentType* get_component(entt::entity entity){
+        return registry->try_get<ComponentType>(entity);
+    }
 
     // Returns a const pointer to the ComponentType instance of the specified entity, if it exists.
     // If it doesn't, returns a null pointer.
     template<class ComponentType>
-    const ComponentType* get_component(entt::entity entity) const;
+    inline const ComponentType* get_component(entt::entity entity) const {
+        return registry->try_get<ComponentType>(entity);
+    }
 
     // Returns a reference to the wrapped registry.
     entt::registry& get();

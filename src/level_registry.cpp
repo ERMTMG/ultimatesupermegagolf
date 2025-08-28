@@ -178,26 +178,6 @@ void LevelRegistry::recalculate_bounding_box(entt::entity entity){
     registry->emplace_or_replace<BoundingBoxComponent>(entity, bb);
 }
 
-template<class ComponentType, class... Args> 
-inline void LevelRegistry::add_component(entt::entity entity, Args&&... args){
-    registry->emplace_or_replace<ComponentType>(entity, std::forward(args...));
-}
-
-template<class ComponentType>
-inline bool LevelRegistry::has_component(entt::entity entity) const {
-    return registry->all_of<ComponentType>(entity);
-}
-
-template<class ComponentType>
-inline ComponentType* LevelRegistry::get_component(entt::entity entity){
-    return registry->try_get<ComponentType>(entity);
-}
-
-template<class ComponentType>
-inline const ComponentType* LevelRegistry::get_component(entt::entity entity) const {
-    return registry->try_get<ComponentType>(entity);
-}
-
 void LevelRegistry::handle_collisions_general(){
     // TODO: divide this into substeps to avoid things clipping through each other. maybe has to be in the update function itself
     
