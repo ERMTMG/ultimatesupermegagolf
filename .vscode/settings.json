@@ -77,5 +77,6 @@
         "clang-diagnostic-c++11-narrowing",
         "clang-diagnostic-c++11-narrowing",
         "clang-diagnostic-c++11-narrowing"
-    ]
+    ],
+    "keyboard.dispatch": "keyCode"
 }
