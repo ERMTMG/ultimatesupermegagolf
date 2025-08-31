@@ -1,5 +1,5 @@
 #pragma once
-#include"../raylib.h"
+#include"raylib.h"
 #include"math_util.h"
 #include<cmath>
 #include<iostream>

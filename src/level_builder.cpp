@@ -1,4 +1,5 @@
 #include"level_builder.h"
+#include<sstream>
 
 #define THROW_ERROR(errorType, errorMsg, location) context.error = {errorType, errorMsg}; \
 std::cerr << "<ERROR> at " #location ": " << context.error << '\n'; \
@@ -20,11 +21,6 @@ if(context.error){\
     return; \
 }
 
-#define CHECK_ERROR_RETURN(statement, location, ret) statement; \
-if(context.error){ \
-    std::cerr << "\tfrom " #location "\n"; \
-    return (ret); \
-}
 namespace LevelBuilder
 {
     using Json = nlohmann::json;
@@ -100,39 +96,6 @@ namespace LevelBuilder
             );
         }
         return Vector2{xComponent.get<float>(), yComponent.get<float>()};
-    }
-
-    static std::pair<float, float> json_get_width_and_height(Context& context, const Json& object){
-        static constexpr std::pair<float, float> ERROR_PAIR = {std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::quiet_NaN()};
-        if(!object.contains("width")){
-            THROW_ERROR_RETURN(
-                ErrorType::SETTING_NOT_FOUND,
-                "No `width` setting found in object",
-                json_get_width_and_height,
-                ERROR_PAIR
-            );
-        }
-        if(!object.contains("height")){
-            THROW_ERROR_RETURN(
-                ErrorType::SETTING_NOT_FOUND,
-                "No `height` setting found in object",
-                json_get_width_and_height,
-                ERROR_PAIR
-            );
-        }
-        float width;
-        float height;
-        CHECK_ERROR_RETURN(
-            width = json_get_float(context, object.at("width"));,
-            json_get_width_and_height (getting `width`),
-            ERROR_PAIR
-        );
-        CHECK_ERROR_RETURN(
-            height = json_get_float(context, object.at("height"));,
-            json_get_width_and_height (getting `height`),
-            ERROR_PAIR
-        );
-        return {width, height};
     }
 
     static void init_level_data(Context& context, LevelRegistry& registry, const Json& levelDict){
@@ -223,55 +186,35 @@ namespace LevelBuilder
             bbPosition = json_get_Vector2(context, componentObj.at("position"));,
             load_bounding_box_component (getting `position`)
         );
-        float bbWidth; float bbHeight;
-        CHECK_ERROR(
-            std::tie(bbWidth, bbHeight) = json_get_width_and_height(context, componentObj);,
-            load_bounding_box_component (getting `width` and `height`)
-        );
-        registry.add_component<BoundingBoxComponent>(entityID, bbPosition, bbWidth, bbHeight);
-    }
-
-    static void load_spritesheet_component(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
-        if(!componentObj.contains("texture")){
+        if(!componentObj.contains("width")){
             THROW_ERROR(
                 ErrorType::SETTING_NOT_FOUND,
-                "No `texture` field found in SpriteSheet component",
-                load_spritesheet_component
+                "No `WIDTH` field found in non-auto BoundingBoxComponent",
+                load_bounding_box_component
             );
         }
-        std::string textureFilename;
-        CHECK_ERROR(
-            textureFilename = json_get_string(context, componentObj.at("texture"));,
-            load_spritesheet_component (getting `texture`)
-        );
-
-        float width; float height;
-        CHECK_ERROR(
-            std::tie(width, height) = json_get_width_and_height(context, componentObj);,
-            load_spritesheet_component
-        );
-        if(width <= 0){
+        if(!componentObj.contains("height")){
             THROW_ERROR(
-                ErrorType::INVALID_SETTING_VALUE,
-                "SpriteSheet component `width` must be a positive number",
-                load_spritesheet_component
+                ErrorType::SETTING_NOT_FOUND,
+                "No `height` field found in non-auto BoundingBoxComponent",
+                load_bounding_box_component
             );
         }
-        if(height <= 0){
-            THROW_ERROR(
-                ErrorType::INVALID_SETTING_VALUE,
-                "SpriteSheet component `height` must be a positive number",
-                load_spritesheet_component
-            );
-        }
-        registry.add_component<SpriteSheet>(entityID, textureFilename.c_str(), (uint)width, (uint)height);
-        // TODO: do something to configure animation lengths
+        float bbWidth; float bbHeight;
+        CHECK_ERROR(
+            bbWidth = json_get_float(context, componentObj.at("width"));,
+            load_bounding_box_component (getting `width`)
+        );
+        CHECK_ERROR(
+            bbHeight = json_get_float(context, componentObj.at("height"));,
+            load_bounding_box_component (getting `height`)
+        );
+        registry.add_component<BoundingBoxComponent>(entityID, bbPosition, bbWidth, bbHeight);
     }
 
     using ComponentLoadingFunc = void(*)(Context&, LevelRegistry&, const Json&, entt::entity);
     static const std::map<std::string, ComponentLoadingFunc> COMPONENT_LOADING_FUNCTIONS = {
         {"BoundingBoxComponent", load_bounding_box_component},
-        {"SpriteSheet", load_spritesheet_component}
     };
 
     static void load_entity_component_generic(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
@@ -400,20 +343,55 @@ namespace LevelBuilder
     }
 
     static void add_centered_collision_rect_to_component(Context& context, const Json& colliderJson, CollisionComponent& collision){
-
+        if(!colliderJson.contains("width")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `width` field found on \"rect\" type collider",
+                add_centered_collision_rect_to_component
+            );
+        }
+        if(!colliderJson.contains("height")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `height` field found on \"rect\" type collider",
+                add_centered_collision_rect_to_component
+            );
+        }
         float rectWidth; float rectHeight;
         CHECK_ERROR(
-            std::tie(rectWidth, rectHeight) = json_get_width_and_height(context, colliderJson);,
-            add_centered_collision_rect_to_component (getting `width` and `height`)
+            rectWidth = json_get_float(context, colliderJson.at("width"));,
+            add_centered_collision_rect_to_component (getting `width`)
+        );
+        CHECK_ERROR(
+            rectHeight = json_get_float(context, colliderJson.at("height"));,
+            add_centered_collision_rect_to_component (getting `height`)
         );
         collision.add_rect_centered(rectWidth, rectHeight);
     }
 
     static void add_collision_rect_to_component(Context& context, const Json& colliderJson, const Vector2& colliderPosition, CollisionComponent& collision){
+        if(!colliderJson.contains("width")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `width` field found on \"rect\" type collider",
+                add_collision_rect_to_component
+            );
+        }
+        if(!colliderJson.contains("height")){
+            THROW_ERROR(
+                ErrorType::SETTING_NOT_FOUND,
+                "No `height` field found on \"rect\" type collider",
+                add_collision_rect_to_component
+            );
+        }
         float rectWidth; float rectHeight;
         CHECK_ERROR(
-            std::tie(rectWidth, rectHeight) = json_get_width_and_height(context, colliderJson);,
-            add_centered_collision_rect_to_component (getting `width` and `height`)
+            rectWidth = json_get_float(context, colliderJson.at("width"));,
+            add_collision_rect_to_component (getting `width`)
+        );
+        CHECK_ERROR(
+            rectHeight = json_get_float(context, colliderJson.at("height"));,
+            add_collision_rect_to_component (getting `height`)
         );
         collision.add_rect(rectWidth, rectHeight, colliderPosition);
     }

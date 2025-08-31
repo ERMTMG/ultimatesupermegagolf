@@ -20,12 +20,6 @@
                 {
                     "type": "BoundingBoxComponent",
                     "auto": true
-                },
-                {
-                    "type": "SpriteSheet",
-                    "texture": "resources/sprites/usmg_block.png",
-                    "width": 32,
-                    "height": 32
                 }
             ]
         },

@@ -1,6 +1,0 @@
-CompilerFlags:
-  Add:
-    "-I./include/"
-    "-I../include/"
-    "-I./include/utility/"
-    "-Wno-narrowing"

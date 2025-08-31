@@ -1,5 +1,0 @@
--xc++
--std=c++17
--Wno-narrowing
--fPIC
--I"~/Projects/ultimatesupermegagolf/include/**"
