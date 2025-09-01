@@ -51,6 +51,7 @@ Context init_level_parsing(const char* jsonFilename){
     }
     return Context {
         .jsonFile = std::move(file),
+        .entityNames = {},
         .error = {ErrorType::SUCCESS},
         .topLevelJsonObject = levelJson
     };
@@ -643,6 +644,17 @@ static void load_level_entity_from_json(Context& context, LevelRegistry& registr
     }
 }
 
+static bool is_entity_name_protected(const std::string& entityName){
+    static const std::set<std::string> PROTECTED_NAMES = {
+        LevelRegistry::PLAYER_ENTITY_NAME,
+        LevelRegistry::GOAL_ENTITY_NAME,
+        LevelRegistry::CAMERA_ENTITY_NAME,
+        LevelRegistry::INPUT_MANAGER_ENTITY_NAME,
+        LevelRegistry::RNG_ENTITY_NAME
+    };
+    return PROTECTED_NAMES.count(entityName) != 0;
+}
+
 static void load_level_entities(Context& context, LevelRegistry& registry, const Json& levelDict){
     if(!levelDict.contains("entities")){
         std::cerr << "<WARNING> at load_level_entities: no `entities` field. Level will be empty\n";
@@ -656,6 +668,31 @@ static void load_level_entities(Context& context, LevelRegistry& registry, const
             load_level_entities
             );
     }
+    // first pass: collect entity names and create corresponding entity IDs
+    auto& entityNamesMap = context.entityNames;
+    for(const auto& [entityName, entityObj] : entities.items()){
+        if(is_entity_name_protected(entityName)){
+            THROW_ERROR(
+                ErrorType::GENERIC_ERROR,
+                "entity name " + entityName + " is protected, it can't be used as the name of an entity",
+                load_level_entities
+            );
+        }
+        entt::entity& entityID = entityNamesMap[entityName]; // this creates a new default constructed entityID (0) if entityNamesMap doesn't
+                                                             // have an entity with this name. Since 0 is an impossible entity ID
+                                                             // (it's already taken by the player), in this context it means a new entity.
+        if(entityID != entt::entity{}){
+            THROW_ERROR(
+                ErrorType::GENERIC_ERROR,
+                "Entity name " + entityName + " already taken on entityID " + std::to_string((int)entityID),
+                load_level_entities
+            );
+        } else {
+            entityID = registry.new_entity(entityName);
+        }
+    }
+    // TODO: load all entity names beforehand and assign them entities. Perhaps with a new Context member variable
+    // that holds a entityname -> entityID map?
     for(const auto& [entityName, entityObj] : entities.items()){
         CHECK_ERROR_STR(
             load_level_entity_from_json(context, registry, entityName, entityObj);,

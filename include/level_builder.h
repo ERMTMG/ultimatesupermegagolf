@@ -65,6 +65,7 @@ namespace LevelBuilder
 
     struct Context {
         std::ifstream jsonFile;
+        std::map<std::string, entt::entity> entityNames;
         Error error;
         nlohmann::json topLevelJsonObject;
     };
