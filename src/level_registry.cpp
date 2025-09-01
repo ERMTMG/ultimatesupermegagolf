@@ -1,4 +1,8 @@
 #include"level_registry.h"
+#include "basic_components.h"
+#include "collision_component.h"
+#include <utility>
+#include <vector>
 
 using std::make_unique;
 using std::move;
@@ -73,7 +77,7 @@ entt::entity LevelRegistry::get_entity(std::string&& name) const{
 }
 
 std::vector<entt::entity> LevelRegistry::search_entities_by_name(const std::string& prefix) const{
-    std::vector<entt::entity> output; 
+    std::vector<entt::entity> output;
     output.reserve(registry->view<entt::entity>().size() / 10); // let's say about a tenth of all entities. might change this later
     for(const auto&[name, entity] : entityNames){
         auto nameItr = name.begin(); auto pfxItr = prefix.begin();
@@ -144,12 +148,19 @@ void LevelRegistry::init_level(const Position& playerPos, const Position& goalPo
     create_player(playerPos);
     create_goal(goalPos);
     create_camera_centered_at(cameraPos);
-    // TODO later: level info component 
+    // TODO later: level info component
     entt::entity input = new_entity(INPUT_MANAGER_ENTITY_NAME);
-    registry->emplace<InputManager>(input); 
+    registry->emplace<InputManager>(input);
 
     entt::entity rng = new_entity(RNG_ENTITY_NAME);
     registry->emplace<RNGComponent>(rng, new_rng_component());
+}
+
+CollisionComponent& LevelRegistry::make_entity_into_static_body(entt::entity entity, const Position& pos, std::vector<LayerType>&& layers){
+    registry->emplace<Position>(entity, pos);
+    CollisionComponent& collision = registry->emplace<CollisionComponent>(entity);
+    set_layers(collision, std::forward<std::vector<LayerType>>(layers));
+    return collision;
 }
 
 std::pair<entt::entity, CollisionComponent&> LevelRegistry::create_static_body(const Position& pos, std::vector<LayerType>&& layers){
@@ -180,7 +191,7 @@ void LevelRegistry::recalculate_bounding_box(entt::entity entity){
 
 void LevelRegistry::handle_collisions_general(){
     // TODO: divide this into substeps to avoid things clipping through each other. maybe has to be in the update function itself
-    
+
     // set all collidedEntityIDs to null
     auto collisionStoreEntities = registry->view<CollisionEntityStoreComponent>();
     for(auto[entity, store] : collisionStoreEntities.each()){
@@ -292,7 +303,7 @@ void LevelRegistry::update(float delta){
     //std::cout << "frame update!\n";
     auto viewPositionAndVelocity = registry->view<Position, Velocity>();
     for(auto[entity, pos, vel] : viewPositionAndVelocity.each()){
-        if(registry->all_of<const Acceleration>(entity)){ //const may not be necessary? 
+        if(registry->all_of<const Acceleration>(entity)){ //const may not be necessary?
             const Acceleration& accel = registry->get<const Acceleration>(entity);
             move_position(pos, vel, accel, delta);
         } else {
@@ -304,7 +315,7 @@ void LevelRegistry::update(float delta){
     handle_input_and_player();
     handle_animations(delta);
     //handle_camera(delta);
-    
+
 }
 
 void LevelRegistry::draw(bool debugMode) const{
@@ -317,7 +328,7 @@ void LevelRegistry::draw(bool debugMode) const{
 
             /*auto spriteEntities = registry->view<const SpriteSheet, const Position>();
             for(auto[entity, sprite, pos] : spriteEntities.each()){
-                
+
                 const SpriteTransform* transform = registry->try_get<SpriteTransform>(entity);
                 if(transform != nullptr){
                     draw_sprite(sprite, *transform, pos);
@@ -325,7 +336,7 @@ void LevelRegistry::draw(bool debugMode) const{
                     draw_sprite(sprite, pos);
                 }
             }*/
-            auto onlySprites = registry->view<const SpriteSheet, const Position>(entt::exclude<SpriteTransform>); 
+            auto onlySprites = registry->view<const SpriteSheet, const Position>(entt::exclude<SpriteTransform>);
             for(auto[entity, sprite, pos] : onlySprites.each()){
                 const BoundingBoxComponent* bb = registry->try_get<BoundingBoxComponent>(entity);
                 if(bb != nullptr && is_in_view(camera, *bb, pos)){
@@ -365,6 +376,6 @@ void LevelRegistry::draw(bool debugMode) const{
             draw_player_drag_velocity(player, pos);
         EndMode2D();
         DrawFPS(10,10);
-        // TODO later: implement and draw UI 
+        // TODO later: implement and draw UI
     EndDrawing();
 }

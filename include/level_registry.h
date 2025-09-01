@@ -17,9 +17,10 @@
 #include<memory>
 #include<unordered_map>
 #include<utility>
+#include <vector>
 
 /*
-    Main class that represents a level with all its entities, and allows basic 
+    Main class that represents a level with all its entities, and allows basic
     manipulation of them. Wraps the entt::registry class, giving it functionality
     to function within the game (updating, drawing,...). Has functionality to get
     entities by custom-given names.
@@ -35,7 +36,7 @@ class LevelRegistry{
 
   private:
     // dynamically allocated registry because the size of entt::registry is ridiculous.
-    // Maybe actually just having it as a member would be better? most of the registry's 
+    // Maybe actually just having it as a member would be better? most of the registry's
     // info is on the heap anyway
     std::unique_ptr<entt::registry> registry;
     // Stores the total number of level objects in the registry. What counts as a level
@@ -67,7 +68,7 @@ class LevelRegistry{
     LevelRegistry(LevelRegistry&& other);
     LevelRegistry& operator=(LevelRegistry&& rhs);
     ;// no copy constructor/assignment because copying levels probably isn't useful
-    LevelRegistry(const LevelRegistry& other) = delete; 
+    LevelRegistry(const LevelRegistry& other) = delete;
     LevelRegistry& operator=(const LevelRegistry& other) = delete;
     // initializes the level (i.e, creates all important entities) with the relevant positions
     void init_level(const Position& playerPos, const Position& goalPos, const Position& cameraPos);
@@ -77,11 +78,11 @@ class LevelRegistry{
     // creates a new entity with the given name and returns its ID
     entt::entity new_entity(const std::string& name);
     entt::entity new_entity(std::string&& name);
-    /* 
+    /*
         creates a new level object with the given name prefix at the given position. the prefix
         will be followed by a number correspondent to the total number of level objects, unless
         uniqueName is set to true in which case the prefix will be the entity's full name if possible.
-    */ 
+    */
     entt::entity new_level_object(const std::string& namePrefix, const Position& pos = {0,0}, bool uniqueName = false);
     // Gets the entity ID with the given name, if no entity exists with that name, returns entt::null.
     entt::entity get_entity(const std::string& name) const;
@@ -89,6 +90,8 @@ class LevelRegistry{
     // Gets a vector containing all the entity ID's whose names start with prefix.
     // might not be a good idea to run this while ingame as it can take up a long time.
     std::vector<entt::entity> search_entities_by_name(const std::string& prefix) const;
+
+    CollisionComponent& make_entity_into_static_body(entt::entity entity, const Position& pos, std::vector<LayerType>&& layers);
 
     // Adds a component with the provided constructor argument. Same functionality as entt::registry::emplace
     template<class ComponentType, class... Args>
@@ -128,7 +131,7 @@ class LevelRegistry{
           blockCollision.add_rect(VEC2_ZERO, 16, 16);
     */
     std::pair<entt::entity, CollisionComponent&> create_static_body(const Position& pos, std::vector<LayerType>&& layers);
-    // Recalculates the bounding box component of the given entity, in case its collision and/or sprite 
+    // Recalculates the bounding box component of the given entity, in case its collision and/or sprite
     // has been modified. If the entity doesn't have a bounding box yet, it adds it.
     void recalculate_bounding_box(entt::entity entity);
     // Basic game logic function. Of course, runs 60 times a second.
@@ -137,4 +140,3 @@ class LevelRegistry{
     // need to nest the function inside another BeginDrawing() ... EndDrawing(). Runs 60 times a second too.
     void draw(bool debugMode = false) const;
 };
-

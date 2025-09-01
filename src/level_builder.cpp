@@ -1,4 +1,7 @@
 #include"level_builder.h"
+#include "collision_component.h"
+#include<unordered_set>
+#include<unordered_map>
 
 #define THROW_ERROR(errorType, errorMsg, location) context.error = {errorType, errorMsg}; \
 std::cerr << "<ERROR> at " #location ": " << context.error << '\n'; \
@@ -313,7 +316,7 @@ static void load_sprite_transform_component(Context& context, LevelRegistry& reg
 }
 
 using ComponentLoadingFunc = void(*)(Context&, LevelRegistry&, const Json&, entt::entity);
-static const std::map<std::string, ComponentLoadingFunc> COMPONENT_LOADING_FUNCTIONS = {
+static const std::unordered_map<std::string, ComponentLoadingFunc> COMPONENT_LOADING_FUNCTIONS = {
     {"BoundingBoxComponent", load_bounding_box_component},
     {"SpriteSheet", load_spritesheet_component},
     {"SpriteTransform", load_sprite_transform_component},
@@ -572,20 +575,20 @@ static void load_entity_static_body_colliders(Context& context, const Json& enti
     }
 }
 
-static void load_entity_static_body_settings(Context& context, LevelRegistry& registry, const Json& entityObj, entt::entity& entityID,
+static void load_entity_static_body_settings(Context& context, LevelRegistry& registry, const Json& entityObj, entt::entity entityID,
                                              const std::string& entityName){
     Vector2 positionVector = VEC2_NULL;
     std::vector<LayerType> layers;
     CHECK_ERROR_STR(
         positionVector = json_get_Vector2(context, entityObj);,
         "load_entity_static_body_settings (getting position, entity name: " + entityName + ")"
-        );
+    );
     if(!entityObj.contains("layers")){
         THROW_ERROR(
             ErrorType::SETTING_NOT_FOUND,
             "No `layers` field found on static body",
             load_entity_static_body_settings
-            );
+        );
     }
     const Json& layersJson = entityObj.at("layers");
     if(!layersJson.is_array()){
@@ -593,30 +596,28 @@ static void load_entity_static_body_settings(Context& context, LevelRegistry& re
             ErrorType::INVALID_JSON_TYPE,
             "expected number array for field `layers`, found '" + to_string(layersJson) + '\'',
             load_entity_static_body_settings
-            );
+        );
     }
     CHECK_ERROR(
         get_collision_layer_array(context, registry, layersJson, layers);,
         load_entity_static_body_settings
-        );
-    auto [temp, entityCollision] = registry.create_static_body(positionVector, std::move(layers));
-    entityID = temp;
+    );
+    CollisionComponent& entityCollision = registry.make_entity_into_static_body(entityID, positionVector, std::move(layers));
     CHECK_ERROR(
         load_entity_static_body_colliders(context, entityObj, entityID, entityCollision);,
         load_entity_static_body_settings
-        )
+    )
 
 }
 
 static void load_level_entity_from_json(Context& context, LevelRegistry& registry, const std::string& entityName, const Json& entityObj){
+    entt::entity currEntity = context.entityNames.at(entityName);
     if(!entityObj.contains("entity_default")){
-        entt::entity currEntity = registry.new_entity(entityName);
         CHECK_ERROR_STR(
             load_entity_components_from_json(context, registry, entityObj, currEntity, entityName);,
             "load_level_entity_from_json (entity name: " +  entityName + ")"
             );
     } else {
-        entt::entity currEntity = entt::null;
         CHECK_ERROR(
             std::string entityDefault = json_get_string(context, entityObj.at("entity_default"));,
             load_level_entity_from_json (getting `entity_default`)
@@ -628,9 +629,7 @@ static void load_level_entity_from_json(Context& context, LevelRegistry& registr
                 );
         } else if(entityDefault == "tilemap"){
             // TODO: do tilemap stuff
-        } else if(entityDefault == "none"){
-            currEntity = registry.new_entity(entityName);
-        } else {
+        } else if(entityDefault != "none"){
             THROW_ERROR(
                 ErrorType::INVALID_SETTING_VALUE,
                 "Invalid value '" + entityDefault + "' for `entity_default`",
@@ -640,12 +639,12 @@ static void load_level_entity_from_json(Context& context, LevelRegistry& registr
         CHECK_ERROR_STR(
             load_entity_components_from_json(context, registry, entityObj, currEntity, entityName);,
             "load_level_entity_from_json (entity name: " + entityName + ")"
-            );
+        );
     }
 }
 
 static bool is_entity_name_protected(const std::string& entityName){
-    static const std::set<std::string> PROTECTED_NAMES = {
+    static const std::unordered_set<std::string> PROTECTED_NAMES = {
         LevelRegistry::PLAYER_ENTITY_NAME,
         LevelRegistry::GOAL_ENTITY_NAME,
         LevelRegistry::CAMERA_ENTITY_NAME,
