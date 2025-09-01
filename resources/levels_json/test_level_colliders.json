@@ -11,15 +11,27 @@
             "colliders": [
                 {
                     "type": "rect",
-                    "position": {"x": -25, "y": -25},
-                    "width": 50,
-                    "height": 50
+                    "position": {"x": -32, "y": -32},
+                    "width": 64,
+                    "height": 64
                 }
             ],
             "components": [
                 {
                     "type": "BoundingBoxComponent",
                     "auto": true
+                },
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/usmg_block.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "fit_to_width_and_height": true,
+                    "width": 64,
+                    "height": 64
                 }
             ]
         },

@@ -19,6 +19,7 @@ namespace LevelBuilder
         INVALID_SETTING_NAME,
         INVALID_SETTING_VALUE,
         INVALID_COMPONENT_NAME,
+        NEEDED_COMPONENT_NOT_FOUND,
     };
 
     struct Error {
@@ -53,6 +54,8 @@ namespace LevelBuilder
             errorString = "[Invalid setting value]"; break;
           case ErrorType::INVALID_COMPONENT_NAME:
             errorString = "[Invalid component name]"; break;
+          case ErrorType::NEEDED_COMPONENT_NOT_FOUND:
+              errorString = "[Needed component not found]"; break;
           default:
             errorString = "[Unknown error]"; break;
         }

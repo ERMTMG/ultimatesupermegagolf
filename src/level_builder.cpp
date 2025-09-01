@@ -268,10 +268,54 @@ static void load_spritesheet_component(Context& context, LevelRegistry& registry
     // TODO: do something to configure animation lengths
 }
 
+static void load_sprite_transform_component(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
+    Vector2 scale = VEC2_ONE;
+    Vector2 offset = VEC2_ZERO;
+    float rotation = 0;
+    SpriteSheet* sprite = registry.get_component<SpriteSheet>(entityID);
+    if(sprite == nullptr){
+        THROW_ERROR(
+            ErrorType::NEEDED_COMPONENT_NOT_FOUND,
+            "SpriteTransform component needs to have a corresponding SpriteSheet component (did you load it *before* the SpriteTransform?)",
+            load_sprite_transform_component
+            );
+    }
+    if(componentObj.contains("fit_to_width_and_height")){
+        float targetWidth;
+        float targetHeight;
+        CHECK_ERROR(
+            std::tie(targetWidth, targetHeight) = json_get_width_and_height(context, componentObj);,
+            load_sprite_transform_component (note: presence of field `fit_to_width_and_height` requires a corresponding `width` and `height` field)
+            );
+        float spriteWidth = sprite->texture.width / sprite->numberFramesPerRow;
+        float spriteHeight = sprite->texture.height / sprite->numberRows;
+        scale = Vector2 {targetWidth / spriteWidth, targetHeight / spriteHeight};
+    } else if(componentObj.contains("scale")){
+        CHECK_ERROR(
+            scale = json_get_Vector2(context, componentObj.at("scale"));,
+            load_sprite_transform_component (getting `scale`)
+            );
+    }
+    if(componentObj.contains("offset")){
+        CHECK_ERROR(
+            offset = json_get_Vector2(context, componentObj.at("offset"));,
+            load_sprite_transform_component (getting `offset`)
+            );
+    }
+    if(componentObj.contains("rotation")){
+        CHECK_ERROR(
+            rotation = json_get_float(context, componentObj.at("rotation"));,
+            load_sprite_transforma component (getting `rotation`)
+            )
+    }
+    registry.add_component<SpriteTransform>(entityID, offset, scale, rotation);
+}
+
 using ComponentLoadingFunc = void(*)(Context&, LevelRegistry&, const Json&, entt::entity);
 static const std::map<std::string, ComponentLoadingFunc> COMPONENT_LOADING_FUNCTIONS = {
     {"BoundingBoxComponent", load_bounding_box_component},
-    {"SpriteSheet", load_spritesheet_component}
+    {"SpriteSheet", load_spritesheet_component},
+    {"SpriteTransform", load_sprite_transform_component},
 };
 
 static void load_entity_component_generic(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
