@@ -5,6 +5,8 @@
     "camera_position": {"x": 0, "y": 0},
     "tilesets": {
         "tileset1": {
+            "tilewidth": 16,
+            "tileheight1": 32,
             "tiles": [
                 {
                     "texture": "resources/sprites/placeholder_tileset/tile_placeholder_0.png",
@@ -104,12 +106,11 @@
             "tileset": "tileset1",
             "tilegrid_rows": 4,
             "tilegrid_cols": 6,
-            "tilegrid": 
-            [
+            "tilegrid": [
                 0, 1, 2,"","","",
                 7, 8,10, 1, 1, 2,
                 6, 5,12, 8, 8, 3,
-               "","", 6, 5, 5, 4
+                "","", 6, 5, 5, 4
             ],
             "components": [
                 {

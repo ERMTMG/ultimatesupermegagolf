@@ -5,6 +5,7 @@
 #include"level_registry.h"
 #include<fstream>
 #include<iostream>
+#include <vector>
 
 namespace LevelBuilder
 {
@@ -66,6 +67,7 @@ namespace LevelBuilder
     struct Context {
         std::ifstream jsonFile;
         std::map<std::string, entt::entity> entityNames;
+        std::map<std::string, std::vector<TilesetTile>> tilesets;
         Error error;
         nlohmann::json topLevelJsonObject;
     };

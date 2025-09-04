@@ -4,6 +4,8 @@
 #include "level_registry.h"
 #include "raylib.h"
 #include "utility/vector2_util.h"
+#include <cstddef>
+#include <string>
 #include<unordered_set>
 #include<unordered_map>
 
@@ -41,6 +43,8 @@ Context init_level_parsing(const char* jsonFilename){
         std::cerr << "<ERROR> at init_level_parsing: failed to open file " << jsonFilename << '\n';
         return Context {
             .jsonFile = std::move(file),
+            .entityNames = {},
+            .tilesets = {},
             .error = {ErrorType::COULDNT_OPEN_FILE, std::string(jsonFilename)},
             .topLevelJsonObject = Json{Json::value_t::null} // null JSON object
         };
@@ -52,6 +56,8 @@ Context init_level_parsing(const char* jsonFilename){
         std::cerr << "<ERROR> at init level_parsing: parse error in file " << jsonFilename << ": " << err.what() << '\n';
         return Context {
             .jsonFile = std::move(file),
+            .entityNames = {},
+            .tilesets = {},
             .error = {ErrorType::PARSE_ERROR, err.what()},
             .topLevelJsonObject = Json{Json::value_t::null}
         };
@@ -59,6 +65,7 @@ Context init_level_parsing(const char* jsonFilename){
     return Context {
         .jsonFile = std::move(file),
         .entityNames = {},
+        .tilesets = {},
         .error = {ErrorType::SUCCESS},
         .topLevelJsonObject = levelJson
     };
@@ -755,9 +762,85 @@ static void load_level_entities(Context& context, LevelRegistry& registry, const
     }
 }
 
+static void load_tile_into_vector(Context& context, const Json& tileObj, std::vector<TilesetTile>& contextTileset){
+    if(!tileObj.contains("texture")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND,
+            "no `texture` field found in tile object",
+            load_tile_into_vector
+        );
+    }
+    std::string tileTextureFilename;
+    CHECK_ERROR(
+        tileTextureFilename = json_get_string(context, tileObj.at("texture")),
+        load_tile_into_vector (getting `texture`)
+    );
+    if(!tileObj.contains("collision")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND,
+            "no `collision` field found in tile object",
+            load_tile_into_vector
+        );
+    }
+    // TODO: make collision-based constructor for tileset tiles and finish this
+}
+
+static void load_tileset_into_context(Context& context, const std::string& tilesetName, const Json& tilesetTiles){
+    if(!tilesetTiles.is_array()){
+        THROW_ERROR(
+            ErrorType::INVALID_JSON_TYPE,
+            "expected array of tile objects for tileset, received '" + to_string(tilesetTiles) + '\'',
+            load_tileset_into_component
+        );
+    }
+    size_t numTiles = tilesetTiles.size();
+    auto [iter, insertSucceeded] = context.tilesets.emplace(tilesetName, std::vector<TilesetTile>{});
+    if(!insertSucceeded){
+        THROW_ERROR(
+            ErrorType::GENERIC_ERROR,
+            "insertion of tileset '" + tilesetName + "' into tilesets map was unsuccessful (have you made sure to give each tileset a unique name?)",
+            load_tileset_into_context
+        );
+    }
+    auto& tilesVector = iter->second;
+    tilesVector.reserve(numTiles);
+    size_t tileIdx = 0;
+    for(const auto& tileObj : tilesetTiles){
+        CHECK_ERROR_STR(
+            load_tile_into_vector(context, tileObj, tilesVector);,
+            "load_tileset_into_context (tile index: " + std::to_string(tileIdx) + ')'
+        )
+        tileIdx++;
+    }
+}
+
+static void load_level_tilesets(Context& context, const Json& levelDict){
+    if(!levelDict.contains("tilesets")){
+        return; // Not an error, just don't load any tilesets.
+    }
+    const Json& tilesetsDict = levelDict.at("tilesets");
+    if(!tilesetsDict.is_object()){
+        THROW_ERROR(
+            ErrorType::INVALID_JSON_TYPE,
+            "expected dictionary (object) for level field `tilesets`, received '" + to_string(tilesetsDict) + '\'' ,
+            load_level_tilesets
+        );
+    }
+    for(const auto& [tilesetName, tilesetTiles] : tilesetsDict.items()){
+        CHECK_ERROR_STR(
+            load_tileset_into_context(context, tilesetName, tilesetTiles),
+            "load_level_tilesets (current tileset name: " + tilesetName + ')'
+        );
+    }
+}
+
 static void iterate_level_keys(Context& context, LevelRegistry& registry, const Json& levelDict){
     CHECK_ERROR(
         init_level_data(context, registry, levelDict);,
+        iterate_level_keys
+    );
+    CHECK_ERROR(
+        load_level_tilesets(context, levelDict);,
         iterate_level_keys
     );
     CHECK_ERROR(
