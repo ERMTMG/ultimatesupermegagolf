@@ -1,5 +1,9 @@
 #include"level_builder.h"
+#include "basic_components.h"
 #include "collision_component.h"
+#include "level_registry.h"
+#include "raylib.h"
+#include "utility/vector2_util.h"
 #include<unordered_set>
 #include<unordered_map>
 
@@ -67,7 +71,7 @@ static float json_get_float(Context& context, const Json& object){
             "expected string, received '" + to_string(object) + '\'',
             json_get_string,
             std::numeric_limits<float>::quiet_NaN()
-            );
+        );
     }
     return object.get<float>();
 }
@@ -79,7 +83,7 @@ static std::string json_get_string(Context& context, const Json& object){
             "expected string, received '" + to_string(object) + '\'',
             json_get_string,
             ""
-            );
+        );
     }
     return object.get<std::string>();
 }
@@ -91,7 +95,7 @@ static Vector2 json_get_Vector2(Context& context, const Json& object){
             "expected Vector2-like object, which needs both `x` and `y` fields",
             json_get_Vector2,
             VEC2_NULL
-            );
+        );
     }
     const Json& xComponent = object.at("x");
     const Json& yComponent = object.at("y");
@@ -101,7 +105,7 @@ static Vector2 json_get_Vector2(Context& context, const Json& object){
             "expected number, received x: '" + to_string(xComponent) + "' and y: '" + to_string(yComponent) + '\'',
             json_get_Vector2,
             VEC2_NULL
-            );
+        );
     }
     return Vector2{xComponent.get<float>(), yComponent.get<float>()};
 }
@@ -114,7 +118,7 @@ static std::pair<float, float> json_get_width_and_height(Context& context, const
             "No `width` setting found in object",
             json_get_width_and_height,
             ERROR_PAIR
-            );
+        );
     }
     if(!object.contains("height")){
         THROW_ERROR_RETURN(
@@ -122,7 +126,7 @@ static std::pair<float, float> json_get_width_and_height(Context& context, const
             "No `height` setting found in object",
             json_get_width_and_height,
             ERROR_PAIR
-            );
+        );
     }
     float width;
     float height;
@@ -130,12 +134,12 @@ static std::pair<float, float> json_get_width_and_height(Context& context, const
         width = json_get_float(context, object.at("width"));,
         json_get_width_and_height (getting `width`),
         ERROR_PAIR
-        );
+    );
     CHECK_ERROR_RETURN(
         height = json_get_float(context, object.at("height"));,
         json_get_width_and_height (getting `height`),
         ERROR_PAIR
-        );
+    );
     return {width, height};
 }
 
@@ -151,37 +155,37 @@ static void init_level_data(Context& context, LevelRegistry& registry, const Jso
             ErrorType::SETTING_NOT_FOUND,
             "No `player_position` setting found in level",
             init_level_data
-            );
+        );
     }
     if(!levelDict.contains("goal_position")){
         THROW_ERROR(
             ErrorType::SETTING_NOT_FOUND,
             "No `goal_position` setting found in level",
             init_level_data
-            );
+        );
     }
     CHECK_ERROR(
         playerPos = json_get_Vector2(context, levelDict.at("player_position"));,
         init_level_data (getting `player_position`)
-        );
+    );
     CHECK_ERROR(
         goalPos = json_get_Vector2(context, levelDict.at("goal_position"));,
         init_level_data (getting `player_position`)
-        );
+    );
 
     if(levelDict.contains("camera_position")){
         isCameraAtPlayer = false;
         CHECK_ERROR(
             cameraPos = json_get_Vector2(context, levelDict.at("camera_position"));,
             init_level_data (getting `camera_position`)
-            );
+        );
     }
 
     if(levelDict.contains("level_name")){
         CHECK_ERROR(
             levelName = json_get_string(context, levelDict.at("level_name"));,
             init_level_data (getting `level_name`)
-            );
+        );
     }
 
     // TODO: do something with level name
@@ -199,7 +203,7 @@ static void load_bounding_box_component_auto(Context& context, LevelRegistry& re
         BoundingBoxComponent bb = bb_union(
             calculate_bb(*sprite),
             calculate_bb(*collision)
-            );
+        );
         registry.get().emplace_or_replace<BoundingBoxComponent>(entityID, bb);
     } else if(collision != nullptr){
         registry.get().emplace_or_replace<BoundingBoxComponent>(entityID, calculate_bb(*collision));
@@ -220,18 +224,18 @@ static void load_bounding_box_component(Context& context, LevelRegistry& registr
             ErrorType::SETTING_NOT_FOUND,
             "No `position` field found in non-auto BoundingBoxComponent",
             load_bounding_box_component
-            );
+        );
     }
     Vector2 bbPosition = VEC2_NULL;
     CHECK_ERROR(
         bbPosition = json_get_Vector2(context, componentObj.at("position"));,
         load_bounding_box_component (getting `position`)
-        );
+    );
     float bbWidth; float bbHeight;
     CHECK_ERROR(
         std::tie(bbWidth, bbHeight) = json_get_width_and_height(context, componentObj);,
         load_bounding_box_component (getting `width` and `height`)
-        );
+    );
     registry.add_component<BoundingBoxComponent>(entityID, bbPosition, bbWidth, bbHeight);
 }
 
@@ -241,32 +245,32 @@ static void load_spritesheet_component(Context& context, LevelRegistry& registry
             ErrorType::SETTING_NOT_FOUND,
             "No `texture` field found in SpriteSheet component",
             load_spritesheet_component
-            );
+        );
     }
     std::string textureFilename;
     CHECK_ERROR(
         textureFilename = json_get_string(context, componentObj.at("texture"));,
         load_spritesheet_component (getting `texture`)
-        );
+    );
 
     float width; float height;
     CHECK_ERROR(
         std::tie(width, height) = json_get_width_and_height(context, componentObj);,
         load_spritesheet_component
-        );
+    );
     if(width <= 0){
         THROW_ERROR(
             ErrorType::INVALID_SETTING_VALUE,
             "SpriteSheet component `width` must be a positive number",
             load_spritesheet_component
-            );
+        );
     }
     if(height <= 0){
         THROW_ERROR(
             ErrorType::INVALID_SETTING_VALUE,
             "SpriteSheet component `height` must be a positive number",
             load_spritesheet_component
-            );
+        );
     }
     registry.add_component<SpriteSheet>(entityID, textureFilename.c_str(), (uint)width, (uint)height);
     // TODO: do something to configure animation lengths
@@ -282,7 +286,7 @@ static void load_sprite_transform_component(Context& context, LevelRegistry& reg
             ErrorType::NEEDED_COMPONENT_NOT_FOUND,
             "SpriteTransform component needs to have a corresponding SpriteSheet component (did you load it *before* the SpriteTransform?)",
             load_sprite_transform_component
-            );
+        );
     }
     if(componentObj.contains("fit_to_width_and_height")){
         float targetWidth;
@@ -290,7 +294,7 @@ static void load_sprite_transform_component(Context& context, LevelRegistry& reg
         CHECK_ERROR(
             std::tie(targetWidth, targetHeight) = json_get_width_and_height(context, componentObj);,
             load_sprite_transform_component (note: presence of field `fit_to_width_and_height` requires a corresponding `width` and `height` field)
-            );
+        );
         float spriteWidth = sprite->texture.width / sprite->numberFramesPerRow;
         float spriteHeight = sprite->texture.height / sprite->numberRows;
         scale = Vector2 {targetWidth / spriteWidth, targetHeight / spriteHeight};
@@ -298,28 +302,79 @@ static void load_sprite_transform_component(Context& context, LevelRegistry& reg
         CHECK_ERROR(
             scale = json_get_Vector2(context, componentObj.at("scale"));,
             load_sprite_transform_component (getting `scale`)
-            );
+        );
     }
     if(componentObj.contains("offset")){
         CHECK_ERROR(
             offset = json_get_Vector2(context, componentObj.at("offset"));,
             load_sprite_transform_component (getting `offset`)
-            );
+        );
     }
     if(componentObj.contains("rotation")){
         CHECK_ERROR(
             rotation = json_get_float(context, componentObj.at("rotation"));,
             load_sprite_transforma component (getting `rotation`)
-            )
+        )
     }
     registry.add_component<SpriteTransform>(entityID, offset, scale, rotation);
 }
 
+static void load_position_component(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
+    if(!componentObj.contains("position")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND,
+            "no `position` field found in Position component",
+            load_position_component
+        );
+    }
+    Vector2 pos = VEC2_NULL;
+    CHECK_ERROR(
+        pos = json_get_Vector2(context, componentObj.at("position")),
+        load_position_component
+    );
+    registry.add_component<Position>(entityID, pos);
+}
+
+static void load_velocity_component(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
+    if(!componentObj.contains("velocity")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND,
+            "no `velocity` field found in Velocity component",
+            load_velocity_component
+        );
+    }
+    Vector2 vel = VEC2_NULL;
+    CHECK_ERROR(
+        vel = json_get_Vector2(context, componentObj.at("velocity")),
+        load_velocity_component
+    );
+    registry.add_component<Velocity>(entityID, vel);
+}
+
+static void load_acceleration_component(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
+    if(!componentObj.contains("acceleration")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND,
+            "no `acceleration` field found in Acceleration component",
+            load_acceleration_component
+        );
+    }
+    Vector2 accel = VEC2_NULL;
+    CHECK_ERROR(
+        accel = json_get_Vector2(context, componentObj.at("acceleration")),
+        load_acceleration_component
+    );
+    registry.add_component<Acceleration>(entityID, accel);
+}
+
 using ComponentLoadingFunc = void(*)(Context&, LevelRegistry&, const Json&, entt::entity);
 static const std::unordered_map<std::string, ComponentLoadingFunc> COMPONENT_LOADING_FUNCTIONS = {
-    {"BoundingBoxComponent", load_bounding_box_component},
-    {"SpriteSheet", load_spritesheet_component},
-    {"SpriteTransform", load_sprite_transform_component},
+    {"BoundingBoxComponent", &load_bounding_box_component},
+    {"SpriteSheet", &load_spritesheet_component},
+    {"SpriteTransform", &load_sprite_transform_component},
+    {"Position", &load_position_component},
+    {"Velocity", &load_velocity_component},
+    {"Acceleration", &load_acceleration_component},
 };
 
 static void load_entity_component_generic(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
@@ -328,32 +383,32 @@ static void load_entity_component_generic(Context& context, LevelRegistry& regis
             ErrorType::INVALID_JSON_TYPE,
             "expected object for `components` array element, found '" + to_string(componentObj) + '\'',
             load_entity_component_generic
-            );
+        );
     }
     if(!componentObj.contains("type")){
         THROW_ERROR(
             ErrorType::SETTING_NOT_FOUND,
             "No `type` field found in component",
             load_entity_component_generic
-            );
+        );
     }
     CHECK_ERROR(
         std::string componentType = json_get_string(context, componentObj.at("type"));,
         load_entity_component_generic
-        );
+    );
     auto itr = COMPONENT_LOADING_FUNCTIONS.find(componentType);
     if(itr == COMPONENT_LOADING_FUNCTIONS.end()){
         THROW_ERROR(
             ErrorType::INVALID_SETTING_VALUE,
             "invalid component type '" + componentType + '\'',
             load_entity_component_generic
-            );
+        );
     } else {
         ComponentLoadingFunc componentLoader = itr->second;
         CHECK_ERROR(
             componentLoader(context, registry, componentObj, entityID);,
             load_entity_component_generic
-            )
+        );
     }
 }
 
@@ -369,14 +424,14 @@ static void load_entity_components_from_json(Context& context, LevelRegistry& re
             ErrorType::INVALID_JSON_TYPE,
             "expected array for field `components`, found '" + to_string(componentArray) + '\'',
             load_entity_components_from_json
-            );
+        );
     }
     size_t i = 0;
     for(const Json& componentObj : componentArray){
         CHECK_ERROR_STR(
             load_entity_component_generic(context, registry, componentObj, entityID);,
             "load_entity_components_from_json (at component index " + std::to_string(i) + ")"
-            );
+        );
     }
 }
 
@@ -391,7 +446,7 @@ static void get_collision_layer_array(Context& context, LevelRegistry& registry,
                     ErrorType::INVALID_SETTING_VALUE,
                     "Invalid layer value " + std::to_string(layerValue) + " at `layers` field index " + std::to_string(idx) + "(expected number between 1 and 16 or string 'player')",
                     get_collision_layer_array
-                    );
+                );
             }
             layersVec.push_back((LayerType)layerValue);
             break;
@@ -405,7 +460,7 @@ static void get_collision_layer_array(Context& context, LevelRegistry& registry,
                     ErrorType::INVALID_SETTING_VALUE,
                     "Invalid layer value '" + stringValue + "' at `layers` field index " + std::to_string(idx) + "(expected number between 1 and 16 or string 'player')",
                     get_collision_layer_array
-                    );
+                );
             }
             break;
         }
@@ -414,7 +469,7 @@ static void get_collision_layer_array(Context& context, LevelRegistry& registry,
                 ErrorType::INVALID_JSON_TYPE,
                 "Expected layer number or string 'player' for `layers` field item at index " + std::to_string(idx) + ", found '" + to_string(item) + '\'',
                 get_collision_layer_array
-                );
+            );
         }
         idx++;
     }
@@ -426,24 +481,24 @@ static void add_collision_line_to_component(Context& context, const Json& collid
             ErrorType::SETTING_NOT_FOUND,
             "No `from` field found on \"line\" type collider",
             add_collision_line_to_component
-            );
+        );
     }
     if(!colliderJson.contains("to")){
         THROW_ERROR(
             ErrorType::SETTING_NOT_FOUND,
             "No `to` field found on \"line\" type collider",
             add_collision_line_to_component
-            );
+        );
     }
     Vector2 lineOrigin; Vector2 lineDestination;
     CHECK_ERROR(
         lineOrigin = json_get_Vector2(context, colliderJson.at("from"));,
         add_collision_line_to_component (getting `from`)
-        );
+    );
     CHECK_ERROR(
         lineDestination = json_get_Vector2(context, colliderJson.at("to"));,
         add_collision_line_to_component (getting `to`)
-        );
+    );
     collision.add_line(lineOrigin, lineDestination);
 }
 
@@ -453,7 +508,7 @@ static void add_centered_collision_rect_to_component(Context& context, const Jso
     CHECK_ERROR(
         std::tie(rectWidth, rectHeight) = json_get_width_and_height(context, colliderJson);,
         add_centered_collision_rect_to_component (getting `width` and `height`)
-        );
+    );
     collision.add_rect_centered(rectWidth, rectHeight);
 }
 
@@ -462,7 +517,7 @@ static void add_collision_rect_to_component(Context& context, const Json& collid
     CHECK_ERROR(
         std::tie(rectWidth, rectHeight) = json_get_width_and_height(context, colliderJson);,
         add_centered_collision_rect_to_component (getting `width` and `height`)
-        );
+    );
     collision.add_rect(rectWidth, rectHeight, colliderPosition);
 }
 
@@ -472,13 +527,13 @@ static void add_collision_circle_to_component(Context& context, const Json& coll
             ErrorType::SETTING_NOT_FOUND,
             "No `radius` field found on \"circle\" type collider",
             add_collision_circle_to_component
-            );
+        );
     }
     float circleRadius;
     CHECK_ERROR(
         circleRadius = json_get_float(context, colliderJson.at("radius"));,
         add_collision_circle_to_component (getting `radius`)
-        );
+    );
     collision.add_circle(circleRadius, colliderPosition);
 }
 
@@ -488,13 +543,13 @@ static void add_collision_barrier_to_component(Context& context, const Json& col
             ErrorType::SETTING_NOT_FOUND,
             "No `normal` field found on \"barrier\" type collider",
             add_collision_barrier_to_component
-            );
+        );
     }
     Vector2 barrierNormal;
     CHECK_ERROR(
         barrierNormal = json_get_Vector2(context, colliderJson.at("normal"));,
         add_collision_barrier_to_component (getting `normal`)
-        );
+    );
     barrierNormal = {-barrierNormal.y, barrierNormal.x};
     collision.add_barrier(colliderPosition, barrierNormal);
 }
@@ -505,30 +560,30 @@ static void load_collision_shape_into_component(Context& context, const Json& co
             ErrorType::SETTING_NOT_FOUND,
             "No `type` found on collider object. `type` must be one of: \"rect\", \"circle\", \"barrier\" or \"line\"",
             load_collision_shape_into_component
-            );
+        );
     }
     std::string colliderType;
     CHECK_ERROR(
         colliderType = json_get_string(context, colliderJson.at("type"));,
         load_collision_shape_into_component (getting `type` field)
-        );
+    );
     if(colliderType == "line"){
         CHECK_ERROR(
             add_collision_line_to_component(context, colliderJson, collision);,
             load_collision_shape_into_component
-            );
+        );
     } else if(colliderJson.contains("centered")){
         CHECK_ERROR(
             add_centered_collision_rect_to_component(context, colliderJson, collision);,
             load_collision_shape_into_component
-            );
+        );
     } else {
         Vector2 colliderPosition = VEC2_ZERO;
         if(colliderJson.contains("position")){
             CHECK_ERROR(
                 colliderPosition = json_get_Vector2(context, colliderJson.at("position"));,
                 load_collision_shape_into_component (getting `position` field)
-                );
+            );
         }
         void (*collider_loading_function)(Context&, const Json&, const Vector2&, CollisionComponent&) = nullptr;
 
@@ -543,13 +598,13 @@ static void load_collision_shape_into_component(Context& context, const Json& co
                 ErrorType::INVALID_SETTING_VALUE,
                 "Invalid value '" + colliderType + "' for collider `type`",
                 load_collision_shape_into_component
-                );
+            );
         }
 
         CHECK_ERROR(
             collider_loading_function(context, colliderJson, colliderPosition, collision);,
             load_collision_shape_into_component
-            )
+        )
     }
 }
 
@@ -564,14 +619,14 @@ static void load_entity_static_body_colliders(Context& context, const Json& enti
             ErrorType::INVALID_JSON_TYPE,
             "expected number array for field `colliders`, found '" + to_string(collidersJson) + '\'',
             load_entity_static_body_colliders
-            );
+        );
     }
     size_t colliderIdx = 0;
     for(const Json& collider : collidersJson){
         CHECK_ERROR_STR(
             load_collision_shape_into_component(context, collider, entityCollision);,
             "load_entity_static_body_colliders (collider index: " + std::to_string(colliderIdx) + ')'
-            );
+        );
     }
 }
 
@@ -621,12 +676,12 @@ static void load_level_entity_from_json(Context& context, LevelRegistry& registr
         CHECK_ERROR(
             std::string entityDefault = json_get_string(context, entityObj.at("entity_default"));,
             load_level_entity_from_json (getting `entity_default`)
-            );
+        );
         if(entityDefault == "static_body"){
             CHECK_ERROR(
                 load_entity_static_body_settings(context, registry, entityObj, currEntity, entityName);,
                 load_level_entity_from_json
-                );
+            );
         } else if(entityDefault == "tilemap"){
             // TODO: do tilemap stuff
         } else if(entityDefault != "none"){
@@ -634,7 +689,7 @@ static void load_level_entity_from_json(Context& context, LevelRegistry& registr
                 ErrorType::INVALID_SETTING_VALUE,
                 "Invalid value '" + entityDefault + "' for `entity_default`",
                 load_level_entity_from_json
-                );
+            );
         }
         CHECK_ERROR_STR(
             load_entity_components_from_json(context, registry, entityObj, currEntity, entityName);,
@@ -665,7 +720,7 @@ static void load_level_entities(Context& context, LevelRegistry& registry, const
             ErrorType::INVALID_JSON_TYPE,
             "expected dictionary for field `entities`, received '" + to_string(entities) + '\'',
             load_level_entities
-            );
+        );
     }
     // first pass: collect entity names and create corresponding entity IDs
     auto& entityNamesMap = context.entityNames;
@@ -696,7 +751,7 @@ static void load_level_entities(Context& context, LevelRegistry& registry, const
         CHECK_ERROR_STR(
             load_level_entity_from_json(context, registry, entityName, entityObj);,
             "load_level_entities (entity name: '" + entityName + "')"
-            );
+        );
     }
 }
 
@@ -704,11 +759,11 @@ static void iterate_level_keys(Context& context, LevelRegistry& registry, const 
     CHECK_ERROR(
         init_level_data(context, registry, levelDict);,
         iterate_level_keys
-        );
+    );
     CHECK_ERROR(
         load_level_entities(context, registry, levelDict);,
         iterate_level_keys
-        );
+    );
 }
 
 void build_level(Context& context, LevelRegistry& registry){
@@ -718,11 +773,12 @@ void build_level(Context& context, LevelRegistry& registry){
             ErrorType::INVALID_JSON_TYPE,
             "Top-level JSON must be of type object.",
             build_level
-            );
+        );
     }
     CHECK_ERROR(
         iterate_level_keys(context, registry, levelObject);,
         build_level
-        );
+    );
 }
-}
+
+} // namespace LevelBuilder
