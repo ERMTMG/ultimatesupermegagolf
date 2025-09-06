@@ -20,15 +20,23 @@ struct TilesetTile {
     Texture texture;
     TileID id;
 
+    enum class TileCollisionPreset {
+        NONE = 0,
+        SOLID,
+        SLOPE_SW_TO_NE,
+        SLOPE_NW_TO_SE,
+        CIRCULAR
+    };
+
     // Constructs an empty invalid tile.
     TilesetTile() : collision(), texture(), id(-1) {}
 
     // Constructs a tile whose texture is the image included in the filename and
     // whose collision is a rectangle as large as the texture.
     // TODO: maybe make it able to support more shapes than just squares?
-    TilesetTile(const char* textureFilename);
+    TilesetTile(const char* textureFilename, TileCollisionPreset preset = TileCollisionPreset::SOLID);
     /*
-        NOTE: this cost me an hour of debugging. Turns out, g++ compiler optimizations 
+        NOTE: this cost me an hour of debugging. Turns out, g++ compiler optimizations
         eat up this destructor and act as if it never existed at all, even though it
         prints out that it's been called and it also calls SpriteLoader::return_texture.
         for some godforsaken reason, g++ thinks it isn't important to go ahead and
@@ -37,7 +45,7 @@ struct TilesetTile {
 
         Destructor that unloads the tile texture.
     */
-    ~TilesetTile() __attribute__((noinline)); 
+    ~TilesetTile() __attribute__((noinline));
     TilesetTile(const TilesetTile& other);
 };
 
@@ -51,7 +59,7 @@ struct TilesetComponent {
     // exception being the null TileID (-1).
     std::vector<TilesetTile> tiles;
 
-    // This stores the tilemap itself, in a 2D array starting from offset (0,0). 
+    // This stores the tilemap itself, in a 2D array starting from offset (0,0).
     // Empty tiles are assigned the ID -1.
     util::Matrix<TileID> map;
 
@@ -61,7 +69,7 @@ struct TilesetComponent {
     // a common divisor of them.
     Vector2 tileSize;
 
-    ;// I don't know why the copy constructor and assignment operator are deleted, 
+    ;// I don't know why the copy constructor and assignment operator are deleted,
     ;// but i don't think they're necessary either.
     TilesetComponent() = default;
 
@@ -74,7 +82,7 @@ struct TilesetComponent {
     TilesetComponent(size_t gridRows, size_t gridCols);
 };
 
-// Adds a new tile to the tileset's tile list (doesn't place it anywhere), and 
+// Adds a new tile to the tileset's tile list (doesn't place it anywhere), and
 // returns the new tile's ID. The parameter `tile` is copied over except for its
 // ID, which is determined based on how many tiles `tileset` has already.
 TileID tileset_add_new_tile(TilesetComponent& tileset, const TilesetTile& tile);
@@ -85,7 +93,7 @@ void tileset_clear_all(TilesetComponent& tileset);
 // Returns true only if the position (row, col) is within range of the allocated tilemap
 bool tileset_is_tile_in_range(const TilesetComponent& tileset, size_t row, size_t col);
 
-// If there's a tile placed at (row, col) in the tilemap, returns that tile's ID. 
+// If there's a tile placed at (row, col) in the tilemap, returns that tile's ID.
 // Else, returns -1 (null tile ID)
 TileID tileset_get_tile_at(const TilesetComponent& tileset, size_t row, size_t col);
 
@@ -106,8 +114,8 @@ inline Position tileset_get_tile_pos(const TilesetComponent& tileset, size_t row
 // get removed
 void tileset_fit_map_to_content(TilesetComponent& tileset);
 
-// Places the tile with the given ID at the (row, col)-th position in the tileset's 
-// tilemap. If id == -1, removes the tile at (row, col) instead (nothing happens if 
+// Places the tile with the given ID at the (row, col)-th position in the tileset's
+// tilemap. If id == -1, removes the tile at (row, col) instead (nothing happens if
 // there's no tile)
 void tileset_place_tile(TilesetComponent& tileset, size_t row, size_t col, TileID id);
 
@@ -119,7 +127,7 @@ void tileset_remove_tile(TilesetComponent& tileset, size_t row, size_t col);
 // -1, the function will remove every single tile in the tilemap instead.
 void tileset_remove_all_tiles(TilesetComponent& tileset, TileID id = -1);
 
-// Sets all tiles in the rectangle with upper left corner (beginRow, beginCol) and 
+// Sets all tiles in the rectangle with upper left corner (beginRow, beginCol) and
 // lower right corner (endRow - 1, endCol - 1) to have the ID `fill`. If fill == -1,
 // then the function removes all the tiles in the rectangle instead.
 void tileset_fill_tiles(TilesetComponent& tileset, size_t beginRow, size_t endRow, size_t beginCol, size_t endCol, TileID fill);

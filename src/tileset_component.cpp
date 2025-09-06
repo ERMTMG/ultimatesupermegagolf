@@ -1,9 +1,32 @@
 #include "tileset_component.h"
+#include "collision_component.h"
+#include "collision_shapes.h"
 #include "entt.hpp"
+#include "raylib.h"
+#include "utility/vector2_util.h"
 
-TilesetTile::TilesetTile(const char* textureFilename){
+TilesetTile::TilesetTile(const char* textureFilename, TilesetTile::TileCollisionPreset preset){
     texture = SpriteLoader::load_or_get_texture(textureFilename);
-    collision = CollisionComponent(new CollisionRect(VEC2_ZERO, texture.width, texture.height));
+    switch(preset){
+      case TileCollisionPreset::NONE:
+        collision = CollisionComponent();
+        break;
+      case TileCollisionPreset::SOLID:
+        collision = CollisionComponent(new CollisionRect(VEC2_ZERO, texture.width, texture.height));
+        break;
+      case TileCollisionPreset::SLOPE_SW_TO_NE:
+        collision = CollisionComponent(new CollisionLine(Vector2{0, (float)texture.height}, Vector2{(float)texture.width, 0}));
+        break;
+      case TileCollisionPreset::SLOPE_NW_TO_SE:
+        collision = CollisionComponent(new CollisionLine(VEC2_ZERO, Vector2{(float)texture.width, (float)texture.height}));
+        break;
+      case TileCollisionPreset::CIRCULAR:
+        float circleDiameter = std::min(texture.width, texture.height);
+        Vector2 circleCenter = {texture.width / 2.f, texture.height / 2.f};
+        collision = CollisionComponent(new CollisionCircle(circleCenter, circleDiameter / 2));
+        break;
+    }
+
     id = -1;
 }
 
