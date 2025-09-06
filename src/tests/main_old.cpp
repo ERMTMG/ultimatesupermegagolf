@@ -1,8 +1,8 @@
-#include"raylib.h"
-#include"entt.hpp"
-#include"utility.h"
-#include"basic_components.h"
-#include"level_registry.h"
+#include "/home/eduardo-r/Projects/ultimatesupermegagolf/include/raylib.h"
+#include"/home/eduardo-r/Projects/ultimatesupermegagolf/include/entt.hpp"
+#include"/home/eduardo-r/Projects/ultimatesupermegagolf/include/utility.h"
+#include"/home/eduardo-r/Projects/ultimatesupermegagolf/include/basic_components.h"
+#include"/home/eduardo-r/Projects/ultimatesupermegagolf/include/level_registry.h"
 #include<iostream>
 
 static const int SCREENWIDTH = 800;
@@ -104,7 +104,7 @@ void load_placeholder_tilemap(LevelRegistry& registry, const Position& pos){
 }
 
 int main_(){
-    
+
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Ultimate Super Mega Golf");
     SetTargetFPS(60);
     Image windowIcon = LoadImage("resources/sprites/ball_icon.png");
@@ -132,7 +132,7 @@ int main_(){
         add_thing(registry, {i+20,-128+12}, 23);
         add_thing(registry, {i+20,+128-12}, 536);
     }
-    
+
     while(!WindowShouldClose()){
         float delta = GetFrameTime();
         registry.update(delta);

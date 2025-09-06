@@ -92,7 +92,7 @@ class LevelRegistry{
     std::vector<entt::entity> search_entities_by_name(const std::string& prefix) const;
 
     CollisionComponent& make_entity_into_static_body(entt::entity entity, const Position& pos, std::vector<LayerType>&& layers);
-
+    std::pair<TilesetComponent&, CollisionComponent&> make_entity_into_tileamp(entt::entity entity, const Position& pos, std::vector<LayerType>&& layers);
     // Adds a component with the provided constructor argument. Same functionality as entt::registry::emplace
     template<class ComponentType, class... Args>
     inline void add_component(entt::entity entity, Args&&... args){

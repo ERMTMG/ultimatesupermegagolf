@@ -3,8 +3,10 @@
 #include "collision_component.h"
 #include "level_registry.h"
 #include "raylib.h"
+#include "utility.h"
 #include "utility/vector2_util.h"
 #include <cstddef>
+#include <limits>
 #include <string>
 #include<unordered_set>
 #include<unordered_map>
@@ -69,6 +71,30 @@ Context init_level_parsing(const char* jsonFilename){
         .error = {ErrorType::SUCCESS},
         .topLevelJsonObject = levelJson
     };
+}
+
+static size_t json_get_pos_int(Context& context, const Json& object){
+    if(!object.is_number_unsigned()){
+        THROW_ERROR_RETURN(
+            ErrorType::INVALID_JSON_TYPE,
+            "expected non-negative integer, received '" + to_string(object) + '\'',
+            json_get_pos_int,
+            -1
+        );
+    }
+    return object.get<size_t>();
+}
+
+static int json_get_int(Context& context, const Json& object){
+    if(!object.is_number_integer()){
+        THROW_ERROR_RETURN(
+            ErrorType::INVALID_JSON_TYPE,
+            "expected integer, received '" + to_string(object) + '\'',
+            json_get_pos_int,
+            std::numeric_limits<int>::max()
+        );
+    }
+    return object.get<int>();
 }
 
 static float json_get_float(Context& context, const Json& object){
@@ -672,6 +698,160 @@ static void load_entity_static_body_settings(Context& context, LevelRegistry& re
 
 }
 
+static void load_tilemap_array(Context& context, const Json& tilemapArray, TilesetComponent& entityTilemap){
+    if(!tilemapArray.is_array()){
+        THROW_ERROR(
+            ErrorType::INVALID_JSON_TYPE,
+            "expected array of tile IDs for field `tilegrid`, found '" + to_string(tilemapArray) + '\'',
+            load_tilemap_array
+        );
+    }
+    if(tilemapArray.size() != entityTilemap.map.total_num_elements()){
+        THROW_ERROR(
+            ErrorType::INVALID_SETTING_VALUE,
+            "expected array of size " + std::to_string(entityTilemap.map.total_num_elements()) + " for tilegrid value, found array of size " + std::to_string(tilemapArray.size()),
+            load_tilemap_array
+        );
+    }
+    size_t currentRow = 0;
+    size_t currentCol = 0;
+    size_t idx = 0;
+    for(const auto& tileIDJson : tilemapArray){
+        TileID tileID;
+        CHECK_ERROR_STR(
+            tileID = json_get_int(context, tileIDJson),
+            "load_tilemap_array (at array index " + std::to_string(idx) + " corresponding to row " + std::to_string(currentRow) + ", col " + std::to_string(currentCol) + ')'
+        );
+        if(tileID >= entityTilemap.tiles.size() && tileID != -1){
+            THROW_ERROR(
+                ErrorType::INVALID_SETTING_VALUE,
+                "`tilegrid` array at index " + std::to_string(idx) + " contains number that doesn't correspond to a valid tile",
+                load_tilemap_array
+            );
+        }
+        entityTilemap.map[currentRow][currentCol] = tileID;
+        idx++;
+        currentCol++;
+        if(currentCol == entityTilemap.map.cols()){
+            currentCol = 0;
+            currentRow++;
+        }
+    }
+}
+
+static void load_entity_tilemap_settings(Context& context, LevelRegistry& registry, const Json& entityObj, entt::entity entityID,
+                                         const std::string& entityName){
+    Vector2 positionVector = VEC2_NULL;
+    std::vector<LayerType> layers;
+    CHECK_ERROR_STR(
+        positionVector = json_get_Vector2(context, entityObj);,
+        "load_entity_tilemap_settings (getting position, entity name: " + entityName + ")"
+    );
+    if(!entityObj.contains("layers")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND,
+            "No `layers` field found on tilemap entity",
+            load_entity_tilemap_settings
+        );
+    }
+    const Json& layersJson = entityObj.at("layers");
+    if(!layersJson.is_array()){
+        THROW_ERROR(
+            ErrorType::INVALID_JSON_TYPE,
+            "expected number array for field `layers`, found '" + to_string(layersJson) + '\'',
+            load_entity_tilemap_settings
+        );
+    }
+    CHECK_ERROR(
+        get_collision_layer_array(context, registry, layersJson, layers);,
+        load_entity_tilemap_settings
+    );
+    auto [tilemap, collision] = registry.make_entity_into_tileamp(entityID, positionVector, std::move(layers));
+    Vector2 tileSize = VEC2_NULL;
+    if(!entityObj.contains("tile_width")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND,
+            "no `tile_width` field found on tilemap entity",
+            load_entity_tilemap_settings
+        );
+    }
+    if(!entityObj.contains("tile_height")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND,
+            "no `tile_height` field found on tilemap entity",
+            load_entity_tilemap_settings
+        );
+    }
+    CHECK_ERROR(
+        tileSize.x = json_get_float(context, entityObj.at("tile_width")),
+        load_entity_tilemap_settings (getting `tile_width`)
+    );
+    CHECK_ERROR(
+        tileSize.y = json_get_float(context, entityObj.at("tile_height")),
+        load_entity_tilemap_settings (getting `tile_height`)
+    );
+    tilemap.tileSize = tileSize;
+    if(!entityObj.contains("tileset")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND,
+            "no `tileset` field found on tilemap entity",
+            load_entity_tilemap_settings
+        );
+    }
+    std::string tilesetName;
+    CHECK_ERROR(
+        tilesetName = json_get_string(context, entityObj),
+        load_entity_tilemap_settings (getting `tileset`)
+    );
+    auto iter = context.tilesets.find(tilesetName);
+    if(iter == context.tilesets.end()){
+        THROW_ERROR(
+            ErrorType::INVALID_SETTING_VALUE,
+            "tileset with name '" + tilesetName + "' doesn't exist in current level context",
+            load_entity_tilemap_settings
+        );
+    }
+    const auto& tilesetTiles = iter->second;
+    tilemap.tiles = tilesetTiles; // NOTE: copy assigned!
+    if(!entityObj.contains("tilegrid_rows")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND,
+            "no `tilegrid_rows` field found on tilemap entity",
+            load_entity_tilemap_settings
+        );
+    }
+    if(!entityObj.contains("tilegrid_cols")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND,
+            "no `tilegrid_cols` field found on tilemap entity",
+            load_entity_tilemap_settings
+        );
+    }
+    size_t tilemapRows;
+    size_t tilemapCols;
+    CHECK_ERROR(
+        tilemapRows = json_get_pos_int(context, entityObj.at("tilegrid_rows")),
+        load_entity_tilemap_settings (getting `tilegrid_rows`)
+    );
+    CHECK_ERROR(
+        tilemapCols = json_get_pos_int(context, entityObj.at("tilegrid_cols")),
+        load_entity_tilemap_settings (getting `tilegrid_cols`)
+    );
+    tilemap.map.resize(tilemapRows, tilemapCols, (TileID)-1);
+    if(!entityObj.contains("tilegrid")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND,
+            "no `tilegrid` field found on tilemap entity",
+            load_entity_tilemap_settings
+        );
+    }
+    CHECK_ERROR(
+        load_tilemap_array(context, entityObj.at("tilegrid"), tilemap);,
+        load_entity_tilemap_settings
+    );
+    tileset_get_complete_collision(tilemap, collision);
+}
+
 static void load_level_entity_from_json(Context& context, LevelRegistry& registry, const std::string& entityName, const Json& entityObj){
     entt::entity currEntity = context.entityNames.at(entityName);
     if(!entityObj.contains("entity_default")){
@@ -690,7 +870,10 @@ static void load_level_entity_from_json(Context& context, LevelRegistry& registr
                 load_level_entity_from_json
             );
         } else if(entityDefault == "tilemap"){
-            // TODO: do tilemap stuff
+            CHECK_ERROR(
+                ,
+                load_level_entity_from_json
+            );
         } else if(entityDefault != "none"){
             THROW_ERROR(
                 ErrorType::INVALID_SETTING_VALUE,

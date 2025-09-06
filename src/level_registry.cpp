@@ -163,6 +163,13 @@ CollisionComponent& LevelRegistry::make_entity_into_static_body(entt::entity ent
     return collision;
 }
 
+std::pair<TilesetComponent&, CollisionComponent&> LevelRegistry::make_entity_into_tileamp(entt::entity entity, const Position& pos, std::vector<LayerType>&& layers){
+    CollisionComponent& collision = make_entity_into_static_body(entity, pos, std::forward<decltype(layers)>(layers));
+    TilesetComponent& tilemap = registry->emplace<TilesetComponent>(entity);
+
+    return {tilemap, collision};
+}
+
 std::pair<entt::entity, CollisionComponent&> LevelRegistry::create_static_body(const Position& pos, std::vector<LayerType>&& layers){
     using std::forward;
     using std::vector;
