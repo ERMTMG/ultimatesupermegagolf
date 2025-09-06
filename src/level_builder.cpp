@@ -782,7 +782,30 @@ static void load_tile_into_vector(Context& context, const Json& tileObj, std::ve
             load_tile_into_vector
         );
     }
-    // TODO: make collision-based constructor for tileset tiles and finish this
+    std::string tileCollisionPresetName;
+    CHECK_ERROR(
+        tileCollisionPresetName = json_get_string(context, tileObj.at("collision"));,
+        load_tile_into_vector (getting `collision`)
+    );
+    TilesetTile::TileCollisionPreset tileCollisionPreset;
+    static const std::map<std::string, TilesetTile::TileCollisionPreset> TILE_COLLISION_PRESETS = {
+        {"solid", TilesetTile::TileCollisionPreset::SOLID},
+        {"none", TilesetTile::TileCollisionPreset::NONE},
+        {"slope_nw_se", TilesetTile::TileCollisionPreset::SLOPE_NW_TO_SE},
+        {"slope_sw_ne", TilesetTile::TileCollisionPreset::SLOPE_SW_TO_NE},
+        {"circular", TilesetTile::TileCollisionPreset::CIRCULAR},
+    };
+    auto iter = TILE_COLLISION_PRESETS.find(tileCollisionPresetName);
+    if(iter == TILE_COLLISION_PRESETS.end()){
+        THROW_ERROR(
+            ErrorType::INVALID_SETTING_VALUE,
+            "Invalid tile collision preset '" + tileCollisionPresetName + '\'',
+            load_tile_into_vector
+        );
+    } else {
+        tileCollisionPreset = iter->second;
+    }
+    contextTileset.emplace_back(tileTextureFilename.c_str(), tileCollisionPreset);
 }
 
 static void load_tileset_into_context(Context& context, const std::string& tilesetName, const Json& tilesetTiles){

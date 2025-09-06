@@ -13,7 +13,7 @@
 
 // Declares an enumerate for each possible type of shape. See further down
 enum class CollisionShapeType{
-    NONE, POINT, BARRIER, LINE, RECT, CIRCLE 
+    NONE, POINT, BARRIER, LINE, RECT, CIRCLE
 };
 inline const int ENUM_COLLISION_TYPE_SIZE = 6;
 
@@ -42,7 +42,7 @@ struct CollisionPoint : CollisionShape{
     }
 };
 
-// Defines a collision shape consisting of a half-plane whose border contains offset and 
+// Defines a collision shape consisting of a half-plane whose border contains offset and
 // with outward-pointing normal forming an angle of normalAngle with the horizontal.
 struct CollisionBarrier : CollisionShape{
     float normalAngle;
@@ -51,7 +51,7 @@ struct CollisionBarrier : CollisionShape{
     inline CollisionShapeType get_type() const override{  return CollisionShapeType::BARRIER;  };
     // Method that just gets a unit normal from the stored angle, since the angle is all that's necessary
     inline Vector2 get_unit_normal() const{
-        return {cos(normalAngle), sin(normalAngle)};
+        return {cosf(normalAngle), sinf(normalAngle)};
     }
     CollisionBarrier(const CollisionBarrier& other) : CollisionBarrier(other.offset, other.normalAngle) {};
     std::unique_ptr<CollisionShape> clone() const override {
@@ -101,7 +101,7 @@ struct CollisionCircle : CollisionShape{
 std::string to_string(CollisionShapeType type);
 
 //Return type of collision detection functions - includes a bool indicating whether
-//there is a collision and a unit normal vector of the collision that pushes away 
+//there is a collision and a unit normal vector of the collision that pushes away
 //the **first argument** of the collision function.
 struct CollisionInformation{
     bool collision;
@@ -124,7 +124,7 @@ CollisionInformation colliding(const CollisionCircle& circle, const CollisionLin
 CollisionInformation colliding(const CollisionCircle& circle, const CollisionRect& rect);
 
 /*
-    Function that takes in two generic shape pointers and decides which two shapes to use and in which order, to 
+    Function that takes in two generic shape pointers and decides which two shapes to use and in which order, to
     tell if they are colliding when placed in the given positions.
     Returns a CollisionInformation struct whose unit normal always pushes away the *first* argument of the function.
     WARNING: crashes if the two shape types given don't have a collision function integrated!
