@@ -1,0 +1,3137 @@
+{
+    "level_name": "level_script_test",
+    "player_position": {
+        "x": 0,
+        "y": 0
+    },
+    "goal_position": {
+        "x": 256,
+        "y": 0
+    },
+    "entities": {
+        "Thing_0": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 0.0,
+            "y": 225.0,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -20.0,
+                        "y": 10.0
+                    },
+                    "to": {
+                        "x": 0.0,
+                        "y": -15.0
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 0.0,
+                        "y": -15.0
+                    },
+                    "to": {
+                        "x": 20.0,
+                        "y": 10.0
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 20.0,
+                        "y": 10.0
+                    },
+                    "to": {
+                        "x": -20.0,
+                        "y": 10.0
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 0.0
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_1": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -32.020838611489154,
+            "y": 222.70982442320985,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -21.219577220351503,
+                        "y": 7.051917653343623
+                    },
+                    "to": {
+                        "x": 2.134722574099277,
+                        "y": -14.84732162821399
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 2.134722574099277,
+                        "y": -14.84732162821399
+                    },
+                    "to": {
+                        "x": 18.3732804548858,
+                        "y": 12.74451118427503
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 18.3732804548858,
+                        "y": 12.74451118427503
+                    },
+                    "to": {
+                        "x": -21.219577220351503,
+                        "y": 7.051917653343623
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 8.181818181818182
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_2": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -63.38982528932168,
+            "y": 215.8859190632619,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -22.007185040704243,
+                        "y": 3.9602785993163794
+                    },
+                    "to": {
+                        "x": 4.225988352621445,
+                        "y": -14.392394604217461
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 4.225988352621445,
+                        "y": -14.392394604217461
+                    },
+                    "to": {
+                        "x": 16.37253390387565,
+                        "y": 15.229580872973568
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 16.37253390387565,
+                        "y": 15.229580872973568
+                    },
+                    "to": {
+                        "x": -22.007185040704243,
+                        "y": 3.9602785993163794
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 16.363636363636363
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_3": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -93.46837792542443,
+            "y": 204.66719895476666,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -22.34679003710923,
+                        "y": 0.7880196935074562
+                    },
+                    "to": {
+                        "x": 6.231225195028296,
+                        "y": -13.644479930317777
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 6.231225195028296,
+                        "y": -13.644479930317777
+                    },
+                    "to": {
+                        "x": 14.038489777071504,
+                        "y": 17.40462021358291
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 14.038489777071504,
+                        "y": 17.40462021358291
+                    },
+                    "to": {
+                        "x": -22.34679003710923,
+                        "y": 0.7880196935074562
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 24.545454545454543
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_4": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -121.64418392750945,
+            "y": 189.28204488701576,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -22.2314788311796,
+                        "y": -2.40028102080014
+                    },
+                    "to": {
+                        "x": 8.109612261833963,
+                        "y": -12.618802992467717
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 8.109612261833963,
+                        "y": -12.618802992467717
+                    },
+                    "to": {
+                        "x": 11.418662482067647,
+                        "y": 19.225351677423763
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 11.418662482067647,
+                        "y": 19.225351677423763
+                    },
+                    "to": {
+                        "x": -22.2314788311796,
+                        "y": -2.40028102080014
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 32.72727272727273
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_5": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -147.34366513768916,
+            "y": 170.04365422970812,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -21.663598826538017,
+                        "y": -5.53971893536312
+                    },
+                    "to": {
+                        "x": 9.822911009179277,
+                        "y": -11.336243615313874
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 9.822911009179277,
+                        "y": -11.336243615313874
+                    },
+                    "to": {
+                        "x": 8.566384147632313,
+                        "y": 20.654710422448286
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 8.566384147632313,
+                        "y": 20.654710422448286
+                    },
+                    "to": {
+                        "x": -21.663598826538017,
+                        "y": -5.53971893536312
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 40.909090909090914
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_6": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -170.04365422970812,
+            "y": 147.34366513768913,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -20.654710422448282,
+                        "y": -8.566384147632315
+                    },
+                    "to": {
+                        "x": 11.336243615313874,
+                        "y": -9.822911009179276
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 11.336243615313874,
+                        "y": -9.822911009179276
+                    },
+                    "to": {
+                        "x": 5.539718935363118,
+                        "y": 21.663598826538013
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 5.539718935363118,
+                        "y": 21.663598826538013
+                    },
+                    "to": {
+                        "x": -20.654710422448282,
+                        "y": -8.566384147632315
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 49.09090909090909
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_7": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -189.28204488701576,
+            "y": 121.64418392750945,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -19.225351677423763,
+                        "y": -11.418662482067647
+                    },
+                    "to": {
+                        "x": 12.618802992467717,
+                        "y": -8.109612261833963
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 12.618802992467717,
+                        "y": -8.109612261833963
+                    },
+                    "to": {
+                        "x": 2.40028102080014,
+                        "y": 22.2314788311796
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 2.40028102080014,
+                        "y": 22.2314788311796
+                    },
+                    "to": {
+                        "x": -19.225351677423763,
+                        "y": -11.418662482067647
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 57.27272727272728
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_8": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -204.66719895476663,
+            "y": 93.46837792542445,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -17.404620213582913,
+                        "y": -14.038489777071502
+                    },
+                    "to": {
+                        "x": 13.644479930317775,
+                        "y": -6.231225195028297
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 13.644479930317775,
+                        "y": -6.231225195028297
+                    },
+                    "to": {
+                        "x": -0.7880196935074544,
+                        "y": 22.34679003710923
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -0.7880196935074544,
+                        "y": 22.34679003710923
+                    },
+                    "to": {
+                        "x": -17.404620213582913,
+                        "y": -14.038489777071502
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 65.45454545454545
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_9": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -215.8859190632619,
+            "y": 63.3898252893217,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -15.229580872973568,
+                        "y": -16.37253390387565
+                    },
+                    "to": {
+                        "x": 14.392394604217461,
+                        "y": -4.225988352621447
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 14.392394604217461,
+                        "y": -4.225988352621447
+                    },
+                    "to": {
+                        "x": -3.9602785993163776,
+                        "y": 22.007185040704243
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -3.9602785993163776,
+                        "y": 22.007185040704243
+                    },
+                    "to": {
+                        "x": -15.229580872973568,
+                        "y": -16.37253390387565
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 73.63636363636363
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_10": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -222.70982442320985,
+            "y": 32.020838611489204,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -12.744511184275034,
+                        "y": -18.373280454885798
+                    },
+                    "to": {
+                        "x": 14.84732162821399,
+                        "y": -2.13472257409928
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 14.84732162821399,
+                        "y": -2.13472257409928
+                    },
+                    "to": {
+                        "x": -7.05191765334362,
+                        "y": 21.219577220351507
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -7.05191765334362,
+                        "y": 21.219577220351507
+                    },
+                    "to": {
+                        "x": -12.744511184275034,
+                        "y": -18.373280454885798
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 81.81818181818181
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_11": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -225.0,
+            "y": 6.373731259853977e-14,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -10.000000000000005,
+                        "y": -19.999999999999996
+                    },
+                    "to": {
+                        "x": 15.0,
+                        "y": -4.249154173235985e-15
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 15.0,
+                        "y": -4.249154173235985e-15
+                    },
+                    "to": {
+                        "x": -9.999999999999995,
+                        "y": 20.000000000000004
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -9.999999999999995,
+                        "y": 20.000000000000004
+                    },
+                    "to": {
+                        "x": -10.000000000000005,
+                        "y": -19.999999999999996
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 89.99999999999999
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_12": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -222.70982442320988,
+            "y": -32.020838611489076,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -7.051917653343632,
+                        "y": -21.219577220351503
+                    },
+                    "to": {
+                        "x": 14.847321628213992,
+                        "y": 2.1347225740992717
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 14.847321628213992,
+                        "y": 2.1347225740992717
+                    },
+                    "to": {
+                        "x": -12.744511184275023,
+                        "y": 18.37328045488581
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -12.744511184275023,
+                        "y": 18.37328045488581
+                    },
+                    "to": {
+                        "x": -7.051917653343632,
+                        "y": -21.219577220351503
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 98.18181818181816
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_13": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -215.88591906326192,
+            "y": -63.389825289321585,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -3.960278599316389,
+                        "y": -22.007185040704243
+                    },
+                    "to": {
+                        "x": 14.392394604217461,
+                        "y": 4.225988352621439
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 14.392394604217461,
+                        "y": 4.225988352621439
+                    },
+                    "to": {
+                        "x": -15.22958087297356,
+                        "y": 16.372533903875656
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -15.22958087297356,
+                        "y": 16.372533903875656
+                    },
+                    "to": {
+                        "x": -3.960278599316389,
+                        "y": -22.007185040704243
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 106.36363636363635
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_14": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -204.66719895476666,
+            "y": -93.46837792542433,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -0.7880196935074668,
+                        "y": -22.34679003710923
+                    },
+                    "to": {
+                        "x": 13.644479930317779,
+                        "y": 6.231225195028289
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 13.644479930317779,
+                        "y": 6.231225195028289
+                    },
+                    "to": {
+                        "x": -17.404620213582902,
+                        "y": 14.038489777071511
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -17.404620213582902,
+                        "y": 14.038489777071511
+                    },
+                    "to": {
+                        "x": -0.7880196935074668,
+                        "y": -22.34679003710923
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 114.54545454545452
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_15": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -189.28204488701581,
+            "y": -121.64418392750937,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 2.4002810208001293,
+                        "y": -22.2314788311796
+                    },
+                    "to": {
+                        "x": 12.618802992467721,
+                        "y": 8.10961226183396
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 12.618802992467721,
+                        "y": 8.10961226183396
+                    },
+                    "to": {
+                        "x": -19.22535167742376,
+                        "y": 11.418662482067658
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -19.22535167742376,
+                        "y": 11.418662482067658
+                    },
+                    "to": {
+                        "x": 2.4002810208001293,
+                        "y": -22.2314788311796
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 122.7272727272727
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_16": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -170.04365422970818,
+            "y": -147.34366513768904,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 5.5397189353631076,
+                        "y": -21.66359882653802
+                    },
+                    "to": {
+                        "x": 11.33624361531388,
+                        "y": 9.82291100917927
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 11.33624361531388,
+                        "y": 9.82291100917927
+                    },
+                    "to": {
+                        "x": -20.65471042244828,
+                        "y": 8.566384147632325
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -20.65471042244828,
+                        "y": 8.566384147632325
+                    },
+                    "to": {
+                        "x": 5.5397189353631076,
+                        "y": -21.66359882653802
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 130.90909090909088
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_17": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -147.34366513768924,
+            "y": -170.04365422970804,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 8.566384147632304,
+                        "y": -20.65471042244829
+                    },
+                    "to": {
+                        "x": 9.822911009179283,
+                        "y": 11.336243615313869
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 9.822911009179283,
+                        "y": 11.336243615313869
+                    },
+                    "to": {
+                        "x": -21.663598826538013,
+                        "y": 5.5397189353631315
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -21.663598826538013,
+                        "y": 5.5397189353631315
+                    },
+                    "to": {
+                        "x": 8.566384147632304,
+                        "y": -20.65471042244829
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 139.09090909090907
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_18": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -121.64418392750957,
+            "y": -189.28204488701567,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 11.418662482067635,
+                        "y": -19.22535167742377
+                    },
+                    "to": {
+                        "x": 8.109612261833972,
+                        "y": 12.618802992467712
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 8.109612261833972,
+                        "y": 12.618802992467712
+                    },
+                    "to": {
+                        "x": -22.231478831179597,
+                        "y": 2.400281020800154
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -22.231478831179597,
+                        "y": 2.400281020800154
+                    },
+                    "to": {
+                        "x": 11.418662482067635,
+                        "y": -19.22535167742377
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 147.27272727272725
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_19": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -93.4683779254246,
+            "y": -204.66719895476658,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 14.038489777071494,
+                        "y": -17.404620213582923
+                    },
+                    "to": {
+                        "x": 6.231225195028307,
+                        "y": 13.644479930317772
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 6.231225195028307,
+                        "y": 13.644479930317772
+                    },
+                    "to": {
+                        "x": -22.346790037109233,
+                        "y": -0.7880196935074402
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -22.346790037109233,
+                        "y": -0.7880196935074402
+                    },
+                    "to": {
+                        "x": 14.038489777071494,
+                        "y": -17.404620213582923
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 155.4545454545454
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_20": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -63.38982528932186,
+            "y": -215.88591906326187,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 16.372533903875638,
+                        "y": -15.229580872973582
+                    },
+                    "to": {
+                        "x": 4.2259883526214574,
+                        "y": 14.392394604217458
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 4.2259883526214574,
+                        "y": 14.392394604217458
+                    },
+                    "to": {
+                        "x": -22.007185040704247,
+                        "y": -3.9602785993163607
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -22.007185040704247,
+                        "y": -3.9602785993163607
+                    },
+                    "to": {
+                        "x": 16.372533903875638,
+                        "y": -15.229580872973582
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 163.6363636363636
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_21": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -32.02083861148936,
+            "y": -222.70982442320982,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 18.37328045488579,
+                        "y": -12.744511184275048
+                    },
+                    "to": {
+                        "x": 2.134722574099291,
+                        "y": 14.847321628213988
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 2.134722574099291,
+                        "y": 14.847321628213988
+                    },
+                    "to": {
+                        "x": -21.219577220351514,
+                        "y": -7.0519176533436045
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -21.219577220351514,
+                        "y": -7.0519176533436045
+                    },
+                    "to": {
+                        "x": 18.37328045488579,
+                        "y": -12.744511184275048
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 171.81818181818178
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_22": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -2.273946974133436e-13,
+            "y": -225.0,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 19.99999999999999,
+                        "y": -10.00000000000002
+                    },
+                    "to": {
+                        "x": 1.515964649422291e-14,
+                        "y": 15.0
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 1.515964649422291e-14,
+                        "y": 15.0
+                    },
+                    "to": {
+                        "x": -20.00000000000001,
+                        "y": -9.99999999999998
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -20.00000000000001,
+                        "y": -9.99999999999998
+                    },
+                    "to": {
+                        "x": 19.99999999999999,
+                        "y": -10.00000000000002
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 179.99999999999994
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_23": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 32.02083861148891,
+            "y": -222.7098244232099,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 21.2195772203515,
+                        "y": -7.051917653343649
+                    },
+                    "to": {
+                        "x": -2.134722574099261,
+                        "y": 14.847321628213994
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -2.134722574099261,
+                        "y": 14.847321628213994
+                    },
+                    "to": {
+                        "x": -18.37328045488582,
+                        "y": -12.74451118427501
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -18.37328045488582,
+                        "y": -12.74451118427501
+                    },
+                    "to": {
+                        "x": 21.2195772203515,
+                        "y": -7.051917653343649
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 188.18181818181813
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_24": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 63.38982528932143,
+            "y": -215.88591906326198,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 22.00718504070424,
+                        "y": -3.960278599316405
+                    },
+                    "to": {
+                        "x": -4.225988352621428,
+                        "y": 14.392394604217465
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -4.225988352621428,
+                        "y": 14.392394604217465
+                    },
+                    "to": {
+                        "x": -16.372533903875667,
+                        "y": -15.229580872973548
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -16.372533903875667,
+                        "y": -15.229580872973548
+                    },
+                    "to": {
+                        "x": 22.00718504070424,
+                        "y": -3.960278599316405
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 196.3636363636363
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_25": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 93.46837792542419,
+            "y": -204.66719895476675,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 22.34679003710923,
+                        "y": -0.7880196935074828
+                    },
+                    "to": {
+                        "x": -6.231225195028279,
+                        "y": 13.644479930317782
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -6.231225195028279,
+                        "y": 13.644479930317782
+                    },
+                    "to": {
+                        "x": -14.038489777071526,
+                        "y": -17.404620213582895
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -14.038489777071526,
+                        "y": -17.404620213582895
+                    },
+                    "to": {
+                        "x": 22.34679003710923,
+                        "y": -0.7880196935074828
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 204.54545454545448
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_26": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 121.6441839275092,
+            "y": -189.28204488701593,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 22.2314788311796,
+                        "y": 2.4002810208001097
+                    },
+                    "to": {
+                        "x": -8.109612261833947,
+                        "y": 12.618802992467728
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -8.109612261833947,
+                        "y": 12.618802992467728
+                    },
+                    "to": {
+                        "x": -11.418662482067674,
+                        "y": -19.225351677423745
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -11.418662482067674,
+                        "y": -19.225351677423745
+                    },
+                    "to": {
+                        "x": 22.2314788311796,
+                        "y": 2.4002810208001097
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 212.72727272727266
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_27": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 147.3436651376889,
+            "y": -170.04365422970832,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 21.663598826538024,
+                        "y": 5.539718935363087
+                    },
+                    "to": {
+                        "x": -9.82291100917926,
+                        "y": 11.336243615313888
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -9.82291100917926,
+                        "y": 11.336243615313888
+                    },
+                    "to": {
+                        "x": -8.566384147632345,
+                        "y": -20.65471042244827
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -8.566384147632345,
+                        "y": -20.65471042244827
+                    },
+                    "to": {
+                        "x": 21.663598826538024,
+                        "y": 5.539718935363087
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 220.90909090909082
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_28": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 170.0436542297079,
+            "y": -147.34366513768938,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 20.654710422448296,
+                        "y": 8.566384147632284
+                    },
+                    "to": {
+                        "x": -11.336243615313858,
+                        "y": 9.822911009179293
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -11.336243615313858,
+                        "y": 9.822911009179293
+                    },
+                    "to": {
+                        "x": -5.539718935363151,
+                        "y": -21.663598826538006
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -5.539718935363151,
+                        "y": -21.663598826538006
+                    },
+                    "to": {
+                        "x": 20.654710422448296,
+                        "y": 8.566384147632284
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 229.090909090909
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_29": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 189.28204488701556,
+            "y": -121.64418392750974,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 19.22535167742378,
+                        "y": 11.418662482067617
+                    },
+                    "to": {
+                        "x": -12.618802992467705,
+                        "y": 8.109612261833984
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -12.618802992467705,
+                        "y": 8.109612261833984
+                    },
+                    "to": {
+                        "x": -2.4002810208001755,
+                        "y": -22.231478831179594
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -2.4002810208001755,
+                        "y": -22.231478831179594
+                    },
+                    "to": {
+                        "x": 19.22535167742378,
+                        "y": 11.418662482067617
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 237.2727272727272
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_30": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 204.66719895476646,
+            "y": -93.4683779254248,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 17.404620213582938,
+                        "y": 14.038489777071472
+                    },
+                    "to": {
+                        "x": -13.644479930317765,
+                        "y": 6.23122519502832
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -13.644479930317765,
+                        "y": 6.23122519502832
+                    },
+                    "to": {
+                        "x": 0.7880196935074171,
+                        "y": -22.346790037109233
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 0.7880196935074171,
+                        "y": -22.346790037109233
+                    },
+                    "to": {
+                        "x": 17.404620213582938,
+                        "y": 14.038489777071472
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 245.45454545454535
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_31": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 215.8859190632618,
+            "y": -63.38982528932206,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 15.229580872973598,
+                        "y": 16.372533903875624
+                    },
+                    "to": {
+                        "x": -14.392394604217454,
+                        "y": 4.225988352621471
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -14.392394604217454,
+                        "y": 4.225988352621471
+                    },
+                    "to": {
+                        "x": 3.960278599316341,
+                        "y": -22.007185040704254
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 3.960278599316341,
+                        "y": -22.007185040704254
+                    },
+                    "to": {
+                        "x": 15.229580872973598,
+                        "y": 16.372533903875624
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 253.63636363636354
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_32": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 222.7098244232098,
+            "y": -32.02083861148957,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 12.744511184275066,
+                        "y": 18.37328045488578
+                    },
+                    "to": {
+                        "x": -14.847321628213987,
+                        "y": 2.134722574099305
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -14.847321628213987,
+                        "y": 2.134722574099305
+                    },
+                    "to": {
+                        "x": 7.051917653343584,
+                        "y": -21.219577220351518
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 7.051917653343584,
+                        "y": -21.219577220351518
+                    },
+                    "to": {
+                        "x": 12.744511184275066,
+                        "y": 18.37328045488578
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 261.8181818181817
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_33": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 222.70982442320994,
+            "y": 32.0208386114887,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 7.051917653343668,
+                        "y": 21.21957722035149
+                    },
+                    "to": {
+                        "x": -14.847321628213995,
+                        "y": -2.134722574099247
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -14.847321628213995,
+                        "y": -2.134722574099247
+                    },
+                    "to": {
+                        "x": 12.744511184274991,
+                        "y": -18.37328045488583
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 12.744511184274991,
+                        "y": -18.37328045488583
+                    },
+                    "to": {
+                        "x": 7.051917653343668,
+                        "y": 21.21957722035149
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 278.1818181818181
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_34": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 215.88591906326207,
+            "y": 63.38982528932122,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 3.9602785993164265,
+                        "y": 22.007185040704236
+                    },
+                    "to": {
+                        "x": -14.39239460421747,
+                        "y": -4.225988352621415
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -14.39239460421747,
+                        "y": -4.225988352621415
+                    },
+                    "to": {
+                        "x": 15.229580872973534,
+                        "y": -16.372533903875684
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 15.229580872973534,
+                        "y": -16.372533903875684
+                    },
+                    "to": {
+                        "x": 3.9602785993164265,
+                        "y": 22.007185040704236
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 286.36363636363626
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_35": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 204.66719895476686,
+            "y": 93.46837792542398,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 0.7880196935075059,
+                        "y": 22.346790037109233
+                    },
+                    "to": {
+                        "x": -13.64447993031779,
+                        "y": -6.231225195028266
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -13.64447993031779,
+                        "y": -6.231225195028266
+                    },
+                    "to": {
+                        "x": 17.40462021358288,
+                        "y": -14.038489777071543
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 17.40462021358288,
+                        "y": -14.038489777071543
+                    },
+                    "to": {
+                        "x": 0.7880196935075059,
+                        "y": 22.346790037109233
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 294.54545454545445
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_36": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 189.28204488701604,
+            "y": 121.64418392750902,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -2.4002810208000884,
+                        "y": 22.231478831179604
+                    },
+                    "to": {
+                        "x": -12.618802992467737,
+                        "y": -8.109612261833934
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -12.618802992467737,
+                        "y": -8.109612261833934
+                    },
+                    "to": {
+                        "x": 19.22535167742374,
+                        "y": -11.418662482067692
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 19.22535167742374,
+                        "y": -11.418662482067692
+                    },
+                    "to": {
+                        "x": -2.4002810208000884,
+                        "y": 22.231478831179604
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 302.7272727272726
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_37": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 170.04365422970847,
+            "y": 147.34366513768873,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -5.539718935363067,
+                        "y": 21.663598826538028
+                    },
+                    "to": {
+                        "x": -11.336243615313897,
+                        "y": -9.822911009179249
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -11.336243615313897,
+                        "y": -9.822911009179249
+                    },
+                    "to": {
+                        "x": 20.654710422448264,
+                        "y": -8.566384147632364
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 20.654710422448264,
+                        "y": -8.566384147632364
+                    },
+                    "to": {
+                        "x": -5.539718935363067,
+                        "y": 21.663598826538028
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 310.90909090909076
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_38": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 147.34366513768958,
+            "y": 170.04365422970776,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -8.566384147632265,
+                        "y": 20.654710422448307
+                    },
+                    "to": {
+                        "x": -9.822911009179304,
+                        "y": -11.336243615313851
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -9.822911009179304,
+                        "y": -11.336243615313851
+                    },
+                    "to": {
+                        "x": 21.663598826538006,
+                        "y": -5.539718935363172
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 21.663598826538006,
+                        "y": -5.539718935363172
+                    },
+                    "to": {
+                        "x": -8.566384147632265,
+                        "y": 20.654710422448307
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 319.09090909090895
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_39": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 121.64418392750994,
+            "y": 189.28204488701545,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -11.418662482067596,
+                        "y": 19.225351677423795
+                    },
+                    "to": {
+                        "x": -8.109612261833997,
+                        "y": -12.618802992467696
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -8.109612261833997,
+                        "y": -12.618802992467696
+                    },
+                    "to": {
+                        "x": 22.231478831179594,
+                        "y": -2.4002810208001986
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 22.231478831179594,
+                        "y": -2.4002810208001986
+                    },
+                    "to": {
+                        "x": -11.418662482067596,
+                        "y": 19.225351677423795
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 327.27272727272714
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_40": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 93.46837792542499,
+            "y": 204.66719895476638,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -14.038489777071458,
+                        "y": 17.40462021358295
+                    },
+                    "to": {
+                        "x": -6.231225195028332,
+                        "y": -13.644479930317758
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -6.231225195028332,
+                        "y": -13.644479930317758
+                    },
+                    "to": {
+                        "x": 22.346790037109233,
+                        "y": 0.7880196935073958
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 22.346790037109233,
+                        "y": 0.7880196935073958
+                    },
+                    "to": {
+                        "x": -14.038489777071458,
+                        "y": 17.40462021358295
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 335.4545454545453
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_41": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 63.389825289322275,
+            "y": 215.88591906326172,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -16.37253390387561,
+                        "y": 15.229580872973614
+                    },
+                    "to": {
+                        "x": -4.225988352621485,
+                        "y": -14.392394604217449
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -4.225988352621485,
+                        "y": -14.392394604217449
+                    },
+                    "to": {
+                        "x": 22.007185040704254,
+                        "y": 3.960278599316319
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 22.007185040704254,
+                        "y": 3.960278599316319
+                    },
+                    "to": {
+                        "x": -16.37253390387561,
+                        "y": 15.229580872973614
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 343.6363636363635
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_42": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 32.020838611489786,
+            "y": 222.70982442320977,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -18.37328045488577,
+                        "y": 12.744511184275083
+                    },
+                    "to": {
+                        "x": -2.134722574099319,
+                        "y": -14.847321628213985
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -2.134722574099319,
+                        "y": -14.847321628213985
+                    },
+                    "to": {
+                        "x": 21.21957722035153,
+                        "y": 7.0519176533435655
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 21.21957722035153,
+                        "y": 7.0519176533435655
+                    },
+                    "to": {
+                        "x": -18.37328045488577,
+                        "y": 12.744511184275083
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 351.81818181818164
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Thing_43": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 6.546295392592154e-13,
+            "y": 225.0,
+            "colliders": [
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -19.99999999999997,
+                        "y": 10.000000000000059
+                    },
+                    "to": {
+                        "x": -4.3641969283947696e-14,
+                        "y": -15.0
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": -4.3641969283947696e-14,
+                        "y": -15.0
+                    },
+                    "to": {
+                        "x": 20.00000000000003,
+                        "y": 9.999999999999941
+                    }
+                },
+                {
+                    "type": "line",
+                    "from": {
+                        "x": 20.00000000000003,
+                        "y": 9.999999999999941
+                    },
+                    "to": {
+                        "x": -19.99999999999997,
+                        "y": 10.000000000000059
+                    }
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/triangle_thing.png",
+                    "width": 40,
+                    "height": 25
+                },
+                {
+                    "type": "SpriteTransform",
+                    "rotation": 359.99999999999983
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_44": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -101.37452043058963,
+            "y": 66.99114937499928,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 15.846201237151083
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 0.9903875773219427,
+                        "y": 0.9903875773219427
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_45": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -73.93396601079503,
+            "y": -135.69073677040083,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 17.930461138125036
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 1.1206538211328148,
+                        "y": 1.1206538211328148
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_46": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -54.0828031341709,
+            "y": 117.33027403443364,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 23.185422069090077
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 1.4490888793181298,
+                        "y": 1.4490888793181298
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_47": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -72.15325747697396,
+            "y": 91.30687356522243,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 19.601381628638816
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 1.225086351789926,
+                        "y": 1.225086351789926
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_48": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -158.3407065609244,
+            "y": -12.432398783733474,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 16.064378704203293
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 1.0040236690127058,
+                        "y": 1.0040236690127058
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_49": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 113.51573044750232,
+            "y": -36.874147689859576,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 18.470746771894287
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 1.154421673243393,
+                        "y": 1.154421673243393
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_50": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -38.495771912158254,
+            "y": -12.24832162441797,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 15.08766629348481
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 0.9429791433428006,
+                        "y": 0.9429791433428006
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_51": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 86.38563147228689,
+            "y": 91.71956006928788,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 12.087635262292768
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 0.755477203893298,
+                        "y": 0.755477203893298
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_52": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -16.4869784267667,
+            "y": 109.7508658953612,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 17.094418001830697
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 1.0684011251144185,
+                        "y": 1.0684011251144185
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_53": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 128.898474547776,
+            "y": -55.85796961405141,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 10.848730044532944
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 0.678045627783309,
+                        "y": 0.678045627783309
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_54": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -9.934939999109979,
+            "y": 69.00024492334835,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 26.46417020071028
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 1.6540106375443926,
+                        "y": 1.6540106375443926
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_55": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 104.39838883741243,
+            "y": 155.93225841783902,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 12.92958735641132
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 0.8080992097757075,
+                        "y": 0.8080992097757075
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_56": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -126.61147778941208,
+            "y": -45.39343700255016,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 13.477292103547594
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 0.8423307564717246,
+                        "y": 0.8423307564717246
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_57": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": 40.979931792712385,
+            "y": 150.94684918761007,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 19.153681027305563
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 1.1971050642065977,
+                        "y": 1.1971050642065977
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_58": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -2.025610430598778,
+            "y": 5.3391707414236524,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 23.764538083755788
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 1.4852836302347368,
+                        "y": 1.4852836302347368
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        },
+        "Jolly_59": {
+            "entity_default": "static_body",
+            "layers": [
+                "player"
+            ],
+            "x": -41.360880470010336,
+            "y": 160.93586094478547,
+            "colliders": [
+                {
+                    "type": "circle",
+                    "radius": 16.105185242513507
+                }
+            ],
+            "components": [
+                {
+                    "type": "SpriteSheet",
+                    "texture": "resources/sprites/jolly_little_guy.png",
+                    "width": 32,
+                    "height": 32
+                },
+                {
+                    "type": "SpriteTransform",
+                    "scale": {
+                        "x": 1.0065740776570942,
+                        "y": 1.0065740776570942
+                    }
+                },
+                {
+                    "type": "BoundingBoxComponent",
+                    "auto": true
+                }
+            ]
+        }
+    }
+}
