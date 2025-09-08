@@ -583,7 +583,7 @@ static void add_collision_barrier_to_component(Context& context, const Json& col
         barrierNormal = json_get_Vector2(context, colliderJson.at("normal"));,
         add_collision_barrier_to_component (getting `normal`)
     );
-    barrierNormal = {-barrierNormal.y, barrierNormal.x};
+    //barrierNormal = {-barrierNormal.y, barrierNormal.x};
     collision.add_barrier(colliderPosition, barrierNormal);
 }
 
@@ -800,7 +800,7 @@ static void load_entity_tilemap_settings(Context& context, LevelRegistry& regist
     }
     std::string tilesetName;
     CHECK_ERROR(
-        tilesetName = json_get_string(context, entityObj),
+        tilesetName = json_get_string(context, entityObj.at("tileset")),
         load_entity_tilemap_settings (getting `tileset`)
     );
     auto iter = context.tilesets.find(tilesetName);
@@ -871,7 +871,7 @@ static void load_level_entity_from_json(Context& context, LevelRegistry& registr
             );
         } else if(entityDefault == "tilemap"){
             CHECK_ERROR(
-                ,
+                load_entity_tilemap_settings(context, registry, entityObj, currEntity, entityName),
                 load_level_entity_from_json
             );
         } else if(entityDefault != "none"){

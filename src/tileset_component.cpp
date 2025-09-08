@@ -3,6 +3,7 @@
 #include "collision_shapes.h"
 #include "entt.hpp"
 #include "raylib.h"
+#include "sprite_loader.h"
 #include "utility/vector2_util.h"
 
 TilesetTile::TilesetTile(const char* textureFilename, TilesetTile::TileCollisionPreset preset){
@@ -38,6 +39,16 @@ TilesetTile::TilesetTile(const TilesetTile& other){
     this->id = other.id;
     clone_collision(other.collision, this->collision);
     if(other.texture.id != 0) this->texture = SpriteLoader::get_texture_copy(other.texture);
+}
+
+
+TilesetTile& TilesetTile::operator=(const TilesetTile& rhs){
+    if(this != &rhs){
+        this->id = rhs.id;
+        clone_collision(rhs.collision, this->collision);
+        if(rhs.texture.id != 0) this->texture = SpriteLoader::get_texture_copy(rhs.texture);
+    }
+    return *this;
 }
 
 TilesetComponent::TilesetComponent(size_t gridRows, size_t gridCols) : TilesetComponent() {

@@ -47,6 +47,7 @@ struct TilesetTile {
     */
     ~TilesetTile() __attribute__((noinline));
     TilesetTile(const TilesetTile& other);
+    TilesetTile& operator=(const TilesetTile& rhs);
 };
 
 

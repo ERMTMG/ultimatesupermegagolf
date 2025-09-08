@@ -4,72 +4,68 @@
     "goal_position": {"x": 100, "y": 100},
     "camera_position": {"x": 0, "y": 0},
     "tilesets": {
-        "tileset1": {
-            "tilewidth": 16,
-            "tileheight1": 32,
-            "tiles": [
-                {
-                    "texture": "resources/sprites/placeholder_tileset/tile_placeholder_0.png",
-                    "collision": "solid"
-                },
-                {
-                    "texture": "resources/sprites/placeholder_tileset/tile_placeholder_1.png",
-                    "collision": "solid"
-                },
-                {
-                    "texture": "resources/sprites/placeholder_tileset/tile_placeholder_2.png",
-                    "collision": "solid"
-                },
-                {
-                    "texture": "resources/sprites/placeholder_tileset/tile_placeholder_3.png",
-                    "collision": "solid"
-                },
-                {
-                    "texture": "resources/sprites/placeholder_tileset/tile_placeholder_4.png",
-                    "collision": "solid"
-                },
-                {
-                    "texture": "resources/sprites/placeholder_tileset/tile_placeholder_5.png",
-                    "collision": "solid"
-                },
-                {
-                    "texture": "resources/sprites/placeholder_tileset/tile_placeholder_6.png",
-                    "collision": "solid"
-                },
-                {
-                    "texture": "resources/sprites/placeholder_tileset/tile_placeholder_7.png",
-                    "collision": "solid"
-                },
-                {
-                    "texture": "resources/sprites/placeholder_tileset/tile_placeholder_8.png",
-                    "collision": "solid"
-                },
-                {
-                    "texture": "resources/sprites/placeholder_tileset/tile_placeholder_9.png",
-                    "collision": "solid"
-                },
-                {
-                    "texture": "resources/sprites/placeholder_tileset/tile_placeholder_10.png",
-                    "collision": "solid"
-                },
-                {
-                    "texture": "resources/sprites/placeholder_tileset/tile_placeholder_11.png",
-                    "collision": "solid"
-                },
-                {
-                    "texture": "resources/sprites/placeholder_tileset/tile_placeholder_12.png",
-                    "collision": "solid"
-                }
-            ]
-        }
+        "tileset1": [
+            {
+                "texture": "resources/sprites/placeholder_tileset/tile_placeholder_0.png",
+                "collision": "solid"
+            },
+            {
+                "texture": "resources/sprites/placeholder_tileset/tile_placeholder_1.png",
+                "collision": "solid"
+            },
+            {
+                "texture": "resources/sprites/placeholder_tileset/tile_placeholder_2.png",
+                "collision": "solid"
+            },
+            {
+                "texture": "resources/sprites/placeholder_tileset/tile_placeholder_3.png",
+                "collision": "solid"
+            },
+            {
+                "texture": "resources/sprites/placeholder_tileset/tile_placeholder_4.png",
+                "collision": "solid"
+            },
+            {
+                "texture": "resources/sprites/placeholder_tileset/tile_placeholder_5.png",
+                "collision": "solid"
+            },
+            {
+                "texture": "resources/sprites/placeholder_tileset/tile_placeholder_6.png",
+                "collision": "solid"
+            },
+            {
+                "texture": "resources/sprites/placeholder_tileset/tile_placeholder_7.png",
+                "collision": "solid"
+            },
+            {
+                "texture": "resources/sprites/placeholder_tileset/tile_placeholder_8.png",
+                "collision": "solid"
+            },
+            {
+                "texture": "resources/sprites/placeholder_tileset/tile_placeholder_9.png",
+                "collision": "solid"
+            },
+            {
+                "texture": "resources/sprites/placeholder_tileset/tile_placeholder_10.png",
+                "collision": "solid"
+            },
+            {
+                "texture": "resources/sprites/placeholder_tileset/tile_placeholder_11.png",
+                "collision": "solid"
+            },
+            {
+                "texture": "resources/sprites/placeholder_tileset/tile_placeholder_12.png",
+                "collision": "solid"
+            }
+        ]
     },
 
     "entities": {
         "Walls": {
             "entity_default": "static_body",
             "layers": ["player"],
-            "x": -128,
-            "y": -128,
+            "x": 0,
+            "y": 0,
             "colliders": [
                 {
                     "type": "barrier",
@@ -103,20 +99,21 @@
         },
         "Tilemap": {
             "entity_default": "tilemap",
+            "x": 64,
+            "y": 64,
+            "layers": ["player"],
             "tileset": "tileset1",
+            "tile_width": 16,
+            "tile_height": 16,
             "tilegrid_rows": 4,
             "tilegrid_cols": 6,
             "tilegrid": [
-                0, 1, 2,"","","",
-                7, 8,10, 1, 1, 2,
-                6, 5,12, 8, 8, 3,
-                "","", 6, 5, 5, 4
+                 0, 1, 2,-1,-1,-1,
+                 7, 8,10, 1, 1, 2,
+                 6, 5,12, 8, 8, 3,
+                -1,-1, 6, 5, 5, 4
             ],
             "components": [
-                {
-                    "type": "Position",
-                    "position": {"x": 64, "y": 64}
-                },
                 {
                     "type": "BoundingBoxComponent",
                     "auto": true
@@ -151,6 +148,10 @@
                     "texture": "resources/sprites/triangle_thing.png",
                     "width": 40,
                     "height": 25
+                },
+                {
+                  "type": "BoundingBoxComponent",
+                  "auto": true
                 }
             ]
         }
