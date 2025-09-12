@@ -36,7 +36,7 @@ Texture SpriteLoader::load_or_get_texture(const char* filepath){
     }
 }
 
-bool operator==(const Texture& texture1, const Texture& texture2){
+static bool operator==(const Texture& texture1, const Texture& texture2){
     return (texture1.id == texture2.id);
 }
 
