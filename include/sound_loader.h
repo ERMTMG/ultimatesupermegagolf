@@ -10,6 +10,7 @@ struct SoundInfo {
     Sound sound;
     SoundInfo() = default;
     SoundInfo(const char* filepath);
+    SoundInfo(const SoundInfo&) = default;
     SoundInfo(SoundInfo&&) = default;
     ~SoundInfo();
   private:

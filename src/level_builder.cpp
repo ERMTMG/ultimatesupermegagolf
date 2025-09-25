@@ -244,7 +244,7 @@ static void load_bounding_box_component_auto(Context& context, LevelRegistry& re
         registry.get().emplace_or_replace<BoundingBoxComponent>(entityID, calculate_bb(*sprite));
     } else {
         std::cerr << "<WARNING> at load_bounding_box_component_auto (entity ID " << (int)entityID << "): No SpriteSheet or CollisionComponent components found on entity. Entity will have a zero bounding box\n";
-        registry.add_component<BoundingBoxComponent>(entityID, VEC2_ZERO, 0, 0);
+        registry.add_component<BoundingBoxComponent>(entityID, VEC2_ZERO, 0.f, 0.f);
     }
 }
 

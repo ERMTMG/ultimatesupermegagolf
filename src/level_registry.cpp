@@ -229,18 +229,10 @@ void LevelRegistry::handle_collisions_general(){
                     CollisionHandler* handler_i = registry->try_get<CollisionHandler>(entity_i);
                     CollisionHandler* handler_j = registry->try_get<CollisionHandler>(entity_j);
                     if(handler_i != nullptr){
-                        if(handler_i->type == COLLISION_HANDLER_DEFAULT){
-                            (handler_i->defaultHandler)(info, velocity_i, velocity_j, handler_j);
-                        } else {
-                            (handler_i->customHandler)(info, entity_i, entity_j, registry.get());
-                        }
+                        handler_i->handler(info, handler_i->physicsHandlingEnabled, entity_i, entity_j, *registry);
                     }
                     if(handler_j != nullptr){
-                        if(handler_j->type == COLLISION_HANDLER_DEFAULT){
-                            (handler_j->defaultHandler)(info, velocity_j, velocity_i, handler_i);
-                        } else {
-                            (handler_i->customHandler)(info, entity_j, entity_i, registry.get());
-                        }
+                        handler_j->handler(info, handler_j->physicsHandlingEnabled, entity_j, entity_i, *registry);
                     }
 
                     // store collided entity IDs
