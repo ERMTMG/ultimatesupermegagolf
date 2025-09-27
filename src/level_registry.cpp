@@ -1,6 +1,9 @@
 #include"level_registry.h"
 #include "basic_components.h"
 #include "collision_component.h"
+#include "collision_handler.h"
+#include "custom_collision_handlers.h"
+#include "sound_component.h"
 #include <utility>
 #include <vector>
 
@@ -118,7 +121,16 @@ entt::entity LevelRegistry::create_player(const Position& pos){
     registry->emplace<PlayerComponent>(player, VEC2_ZERO, VEC2_ZERO, 0, PlayerComponent::MAX_HEALTH, true);
     BoundingBoxComponent playerBB = calculate_bb(collision, 0);
     registry->emplace<BoundingBoxComponent>(player, playerBB);
-    registry->emplace<CollisionHandler>(player, default_collision_handler());
+    SoundComponent& playerSoundComponent = registry->emplace<SoundComponent>(player);
+    add_sound_to_component(playerSoundComponent, "resources/sounds/hit_1.ogg", "hit"_sound);
+    CollisionHandler playerCollisionHandler = CollisionHandler{
+        .handler = join_handlers(
+            DefaultElasticCollisionHandler{0.9}, 
+            PlaySoundCollisionHandler{"hit"_sound}
+        ),
+        .physicsHandlingEnabled = true
+    };
+    registry->emplace<CollisionHandler>(player, playerCollisionHandler);
 
     return player;
 }
