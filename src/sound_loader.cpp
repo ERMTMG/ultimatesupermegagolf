@@ -24,7 +24,7 @@ Sound load_or_get_sound(const char* filepath){
         return LoadSoundAlias(soundInfo.sound);
     } else {
         SoundInfo soundInfo{filepath};
-        _soundFileMap.emplace(filepath, soundInfo);
+        _soundFileMap.emplace(std::make_pair(filepath, std::move(soundInfo)));
         _soundFileMap[filepath].unloadOnDestruct = true;
         return LoadSoundAlias(soundInfo.sound);
     }
