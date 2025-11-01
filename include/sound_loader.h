@@ -11,6 +11,7 @@ struct SoundInfo {
     SoundHandle sound;
     SoundInfo() = delete;
     SoundInfo(const char* filepath);
+    SoundInfo(const SoundInfo&) = default;
     SoundInfo(SoundInfo&&) = default;
 };
 

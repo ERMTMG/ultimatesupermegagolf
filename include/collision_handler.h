@@ -11,6 +11,9 @@
 #include"basic_components.h"
 #include"collision_shapes.h"
 #include"collision_component.h"
+#include <functional>
+
+using CollisionHandlerFunction = std::function<void(CollisionInformation, bool, entt::entity, entt::entity, entt::registry&)>;
 
 /*
     Component that defines an entity's response to collision with another object.
@@ -18,23 +21,7 @@
     a CollisionHandler it is assumed that the entity is not static.
 */
 struct CollisionHandler{
-    union{
-        /*
-            Default type of collision handler. Needs a reference to the own entity's velocity,
-            the other entity's velocity and the other entity's collisionHandler (to maybe disable it 
-            for the rest of the frame in case the collision handler swaps velocities). More efficient 
-            than the custom handler because it has direct access to the entities' needed components.
-        */
-        void (*defaultHandler)(CollisionInformation, Velocity*, Velocity*, CollisionHandler*);
-
-        // Custom handler that has the entities' address in the registry for access to other components.
-        // Of course, allows for much more complex behavior but needs to individually get every other component.
-        void (*customHandler)(CollisionInformation, entt::entity, entt::entity, entt::registry*);
-    };
-
-    bool type;
-        #define COLLISION_HANDLER_DEFAULT true
-        #define COLLISION_HANDLER_CUSTOM false
+    CollisionHandlerFunction handler;
 
     /*
         Checks if the handler should call its function. Gets reset to true every frame, but
@@ -43,17 +30,20 @@ struct CollisionHandler{
         don't want them to be switched again by the other entity, so you disable that entity's
         handler).
     */
-    bool enabled;
+    bool physicsHandlingEnabled;
 
-    inline void disable_if_default(){
-        if(type == COLLISION_HANDLER_DEFAULT){
-            enabled = false;
-        }
+    inline void disable_physics_handling(){
+        physicsHandlingEnabled = false;
     }
 };
 
-// Defines the internal function for the default collision handler
-void default_elastic_collision_handler_fn(CollisionInformation info, Velocity* thisVelocity, Velocity* otherVelocity, CollisionHandler* otherHandler);
+struct DefaultElasticCollisionHandler {
+    float elasticity = 0.9;
+    DefaultElasticCollisionHandler(float elasticity);
+    void operator()(CollisionInformation info, bool physicsHandlingEnabled, entt::entity entityThis, entt::entity entityOther, entt::registry& registry) const;
+};
 
-// Constructs a default collision handler with the respective default function
-CollisionHandler default_collision_handler();
+CollisionHandlerFunction join_handlers(CollisionHandlerFunction&& handler1, CollisionHandlerFunction&& handler2);
+
+// Constructs a default collision handler with the respective default function and a given elasticity value.
+CollisionHandler default_collision_handler(float elasticity = 0.9);

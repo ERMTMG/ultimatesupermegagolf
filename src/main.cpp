@@ -32,6 +32,7 @@ void parse_args(int argc, char** argv){
 int main(int argc, char** argv){
     parse_args(argc, argv);
     InitWindow(SCREENWIDTH, SCREENHEIGHT, "Ultimate Super Mega Golf");
+    InitAudioDevice();
     SetTargetFPS(60);
     LevelRegistry level;
     {
@@ -88,4 +89,6 @@ int main(int argc, char** argv){
     }
 
     level.get().clear();
+    CloseAudioDevice();
+    CloseWindow();
 }

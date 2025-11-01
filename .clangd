@@ -3,3 +3,4 @@ CompileFlags:
     - "-I./include"
     - "-I../include"
     - "-Wno-unqualified-std-cast-call"
+    - "-Wno-c++11-narrowing"

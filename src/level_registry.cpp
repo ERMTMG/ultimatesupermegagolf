@@ -1,6 +1,9 @@
 #include"level_registry.h"
 #include "basic_components.h"
 #include "collision_component.h"
+#include "collision_handler.h"
+#include "custom_collision_handlers.h"
+#include "sound_component.h"
 #include <utility>
 #include <vector>
 
@@ -118,7 +121,16 @@ entt::entity LevelRegistry::create_player(const Position& pos){
     registry->emplace<PlayerComponent>(player, VEC2_ZERO, VEC2_ZERO, 0, PlayerComponent::MAX_HEALTH, true);
     BoundingBoxComponent playerBB = calculate_bb(collision, 0);
     registry->emplace<BoundingBoxComponent>(player, playerBB);
-    registry->emplace<CollisionHandler>(player, default_collision_handler());
+    SoundComponent& playerSoundComponent = registry->emplace<SoundComponent>(player);
+    add_sound_to_component(playerSoundComponent, "resources/sounds/hit_1.ogg", "hit"_sound);
+    CollisionHandler playerCollisionHandler = CollisionHandler{
+        .handler = join_handlers(
+            DefaultElasticCollisionHandler{0.9}, 
+            PlaySoundCollisionHandler{"hit"_sound}
+        ),
+        .physicsHandlingEnabled = true
+    };
+    registry->emplace<CollisionHandler>(player, playerCollisionHandler);
 
     return player;
 }
@@ -229,18 +241,10 @@ void LevelRegistry::handle_collisions_general(){
                     CollisionHandler* handler_i = registry->try_get<CollisionHandler>(entity_i);
                     CollisionHandler* handler_j = registry->try_get<CollisionHandler>(entity_j);
                     if(handler_i != nullptr){
-                        if(handler_i->type == COLLISION_HANDLER_DEFAULT){
-                            (handler_i->defaultHandler)(info, velocity_i, velocity_j, handler_j);
-                        } else {
-                            (handler_i->customHandler)(info, entity_i, entity_j, registry.get());
-                        }
+                        handler_i->handler(info, handler_i->physicsHandlingEnabled, entity_i, entity_j, *registry);
                     }
                     if(handler_j != nullptr){
-                        if(handler_j->type == COLLISION_HANDLER_DEFAULT){
-                            (handler_j->defaultHandler)(info, velocity_j, velocity_i, handler_i);
-                        } else {
-                            (handler_i->customHandler)(info, entity_j, entity_i, registry.get());
-                        }
+                        handler_j->handler(info, handler_j->physicsHandlingEnabled, entity_j, entity_i, *registry);
                     }
 
                     // store collided entity IDs
