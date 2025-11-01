@@ -1,4 +1,6 @@
 #include "sound_component.h"
+#include "sound_handle.h"
+#include "sound_loader.h"
 #include <algorithm>
 #include <cstddef>
 #include <cstring>
@@ -19,6 +21,12 @@ SoundComponent::SoundComponent() : sounds{}, keys{} {
     static const size_t DEFAULT_CAPACITY = 4;
     sounds.reserve(DEFAULT_CAPACITY);
     keys.reserve(DEFAULT_CAPACITY);
+}
+
+SoundComponent::~SoundComponent(){
+    for(SoundHandle& sound : sounds) {
+        SoundLoader::return_sound(sound);
+    }
 }
 
 void add_sound_to_component(SoundComponent& sound, const char* soundFilename, SoundKey key){

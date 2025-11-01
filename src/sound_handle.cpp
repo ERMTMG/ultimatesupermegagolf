@@ -1,6 +1,7 @@
 #include "sound_handle.h"
 #include "raylib.h"
 #include <cstddef>
+#include <iostream>
 
 SoundHandle::SoundHandle(const char* filepath){
     m_soundArray[0] = LoadSound(filepath);
@@ -57,14 +58,18 @@ SoundHandle& SoundHandle::operator=(SoundHandle&& other){
 }
 
 SoundHandle::~SoundHandle(){
+    std::cout << "SoundHandle destructor called\n";
     if(m_holdsSoundData){
         if(m_isSoundSource){
             for(size_t i = 1; i < MAX_SOUND_COPIES; i++){
+                std::cout << "\tUnloading sound alias " << i << "...\n";
                 UnloadSoundAlias(m_soundArray[i]);
             }
+            std::cout << "\tUnloading original sound...\n";
             UnloadSound(m_soundArray[0]);
         } else {
             for(size_t i = 0; i < MAX_SOUND_COPIES; i++){
+                std::cout << "\tUnloading sound alias " << i << "...\n";
                 UnloadSoundAlias(m_soundArray[i]);
             }
         }
