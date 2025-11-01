@@ -1,5 +1,5 @@
 #pragma once
-#include <raylib.h>
+#include "sound_handle.h"
 #include "sound_loader.h"
 
 #include <vector>
@@ -12,7 +12,7 @@ SoundKey to_key(const char* str);
 
 // TODO: is there a better way to do this?
 struct SoundComponent {
-    std::vector<Sound> sounds;
+    std::vector<SoundHandle> sounds;
     std::vector<SoundKey> keys;
 
     SoundComponent();

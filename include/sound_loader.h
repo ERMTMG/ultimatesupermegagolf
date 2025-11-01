@@ -2,26 +2,23 @@
 #include <raylib.h>
 #include <string>
 #include <unordered_map>
+#include "sound_handle.h"
 
 namespace SoundLoader {
 
 struct SoundInfo {
     size_t refCount;
-    Sound sound;
-    SoundInfo() = default;
+    SoundHandle sound;
+    SoundInfo() = delete;
     SoundInfo(const char* filepath);
     SoundInfo(SoundInfo&&) = default;
-    ~SoundInfo();
-  private:
-    bool unloadOnDestruct = false;
-    friend Sound load_or_get_sound(const char*);
 };
 
 inline std::unordered_map<std::string, SoundInfo> _soundFileMap;
 
-Sound load_or_get_sound(const char* filepath);
-void return_sound(Sound sound);
-Sound get_sound_copy(Sound sound);
+SoundHandle load_or_get_sound(const char* filepath);
+void return_sound(SoundHandle& sound);
+SoundHandle get_sound_copy(const SoundHandle& sound);
 size_t _get_sound_ref_count(const char* filepath);
 
 }

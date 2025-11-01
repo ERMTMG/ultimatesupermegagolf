@@ -1,41 +1,30 @@
 #include "sound_loader.h"
-#include "raylib.h"
+#include "sound_handle.h"
 #include <cassert>
 #include <algorithm>
 #include <cstddef>
 #include <stdexcept>
+#include <utility>
 
 namespace SoundLoader {
 
-SoundInfo::SoundInfo(const char* filepath) : refCount(1), sound(LoadSound(filepath)), unloadOnDestruct(false) {};
+SoundInfo::SoundInfo(const char* filepath) : refCount(1), sound(filepath) {};
 
-SoundInfo::~SoundInfo(){
-    if(unloadOnDestruct){
-      assert("Unloading a sound with a reference count greater than 0" && refCount > 0);
-      UnloadSound(this->sound);
-    }
-}
-
-Sound load_or_get_sound(const char* filepath){
+SoundHandle load_or_get_sound(const char* filepath){
     auto itr = _soundFileMap.find(filepath);
     if(itr != _soundFileMap.end()){
         SoundInfo& soundInfo = itr->second;
         soundInfo.refCount++;
-        return LoadSoundAlias(soundInfo.sound);
+        return SoundHandle{soundInfo.sound};
     } else {
         SoundInfo soundInfo{filepath};
         _soundFileMap.emplace(std::make_pair(filepath, std::move(soundInfo)));
-        _soundFileMap[filepath].unloadOnDestruct = true;
-        return LoadSoundAlias(soundInfo.sound);
+        return SoundHandle{soundInfo.sound};
     }
 }
 
-static bool operator==(const Sound& lhs, const Sound& rhs){
-    return lhs.stream.buffer == rhs.stream.buffer;
-}
-
-void return_sound(Sound sound){
-    auto itr = std::find_if(_soundFileMap.begin(), _soundFileMap.end(), [&sound](const std::pair<std::string, SoundInfo>& pair){
+void return_sound(SoundHandle& sound){
+    auto itr = std::find_if(_soundFileMap.begin(), _soundFileMap.end(), [&sound](const std::pair<const std::string, SoundInfo>& pair){
         return pair.second.sound == sound;
     });
 
@@ -47,14 +36,14 @@ void return_sound(Sound sound){
     }
 }
 
-Sound get_sound_copy(Sound sound){
-    auto itr = std::find_if(_soundFileMap.begin(), _soundFileMap.end(), [&sound](const std::pair<std::string, SoundInfo>& pair){
+SoundHandle get_sound_copy(const SoundHandle& sound){
+    auto itr = std::find_if(_soundFileMap.begin(), _soundFileMap.end(), [&sound](const std::pair<const std::string, SoundInfo>& pair){
         return pair.second.sound == sound;
     });
 
     if(itr != _soundFileMap.end()){
         itr->second.refCount++;
-        return LoadSoundAlias(sound);
+        return SoundHandle{itr->second.sound};
     } else {
         throw new std::invalid_argument("Copying sound not registered by SoundLoader");
     }

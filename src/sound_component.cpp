@@ -1,5 +1,4 @@
 #include "sound_component.h"
-#include "raylib.h"
 #include <algorithm>
 #include <cstddef>
 #include <cstring>
@@ -23,7 +22,7 @@ SoundComponent::SoundComponent() : sounds{}, keys{} {
 }
 
 void add_sound_to_component(SoundComponent& sound, const char* soundFilename, SoundKey key){
-    Sound loadedSound = SoundLoader::load_or_get_sound(soundFilename);
+    SoundHandle loadedSound = SoundLoader::load_or_get_sound(soundFilename);
     sound.sounds.push_back(loadedSound);
     sound.keys.push_back(key);
 }
@@ -38,11 +37,11 @@ void remove_sound_from_component(SoundComponent& sound, SoundKey key){
     }
 }
 
-void try_play_sound(const SoundComponent& sound, SoundKey key){
+void try_play_sound(SoundComponent& sound, SoundKey key){
     auto itr = std::find(sound.keys.begin(), sound.keys.end(), key);
     if(itr != sound.keys.end()){
         size_t idx = itr - sound.keys.begin();
-        PlaySound(sound.sounds[idx]);
+        sound.sounds[idx].play();
     }
 }
 
