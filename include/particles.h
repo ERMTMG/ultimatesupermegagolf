@@ -3,13 +3,13 @@
 
 class Particle {
   private:
-    const Color color;
+    Color m_color;
     Vector2 m_relativePos;
     Vector2 m_velocity;
-    const Vector2 m_acceleration;
+    Vector2 m_acceleration;
     float m_currentAngle; // in degrees!
-    const float m_rotationalVelocity;
-    float timeToLive;
+    float m_rotationalVelocity;
+    float m_timeToLive;
     Particle();
   public:
     Particle(
@@ -21,7 +21,11 @@ class Particle {
         float rotationalVelocity,
         float lifetime
     );
+    Particle(const Particle&) = default;
+    Particle(Particle&&) = default;
+    Particle& operator=(const Particle& other) = default;
+    Particle& operator=(Particle&& other) = default;
     void update(float delta);
     bool shouldDie() const;
-    void draw() const;
+    void draw(const Texture& texture, const Vector2& position) const;
 };

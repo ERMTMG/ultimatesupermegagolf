@@ -9,4 +9,5 @@
 #include"utility/heaparray.h"
 #include"utility/matrix.hpp"
 #include"utility/raylib_draw_util.h"
+#include"utility/color_util.h"
 #include"utility/random_range.h"
