@@ -73,7 +73,7 @@ SoundHandle::~SoundHandle(){
                 UnloadSoundAlias(m_soundArray[i]);
             }
         }
-    }    
+    }
 }
 
 void SoundHandle::play(){
@@ -90,5 +90,5 @@ void SoundHandle::stop_all(){
 }
 
 bool SoundHandle::operator==(const SoundHandle& rhs) const {
-    return (this->m_soundArray[0].stream.buffer == this->m_soundArray[0].stream.buffer);
+    return (this->m_soundArray[0].stream.buffer == rhs.m_soundArray[0].stream.buffer);
 }
