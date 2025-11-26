@@ -1,11 +1,17 @@
 #include"level_builder.h"
 #include "basic_components.h"
 #include "collision_component.h"
+#include "sound_component.h"
+#include "particle_generator.h"
+#include "bounding_box.h"
 #include "level_registry.h"
 #include "raylib.h"
 #include "utility.h"
+#include "utility/random_range.h"
 #include "utility/vector2_util.h"
 #include <cstddef>
+#include <cstdint>
+#include <cstdlib>
 #include <limits>
 #include <string>
 #include<unordered_set>
@@ -121,6 +127,35 @@ static std::string json_get_string(Context& context, const Json& object){
     return object.get<std::string>();
 }
 
+static Color json_get_color(Context& context, const Json& object){
+    static const Color ERROR_COLOR = Color{0,0,0,0};
+    std::string str;
+    CHECK_ERROR_RETURN(
+        str = json_get_string(context, object);, 
+        json_get_color, 
+        ERROR_COLOR
+    );
+    if(str.empty() || str[0] != '#'){
+        THROW_ERROR_RETURN(
+            ErrorType::INVALID_SETTING_VALUE, 
+            "Color code on string has invalid syntax (must start with '#' character)", 
+            json_get_color,
+            ERROR_COLOR
+        );
+    }
+    char* outPtr;
+    unsigned int colorCode = strtoul(str.c_str() + 1, &outPtr, 16);
+    if(outPtr != nullptr){
+        THROW_ERROR_RETURN(
+            ErrorType::INVALID_SETTING_VALUE, 
+            "Color code on string has invalid syntax (not a valid hexadecimal value)",
+            json_get_color, 
+            ERROR_COLOR
+        );
+    }
+    return GetColor(colorCode);
+}
+
 static Vector2 json_get_Vector2(Context& context, const Json& object){
     if(!object.contains("x") || !object.contains("y")){
         THROW_ERROR_RETURN(
@@ -176,6 +211,138 @@ static std::pair<float, float> json_get_width_and_height(Context& context, const
     return {width, height};
 }
 
+static ColorRange json_get_color_range(Context& context, const Json& object){
+    static const ColorRange ERROR_RANGE = ColorRange{Color{0,0,0,0}, Color{0,0,0,0}};
+    if(!object.contains("from")){
+        THROW_ERROR_RETURN(
+            ErrorType::SETTING_NOT_FOUND, 
+            "No `from` color found in color range", 
+            json_get_color_range, 
+            ERROR_RANGE
+        );
+    }
+    if(!object.contains("to")){
+        THROW_ERROR_RETURN(
+            ErrorType::SETTING_NOT_FOUND, 
+            "No `to` color found in color range", 
+            json_get_color_range, 
+            ERROR_RANGE
+        );
+    }
+    Color from;
+    Color to;
+    CHECK_ERROR_RETURN(
+        from = json_get_color(context, object.at("from"));, 
+        json_get_color_range, 
+        ERROR_RANGE
+    );
+    CHECK_ERROR_RETURN(
+        to = json_get_color(context, object.at("to"));,
+        json_get_color_range,
+        ERROR_RANGE
+    );
+    return ColorRange{from, to};
+}
+
+static Vec2Range json_get_Vector2_range(Context& context, const Json& object){
+    static const Vec2Range ERROR_RANGE = Vec2Range{VEC2_NULL, VEC2_NULL};
+    if(!object.contains("min")){
+        THROW_ERROR_RETURN(
+            ErrorType::SETTING_NOT_FOUND, 
+            "No `min` found in Vector2 range", 
+            json_get_Vector2_range, 
+            ERROR_RANGE
+        );
+    }
+    if(!object.contains("max")){
+        THROW_ERROR_RETURN(
+            ErrorType::SETTING_NOT_FOUND, 
+            "No `max` found in Vector2 range", 
+            json_get_Vector2_range, 
+            ERROR_RANGE
+        );
+    }
+    Vector2 min;
+    Vector2 max;
+    CHECK_ERROR_RETURN(
+        min = json_get_Vector2(context, object.at("min"));, 
+        json_get_Vector2_range, 
+        ERROR_RANGE
+    );
+    CHECK_ERROR_RETURN(
+        max = json_get_Vector2(context, object.at("max"));, 
+        json_get_Vector2_range,
+        ERROR_RANGE
+    )
+    return Vec2Range{min, max};
+}
+
+static FloatRange json_get_float_range(Context& context, const Json& object){ 
+    static const FloatRange ERROR_RANGE = FloatRange{std::numeric_limits<float>::quiet_NaN(), std::numeric_limits<float>::quiet_NaN()};
+    if(!object.contains("min")){
+        THROW_ERROR_RETURN(
+            ErrorType::SETTING_NOT_FOUND, 
+            "No `min` found in float range", 
+            json_get_float_range, 
+            ERROR_RANGE
+        );
+    }
+    if(!object.contains("max")){
+        THROW_ERROR_RETURN(
+            ErrorType::SETTING_NOT_FOUND, 
+            "No `max` found in float range", 
+            json_get_float_range, 
+            ERROR_RANGE
+        );
+    }
+    float min;
+    float max;
+    CHECK_ERROR_RETURN(
+        min = json_get_float(context, object.at("min"));, 
+        json_get_float_range,
+        ERROR_RANGE
+    );
+    CHECK_ERROR_RETURN(
+        max = json_get_float(context, object.at("max"));, 
+        json_get_float_range, 
+        ERROR_RANGE
+    );
+    return FloatRange{min, max};
+}
+
+static IntRange json_get_int_range(Context& context, const Json& object){
+    static const IntRange ERROR_RANGE = IntRange{INT32_MIN, INT32_MIN};
+    if(!object.contains("min")){
+        THROW_ERROR_RETURN(
+            ErrorType::SETTING_NOT_FOUND, 
+            "No `min` found in int range", 
+            json_get_int_range, 
+            ERROR_RANGE
+        );
+    }
+    if(!object.contains("max")){
+        THROW_ERROR_RETURN(
+            ErrorType::SETTING_NOT_FOUND, 
+            "No `max` found in int range", 
+            json_get_int_range, 
+            ERROR_RANGE
+        );
+    }
+    int min;
+    int max;
+    CHECK_ERROR_RETURN(
+        min = json_get_int(context, object.at("min"));, 
+        json_get_int_range,
+        ERROR_RANGE
+    );
+    CHECK_ERROR_RETURN(
+        max = json_get_int(context, object.at("max"));, 
+        json_get_int_range, 
+        ERROR_RANGE
+    );
+    return IntRange{min, max};
+}
+
 static void init_level_data(Context& context, LevelRegistry& registry, const Json& levelDict){
     std::string levelName = "<unnamed>";
     Vector2 playerPos;
@@ -226,6 +393,57 @@ static void init_level_data(Context& context, LevelRegistry& registry, const Jso
         registry.init_level(Position{playerPos}, Position{goalPos});
     } else {
         registry.init_level(Position{playerPos}, Position{goalPos}, Position{cameraPos});
+    }
+}
+
+static ParticleSettings load_particle_settings_from_json(Context& context, const Json& particleSettingsDict){
+    throw 1;
+}
+
+static void load_particle_component(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
+    if(!componentObj.contains("settings")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND, 
+            "No `settings` field found in ParticleGenerator component", 
+            load_particle_component
+        )
+    }
+    const Json& settingsDict = componentObj.at("settings");
+    if(!settingsDict.is_object()){
+        THROW_ERROR(
+            ErrorType::INVALID_JSON_TYPE, 
+            "Expected dictionary for settings, received '" + to_string(settingsDict) + '\'',
+            load_particle_component
+        );
+    }
+
+}
+
+static void load_sound_component(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
+    if(!componentObj.contains("sounds")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND, 
+            "No `sounds` field found in SoundComponent component", 
+            load_sound_component
+        );
+    }
+    const Json& soundsDict = componentObj.at("sounds");
+    if(!soundsDict.is_object()){
+        THROW_ERROR(
+            ErrorType::INVALID_JSON_TYPE, 
+            "Expected dictionary for sounds, received '" + to_string(soundsDict) + '\'',
+            load_sound_component
+        );
+    }
+    registry.add_component<SoundComponent>(entityID);
+    SoundComponent& sound = *registry.get_component<SoundComponent>(entityID);
+    for(const auto&[soundKey, soundFilenameJson] : soundsDict.items()){
+        std::string soundFilename;
+        CHECK_ERROR(
+            soundFilename = json_get_string(context, soundFilenameJson);,
+            load_sound_component
+        );
+        add_sound_to_component(sound, soundFilename.c_str(), to_key(soundKey));
     }
 }
 
@@ -402,6 +620,7 @@ static void load_acceleration_component(Context& context, LevelRegistry& registr
 
 using ComponentLoadingFunc = void(*)(Context&, LevelRegistry&, const Json&, entt::entity);
 static const std::unordered_map<std::string, ComponentLoadingFunc> COMPONENT_LOADING_FUNCTIONS = {
+    {"SoundComponent", &load_sound_component},
     {"BoundingBoxComponent", &load_bounding_box_component},
     {"SpriteSheet", &load_spritesheet_component},
     {"SpriteTransform", &load_sprite_transform_component},
