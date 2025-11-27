@@ -6,6 +6,7 @@
 #include "bounding_box.h"
 #include "level_registry.h"
 #include "raylib.h"
+#include "sprite_loader.h"
 #include "utility.h"
 #include "utility/random_range.h"
 #include "utility/vector2_util.h"
@@ -16,6 +17,7 @@
 #include <string>
 #include<unordered_set>
 #include<unordered_map>
+#include <utility>
 
 #define THROW_ERROR(errorType, errorMsg, location) context.error = {errorType, errorMsg}; \
 std::cerr << "<ERROR> at " #location ": " << context.error << '\n'; \
@@ -343,6 +345,29 @@ static IntRange json_get_int_range(Context& context, const Json& object){
     return IntRange{min, max};
 }
 
+static Rectangle json_get_rectangle(Context& context, const Json& object){
+    static const Rectangle ERROR_RECTANGLE = {
+        .x = std::numeric_limits<float>::quiet_NaN(),
+        .y = std::numeric_limits<float>::quiet_NaN(),
+        .width = std::numeric_limits<float>::quiet_NaN(),
+        .height = std::numeric_limits<float>::quiet_NaN()
+    };
+    Vector2 position;
+    CHECK_ERROR_RETURN(
+        position = json_get_Vector2(context, object),
+        json_get_rectangle,
+        ERROR_RECTANGLE
+    );
+    float width; 
+    float height;
+    CHECK_ERROR_RETURN(
+        std::tie(width, height) = json_get_width_and_height(context, object), 
+        json_get_rectangle, 
+        ERROR_RECTANGLE
+    );
+    return Rectangle{position.x, position.y, width, height};
+}
+
 static void init_level_data(Context& context, LevelRegistry& registry, const Json& levelDict){
     std::string levelName = "<unnamed>";
     Vector2 playerPos;
@@ -396,8 +421,100 @@ static void init_level_data(Context& context, LevelRegistry& registry, const Jso
     }
 }
 
-static ParticleSettings load_particle_settings_from_json(Context& context, const Json& particleSettingsDict){
-    throw 1;
+static void load_particle_settings_from_json(Context& context, const Json& particleSettingsDict, ParticleSettings& outParticleSettings){
+    if(!particleSettingsDict.contains("texture")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND, 
+            "No `texture` field in particle settings", 
+            load_particle_settings_from_json
+        );
+    }
+    std::string particleTextureFilename;
+    CHECK_ERROR(
+        particleTextureFilename = json_get_string(context, particleSettingsDict.at("texture"));, 
+        load_particle_settings_from_json
+    );
+    Texture2D particleTexture = SpriteLoader::load_or_get_texture(particleTextureFilename.c_str());
+    if(!particleSettingsDict.contains("spawning_area")){
+        THROW_ERROR(
+            ErrorType::SETTING_NOT_FOUND, 
+            "No `spawning_area` field in particle settings", 
+            load_particle_settings_from_json
+        );
+    }
+    Rectangle spawningArea;
+    CHECK_ERROR(
+        spawningArea = json_get_rectangle(context, particleSettingsDict.at("spawning_area"));, 
+        load_particle_settings_from_json
+    );
+    Vec2Range initialVelocity{VEC2_ZERO, VEC2_ZERO};
+    if(particleSettingsDict.contains("initial_velocity")){
+        CHECK_ERROR(
+            initialVelocity = json_get_Vector2_range(context, particleSettingsDict.at("initial_velocity")), 
+            load_particle_settings_from_json
+        );
+    }
+    Vector2 particleAcceleration = VEC2_ZERO;
+    if(particleSettingsDict.contains("acceleration")){
+        CHECK_ERROR(
+            particleAcceleration = json_get_Vector2(context, particleSettingsDict.at("acceleration")), 
+            load_particle_settings_from_json
+        );
+    }
+    FloatRange particleLifetime{1.0, 1.0};
+    if(particleSettingsDict.contains("lifetime")){
+        CHECK_ERROR(
+            particleLifetime = json_get_float_range(context, particleSettingsDict.at("lifetime")), 
+            load_particle_settings_from_json
+        );
+    }
+    FloatRange particleSpawnPeriod{1.0, 1.0};
+    if(particleSettingsDict.contains("spawning_period")){
+        CHECK_ERROR(
+            particleSpawnPeriod = json_get_float_range(context, particleSettingsDict.at("spawning_period")), 
+            load_particle_settings_from_json
+        );
+    }
+    IntRange particleSpawnQuantity{1, 1};
+    if(particleSettingsDict.contains("spawning_quantity")){
+        CHECK_ERROR(
+            particleSpawnQuantity = json_get_int_range(context, particleSettingsDict.at("spawning_quantity")), 
+            load_particle_settings_from_json
+        );
+    }
+    FloatRange particleInitialRotation{0.0, 0.0};
+    if(particleSettingsDict.contains("initial_rotation")){
+        CHECK_ERROR(
+            particleInitialRotation = json_get_float_range(context, particleSettingsDict.at("initial_rotation")), 
+            load_particle_settings_from_json
+        );
+    }
+    FloatRange particleRotationalVelocity{0.0, 0.0};
+    if(particleSettingsDict.contains("rotational_velocity")){
+        CHECK_ERROR(
+            particleRotationalVelocity = json_get_float_range(context, particleSettingsDict.at("rotational_velocity")), 
+            load_particle_settings_from_json
+        );
+    }
+    ColorRange particleColorRange;
+    if(particleSettingsDict.contains("color_range")){
+        CHECK_ERROR(
+            particleColorRange = json_get_color_range(context, particleSettingsDict.at("color_range")), 
+            load_particle_settings_from_json
+        );
+    }
+    outParticleSettings = ParticleSettings {
+        .texture = particleTexture,
+        .spawningArea = spawningArea,
+        .initialVelocity = initialVelocity,
+        .acceleration = particleAcceleration,
+        .lifetime = particleLifetime,
+        .spawnPeriod = particleSpawnPeriod,
+        .spawnQuantity = particleSpawnQuantity,
+        .initialRotation = particleInitialRotation,
+        .rotationalVelocity = particleRotationalVelocity,
+        .color = particleColorRange
+    };
 }
 
 static void load_particle_component(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
@@ -416,7 +533,12 @@ static void load_particle_component(Context& context, LevelRegistry& registry, c
             load_particle_component
         );
     }
-
+    ParticleSettings particleSettings;
+    CHECK_ERROR(
+        load_particle_settings_from_json(context, settingsDict, particleSettings);, 
+        load_particle_component
+    );
+    registry.add_component<ParticleGenerator>(entityID, new_particle_generator(std::move(particleSettings)));
 }
 
 static void load_sound_component(Context& context, LevelRegistry& registry, const Json& componentObj, entt::entity entityID){
@@ -620,6 +742,7 @@ static void load_acceleration_component(Context& context, LevelRegistry& registr
 
 using ComponentLoadingFunc = void(*)(Context&, LevelRegistry&, const Json&, entt::entity);
 static const std::unordered_map<std::string, ComponentLoadingFunc> COMPONENT_LOADING_FUNCTIONS = {
+    {"ParticleGenerator", &load_particle_component},
     {"SoundComponent", &load_sound_component},
     {"BoundingBoxComponent", &load_bounding_box_component},
     {"SpriteSheet", &load_spritesheet_component},
